@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="36dp"
+    android:paddingRight="36dp"
+    android:paddingTop="36dp"
+    android:paddingBottom="24dp">
+
+    <TextView
+        android:id="@+id/menu_name"
+        android:text="이름"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/menu_nameContent"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_name"
+        android:inputType="text"/>
+    <TextView
+        android:id="@+id/menu_price"
+        android:text="매뉴 가격"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/menu_nameContent"/>
+    <EditText
+        android:id="@+id/menu_priceContent"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_below="@id/menu_price" />
+    <TextView
+        android:id="@+id/menu_category"
+        android:text="카테고리"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/menu_priceContent" />
+    <Spinner
+        android:id="@+id/menu_categoryContent"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_category" />
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_alignRight="@id/menu_categoryContent"
+        android:layout_below="@id/menu_categoryContent"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/default_btn"
+        android:text="@string/confirm"
+        android:textColor="@color/point"/>
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_below="@id/menu_categoryContent"
+        android:layout_toLeftOf="@id/confirmBtn"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/default_btn"
+        android:text="@string/cancel"
+        android:textColor="@color/point"/>
+
+</RelativeLayout>
