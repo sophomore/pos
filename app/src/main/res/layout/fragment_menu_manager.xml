@@ -109,7 +109,7 @@
         android:layout_gravity="right|bottom"
         android:layout_margin="48dp"
         android:padding="16dp"
-        android:elevation="4dp"
+        android:elevation="2dp"
         android:background="@drawable/circle_btn"
         android:src="@drawable/ic_add_white_36dp"/>
 

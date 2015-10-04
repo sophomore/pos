@@ -8,41 +8,42 @@ import org.json.JSONObject;
 
 import java.util.PriorityQueue;
 
-import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by kjydiary on 15. 9. 21..
  */
-public class OrderMenu extends RealmObject {
+public class OrderMenu {
 
-    @PrimaryKey
     private int id;
     private Menu menu;
     private Order order;
     private int pay;
     private boolean curry;
     private boolean twice;
+    private boolean takeout;
     private int totalprice;
-    @Ignore
-    private Manager manager;
-    public OrderMenu() {
-
+    public OrderMenu(Menu menu, int pay, boolean curry, boolean twice, boolean takeout) {
+        this.menu = menu;
+        this.pay = pay;
+        this.curry = curry;
+        this.twice = twice;
+        this.takeout = takeout;
+        this.totalprice = menu.getPrice();
+        if (curry) totalprice += Data.CURRY;
+        if (twice) totalprice += Data.TWICE;
+        if (takeout) totalprice += Data.TAKEOUT;
     }
-    public OrderMenu(int id, Menu menu, Order order, int pay, boolean curry, boolean twice) {
+    public OrderMenu(int id, Menu menu, Order order, int pay, boolean curry, boolean twice, boolean takeout) {
         this.id = id;
         this.menu = menu;
         this.order = order;
         this.pay = pay;
         this.curry = curry;
         this.twice = twice;
+        this.takeout = takeout;
         this.totalprice = menu.getPrice();
         if (curry) totalprice += Data.CURRY;
         if (twice) totalprice += Data.TWICE;
-        order.getOrdermenus().add(this);
-        order.setTotalprice(order.getTotalprice() + this.totalprice);
+        if (takeout) totalprice += Data.TAKEOUT;
     }
 
     public int getId() {
@@ -69,15 +70,12 @@ public class OrderMenu extends RealmObject {
         return twice;
     }
 
-    public int getTotalprice() {
-        return totalprice;
+    public boolean isTakeout() {
+        return takeout;
     }
 
-    public Manager getManager() {
-        if (manager == null) {
-            setManager();
-        }
-        return manager;
+    public int getTotalprice() {
+        return totalprice;
     }
 
     public void setId(int id) {
@@ -108,72 +106,43 @@ public class OrderMenu extends RealmObject {
         this.totalprice = totalprice;
     }
 
-    public void setManager() {
-        manager = new Manager();
+    public JSONObject toJson() {
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("id", getId());
+            jo.put("menu", getMenu().getId());
+            jo.put("order", getOrder().getId());
+            jo.put("pay", getPay());
+            jo.put("curry", isCurry());
+            jo.put("twice", isTwice());
+            jo.put("totalprice", getTotalprice());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  jo;
     }
 
-    public static int getNextKey(Realm db) {
-        return (int)db.where(org.jaram.ds.data.struct.OrderMenu.class).maximumInt("id") + 1;
+    public void setCurry() {
+        OrderMenu.this.setCurry(true);
+        setTotalprice(getTotalprice() + Data.CURRY);
+        getOrder().setTotalprice(getOrder().getTotalprice() + Data.CURRY);
     }
 
-    public class Manager {
+    public void setTwice() {
+        OrderMenu.this.setTwice(true);
+        setTotalprice(getTotalprice() + Data.TWICE);
+        getOrder().setTotalprice(getOrder().getTotalprice() + Data.TWICE);
+    }
 
-        public void setCurry() {
-            OrderMenu.this.setCurry(true);
-            setTotalprice(getTotalprice() + Data.CURRY);
-            getOrder().setTotalprice(getOrder().getTotalprice() + Data.CURRY);
-        }
+    public void resetCurry() {
+        OrderMenu.this.setCurry(false);
+        setTotalprice(getTotalprice() - Data.CURRY);
+        getOrder().setTotalprice(getOrder().getTotalprice() - Data.CURRY);
+    }
 
-        public void setTwice() {
-            OrderMenu.this.setTwice(true);
-            setTotalprice(getTotalprice() + Data.TWICE);
-            getOrder().setTotalprice(getOrder().getTotalprice() + Data.TWICE);
-        }
-
-        public void resetCurry() {
-            OrderMenu.this.setCurry(false);
-            setTotalprice(getTotalprice() - Data.CURRY);
-            getOrder().setTotalprice(getOrder().getTotalprice() - Data.CURRY);
-        }
-
-        public void resetTwice() {
-            OrderMenu.this.setTwice(false);
-            setTotalprice(getTotalprice() - Data.TWICE);
-            getOrder().setTotalprice(getOrder().getTotalprice() - Data.TWICE);
-        }
-
-        public JSONObject toJson() {
-            JSONObject jo = new JSONObject();
-            try {
-                jo.put("id", getId());
-                jo.put("menu", getMenu().getId());
-                jo.put("order", getOrder().getId());
-                jo.put("pay", getPay());
-                jo.put("curry", isCurry());
-                jo.put("twice", isTwice());
-                jo.put("totalprice", getTotalprice());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return  jo;
-        }
-
-        public void set(OrderMenu ordermenu) {
-            set(ordermenu.getId(), ordermenu.getMenu(), ordermenu.getOrder(), ordermenu.getPay(), ordermenu.isCurry(), ordermenu.isTwice());
-        }
-
-        public void set(Menu menu, Order order, int pay, boolean curry, boolean twice) {
-            OrderMenu.this.setMenu(menu);
-            OrderMenu.this.setOrder(order);
-            OrderMenu.this.setPay(pay);
-            OrderMenu.this.setTotalprice(menu.getPrice());
-            if (curry) setCurry();
-            if (twice) setTwice();
-        }
-
-        public void set(int id, Menu menu, Order order, int pay, boolean curry,  boolean twice) {
-            OrderMenu.this.setId(id);
-            set(menu, order, pay, curry, twice);
-        }
+    public void resetTwice() {
+        OrderMenu.this.setTwice(false);
+        setTotalprice(getTotalprice() - Data.TWICE);
+        getOrder().setTotalprice(getOrder().getTotalprice() - Data.TWICE);
     }
 }

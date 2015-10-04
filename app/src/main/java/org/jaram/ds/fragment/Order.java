@@ -1,8 +1,10 @@
 package org.jaram.ds.fragment;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +24,7 @@ import org.jaram.ds.data.struct.OrderMenu;
 import org.jaram.ds.util.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
-
-import io.realm.Realm;
-import io.realm.RealmList;
+import java.util.Date;
 
 /**
  * Created by kjydiary on 15. 9. 20..
@@ -32,8 +32,7 @@ import io.realm.RealmList;
 public class Order extends Fragment {
 
     org.jaram.ds.data.struct.Order order = null;
-//    ArrayList<OrderMenu> ordermenus = null;
-    RealmList<OrderMenu> ordermenus = null;
+    ArrayList<OrderMenu> ordermenus = null;
     OrderMenuListAdapter orderMenuAdapter = null;
 
     TextView ordermenuEmpty = null;
@@ -44,13 +43,9 @@ public class Order extends Fragment {
 
     boolean isConfirmView = false;
 
-    Realm db;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
-
-        db = Realm.getInstance(getActivity());
 
         final MenuClicked menuListener = new MenuClicked();
         final OrderMenuListAction orderMenuListener = new OrderMenuListAction();
@@ -74,8 +69,9 @@ public class Order extends Fragment {
 
                             @Override
                             public boolean canDismiss(int i) {
-                                if (ordermenus.get(i).getPay() == Data.PAY_CREDIT) return true;
-                                return false;
+//                                if (ordermenus.get(i).getPay() == Data.PAY_CREDIT) return true;
+//                                return false;
+                                return true;
                             }
 
                             @Override
@@ -137,7 +133,19 @@ public class Order extends Fragment {
                     Toast.makeText(getActivity(), "주문을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!chkAllPaied()) Toast.makeText(getActivity(), "결제를 모두 마쳐주세요.", Toast.LENGTH_SHORT).show();
+                if (!chkAllPaied()) {
+                    new AlertDialog.Builder(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                            .setTitle("결제 확인")
+                            .setMessage("미결제된 상품이 있습니다. 외상으로 처리하시겠습니까?")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    endOrder(true);
+                                }
+                            })
+                            .setNegativeButton("아니오", null)
+                            .show();
+                }
                 if (!isConfirmView) {
                     if(chkAllPaied()) endOrder(true);
                 }
@@ -157,12 +165,10 @@ public class Order extends Fragment {
                 confirmBox.setVisibility(View.INVISIBLE);
                 endBtn.setText("전표 출력");
                 orderMenuAdapter.resetSelectedMenu();
-                Log.d("order method", "before chek");
                 if (chkAllPaied()) {
                     endOrder(true);
                     return;
                 }
-                Log.d("order method", "after chek");
                 listRefresh();
             }
         });
@@ -178,8 +184,10 @@ public class Order extends Fragment {
     }
 
     public void endOrder(boolean isSave) {
-        if (isSave) db.commitTransaction();
-        else db.cancelTransaction();
+        if (isSave) {
+            order.setDate(new Date());
+            order.putDB();
+        }
 
         //TODO: 전표 출력
         listRefresh();
@@ -187,10 +195,8 @@ public class Order extends Fragment {
     }
 
     private void newOrder() {
-        db.beginTransaction();
-        order = db.createObjectFromJson(org.jaram.ds.data.struct.Order.class, "{\"id\":"+org.jaram.ds.data.struct.Order.getNextKey(db)+"}");
+        order = new org.jaram.ds.data.struct.Order();
         ordermenus = order.getOrdermenus();
-        Log.d("order", ordermenus.toString());
         orderMenuAdapter.setOrdermenus(ordermenus);
         listRefresh();
     }
@@ -232,14 +238,13 @@ public class Order extends Fragment {
     }
 
     private void addMenu(Menu menu) {
-        order.getManager().addMenu(db, menu);
+        order.addMenu(menu, Data.PAY_CREDIT, false, false, false);
         listRefresh();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        db.cancelTransaction();
     }
 
     private class MenuClicked implements MenuListAdapter.MenuClickListener {
@@ -247,6 +252,11 @@ public class Order extends Fragment {
         @Override
         public void onClick(Menu menu) {
             addMenu(menu);
+        }
+
+        @Override
+        public void onLongClick(Menu menu) {
+
         }
     }
 
@@ -300,11 +310,11 @@ public class Order extends Fragment {
         @Override
         public void curryClicked(OrderMenu ordermenu, Button curryView) {
             if (ordermenu.isCurry()) {
-                ordermenu.getManager().resetCurry();
+                ordermenu.resetCurry();
 //                curryView.setBackgroundResource(android.R.color.transparent);
 //                curryView.setTextColor(getResources().getColor(R.color.point));
             } else {
-                ordermenu.getManager().setCurry();
+                ordermenu.setCurry();
 //                curryView.setBackgroundResource(R.color.point);
 //                curryView.setTextColor(Color.WHITE);
             }
@@ -315,11 +325,11 @@ public class Order extends Fragment {
         @Override
         public void twiceClicked(OrderMenu ordermenu, Button twiceView) {
             if (ordermenu.isTwice()) {
-                ordermenu.getManager().resetTwice();
+                ordermenu.resetTwice();
 //                twiceView.setBackgroundResource(android.R.color.transparent);
 //                twiceView.setTextColor(getResources().getColor(R.color.point));
             } else {
-                ordermenu.getManager().setTwice();
+                ordermenu.setTwice();
 //                twiceView.setBackgroundResource(R.color.point);
 //                twiceView.setTextColor(Color.WHITE);
             }

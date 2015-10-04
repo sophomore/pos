@@ -13,18 +13,16 @@ import org.jaram.ds.data.struct.Menu;
 
 import java.util.ArrayList;
 
-import io.realm.RealmList;
-
 /**
  * Created by kjydiary on 15. 9. 20..
  */
 public class MenuListAdapter extends BaseAdapter {
 
 //    ArrayList<Menu> menus = null;
-    RealmList<Menu> menus = null;
+    ArrayList<Menu> menus = null;
     MenuClickListener listener = null;
 //    public MenuListAdapter(ArrayList<Menu> menus, MenuClickListener listener) {
-    public MenuListAdapter(RealmList<Menu> menus, MenuClickListener listener) {
+    public MenuListAdapter(ArrayList<Menu> menus, MenuClickListener listener) {
         this.menus = menus;
         this.listener = listener;
     }
@@ -78,6 +76,13 @@ public class MenuListAdapter extends BaseAdapter {
                 listener.onClick(menus.get(i));
             }
         });
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onLongClick(menus.get(i));
+                return false;
+            }
+        });
         return convertView;
     }
 
@@ -88,5 +93,6 @@ public class MenuListAdapter extends BaseAdapter {
 
     public interface MenuClickListener {
         void onClick(Menu menu);
+        void onLongClick(Menu menu);
     }
 }

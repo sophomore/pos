@@ -16,14 +16,12 @@ import org.jaram.ds.data.struct.OrderMenu;
 
 import java.util.ArrayList;
 
-import io.realm.RealmList;
-
 /**
  * Created by kjydiary on 15. 9. 20..
  */
 public class OrderMenuListAdapter extends BaseAdapter {
 
-    RealmList<OrderMenu> ordermenus = null;
+    ArrayList<OrderMenu> ordermenus = null;
     ArrayList<OrderMenu> selectedMenus = null;
     OrderMenuListener listener = null;
     public OrderMenuListAdapter(OrderMenuListener listener) {
@@ -142,7 +140,7 @@ public class OrderMenuListAdapter extends BaseAdapter {
         selectedMenus.clear();
     }
 
-    public void setOrdermenus(RealmList<OrderMenu> ordermenus) {
+    public void setOrdermenus(ArrayList<OrderMenu> ordermenus) {
         this.ordermenus = ordermenus;
     }
 

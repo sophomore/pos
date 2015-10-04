@@ -47,7 +47,6 @@ public class Http {
             URL url = new URL(addr);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             httpCon.setRequestMethod(method);
-            httpCon.setConnectTimeout(5000);
 
             if (parameters != null) {
                 httpCon.setDoOutput(true);

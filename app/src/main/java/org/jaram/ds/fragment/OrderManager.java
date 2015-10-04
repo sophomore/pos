@@ -18,7 +18,8 @@ import org.jaram.ds.R;
 import org.jaram.ds.adapter.OrderDetailMenuAdapter;
 import org.jaram.ds.adapter.OrderListAdapter;
 import org.jaram.ds.data.Data;
-import org.jaram.ds.data.struct.OrderMenu;
+import org.jaram.ds.data.struct.*;
+import org.jaram.ds.data.struct.Order;
 import org.jaram.ds.dialog.OrderSearch;
 import org.jaram.ds.util.Http;
 import org.json.JSONArray;
@@ -69,8 +70,6 @@ public class OrderManager extends Fragment {
             }
         });
 
-        new GetOrder(getActivity()).execute();
-
         ordermenus = new ArrayList<OrderMenu>();
         orderDetailAdapter = new OrderDetailMenuAdapter(ordermenus, getActivity());
 
@@ -86,6 +85,10 @@ public class OrderManager extends Fragment {
                 dialog.show();
             }
         });
+
+        orders.addAll(Data.dbOrder.getAll());
+
+//        new GetOrder(getActivity()).execute(); //TODO: 삭제된 메뉴 불러올 때 오류 처리
 
         return view;
     }
@@ -114,28 +117,35 @@ public class OrderManager extends Fragment {
             return result;
         }
 
-        @Override
-        protected void onPostExecute(JSONArray result) {
-            try {
-                for (int i=0; i<result.length(); i++) {
-                    JSONObject jo = result.getJSONObject(i);
-                    org.jaram.ds.data.struct.Order order = new org.jaram.ds.data.struct.Order(jo.getInt("id"), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(jo.getString("time")), jo.getInt("totalprice"));
-                    orders.add(order);
-                    JSONArray ordermenusJSN = jo.getJSONArray("ordermenus");
-                    ArrayList<OrderMenu> ordermenus = new ArrayList<OrderMenu>();
-                    for (int j=0; j<ordermenusJSN.length(); j++) {
-                        JSONObject ordermenuObj = ordermenusJSN.getJSONObject(j);
-                        ordermenus.add(new OrderMenu(ordermenuObj.getInt("id"), Data.menus.get(ordermenuObj.getInt("menu_id")), order, ordermenuObj.getInt("pay"), ordermenuObj.getBoolean("curry"), ordermenuObj.getBoolean("twice")));
-                    }
-                }
-            } catch(JSONException e) {
-                Log.e("JSONParse Error", e.toString());
-
-            } catch (ParseException e) {
-                Log.e("DateFormatParse Error", e.toString());
-            }
-            adapter.notifyDataSetChanged();
-            dialog.dismiss();
-        }
+//        @Override
+//        protected void onPostExecute(JSONArray result) {
+//            try {
+//                for (int i=0; i<result.length(); i++) {
+//                    JSONObject jo = result.getJSONObject(i);
+//                    org.jaram.ds.data.struct.Order order =
+//                            new org.jaram.ds.data.struct.Order(jo.getInt("id"),
+//                                    Data.dateFormat.parse(jo.getString("time")),
+//
+//                                    jo.getInt("totalprice"));
+//                    orders.add(order);
+//                    JSONArray ordermenusJSN = jo.getJSONArray("ordermenus");
+//                    ArrayList<OrderMenu> ordermenus = new ArrayList<OrderMenu>();
+//                    for (int j=0; j<ordermenusJSN.length(); j++) {
+//                        JSONObject ordermenuObj = ordermenusJSN.getJSONObject(j);
+//                        order.linkOrderMenu(new OrderMenu(ordermenuObj.getInt("id"),
+//                                Data.menus.get(ordermenuObj.getInt("menu_id")), order,
+//                                ordermenuObj.getInt("pay"), ordermenuObj.getBoolean("curry"),
+//                                ordermenuObj.getBoolean("twice"), ordermenuObj.getBoolean("takeout")));
+//                    }
+//                }
+//            } catch(JSONException e) {
+//                Log.e("JSONParse Error", e.toString());
+//
+//            } catch (ParseException e) {
+//                Log.e("DateFormatParse Error", e.toString());
+//            }
+//            adapter.notifyDataSetChanged();
+//            dialog.dismiss();
+//        }
     }
 }

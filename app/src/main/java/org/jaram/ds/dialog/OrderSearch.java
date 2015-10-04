@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 
 import org.jaram.ds.R;
+import org.jaram.ds.data.Data;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,8 +42,8 @@ public class OrderSearch extends Dialog {
         final Button endDate = (Button)findViewById(R.id.endDate);
         final Button menuSelectBtn = (Button)findViewById(R.id.menuSelectBtn);
 
-        startDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(date));
-        endDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(date));
+        startDate.setText(Data.dateFormat.format(date));
+        endDate.setText(Data.dateFormat.format(date));
 
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +53,7 @@ public class OrderSearch extends Dialog {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 startCalendar.set(year, monthOfYear, dayOfMonth);
-                                startDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(startCalendar.getTime()));
+                                startDate.setText(Data.dateFormat.format(startCalendar.getTime()));
                             }
                         },
                         startCalendar.get(Calendar.YEAR),
@@ -69,7 +70,7 @@ public class OrderSearch extends Dialog {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 endCalendar.set(year, monthOfYear, dayOfMonth);
-                                endDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(endCalendar.getTime()));
+                                endDate.setText(Data.dateFormat.format(endCalendar.getTime()));
                             }
                         },
                         endCalendar.get(Calendar.YEAR),

@@ -3,6 +3,7 @@ package org.jaram.ds.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class OrderListAdapter extends BaseAdapter {
         holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초").format(order.getDate()));
         holder.price.setText(order.getTotalprice() + "원");
         holder.ordermenuList.removeAllViews();
+        order.setOrdermenus(Data.dbOrderMenu.getAll(order.getId()));
         for (int i=0; i<order.getOrdermenus().size(); i++) {
             TextView ordermenuView = (TextView)((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.orderlist_menu_item, holder.ordermenuList, false);
@@ -78,6 +80,7 @@ public class OrderListAdapter extends BaseAdapter {
         else {
             convertView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         }
+        Log.d("OrderListAdapter", order.toString() +" | "+order.getOrdermenus().toString());
         return convertView;
     }
 

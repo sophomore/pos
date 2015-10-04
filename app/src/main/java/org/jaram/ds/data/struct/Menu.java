@@ -1,31 +1,27 @@
 package org.jaram.ds.data.struct;
 
-import org.jaram.ds.data.Data;
+import android.util.Log;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import org.jaram.ds.data.Data;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by kjydiary on 15. 9. 20..
  */
-public class Menu extends RealmObject {
+public class Menu {
 
-    @PrimaryKey
     private int id;
     private String name;
     private int price;
     private Category category;
-    public Menu() {
-        Data.menus.put(id, this);
-//        category.getMenus().add(this);
-    }
     public Menu(int id, String name, int price, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
-        Data.menus.put(id, this);
-        category.getMenus().add(this);
+//        Data.menus.put(id, this);
+//        category.getMenus().add(this);
     }
 
     public int getId() {
@@ -59,4 +55,65 @@ public class Menu extends RealmObject {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public Menu regist() {
+        Data.menus.put(id, this);
+        category.getMenus().add(this);
+        return this;
+    }
+
+    public Menu putDB() {
+        Data.dbMenu.insert(this.getName(), this.getPrice(), this.getCategory());
+        return this;
+    }
+
+    public Menu create() {
+        regist();
+        putDB();
+        return this;
+    }
+
+    public void destroy() {
+        Data.menus.remove(this.getId());
+        category.getMenus().remove(this);
+        Data.dbMenu.delete(this.getId());
+    }
+
+//    public void setManager() {
+//        manager = new Manager();
+//    }
+
+//    public static void createObj(Realm db, JSONObject menuObj) {
+//        try {
+//            createObj(db, menuObj.getInt("id"), menuObj.getString("name"), menuObj.getInt("price"),
+//                    Data.categories.get(menuObj.getInt("category_id")));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public static void createObj(Realm db, int id, String name, int price, Category category) {
+//        Menu newMenu = db.createObjectFromJson(Menu.class, "{\"id\": "+id+"}");
+//        newMenu.setName(name);
+//        newMenu.setPrice(price);
+//        newMenu.setCategory(category);
+//        Data.menus.put(id, newMenu);
+//        newMenu.getCategory().getMenus().add(newMenu);
+//        Log.d("menu", "Created "+newMenu.toString());
+//    }
+//
+//    public static void removeObj(Realm db, int id) {
+//        removeObj(db, Data.menus.get(id));
+//    }
+//
+//    public static void removeObj(Realm db, Menu menu) {
+//        Log.d("menu", "remove " + menu.toString());
+//        Data.menus.remove(menu.getId());
+//        menu.getCategory().getMenus().remove(menu);
+//        menu.removeFromRealm();
+//    }
+//
+//    public class Manager {
+//
+//    }
 }
