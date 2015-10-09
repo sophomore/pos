@@ -25,4 +25,8 @@
     <string name="card">카드</string>
     <string name="service">서비스</string>
     <string name="credit">외상</string>
+    <!--Tax-->
+    <string name="rangeTotal">기간 내 총액</string>
+    <string name="monthTotal">월별 총액</string>
+    <string name="total">총액</string>
 </resources>

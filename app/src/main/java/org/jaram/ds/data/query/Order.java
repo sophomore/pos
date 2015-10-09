@@ -41,7 +41,7 @@ public class Order extends DBQuery {
     }
 
     public void clear() {
-        writeDB().delete("order", null, null);
+        writeDB().delete("`order`", null, null);
     }
 
     public org.jaram.ds.data.struct.Order get(int id) {

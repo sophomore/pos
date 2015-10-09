@@ -24,6 +24,7 @@ public class Data {
     public static final HashMap<Integer, Menu> menus = new HashMap<Integer, Menu>();
     public static final HashMap<Integer, Category> categories = new HashMap<Integer, Category>();
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
+    public static final SimpleDateFormat onlyDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
     public static org.jaram.ds.data.query.Category dbCategory;
     public static org.jaram.ds.data.query.Menu dbMenu;

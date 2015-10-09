@@ -60,7 +60,7 @@ public class Intro extends Activity {
     }
 
     private void startApp() {
-        startActivity(new Intent(Intro.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
+        startActivity(new Intent(Intro.this, Admin.class).putExtra("view", Base.STATISTIC));
         finish();
     }
 
@@ -84,14 +84,16 @@ public class Intro extends Activity {
             if (calendar.get(Calendar.YEAR)!=today.get(Calendar.YEAR)
                     || calendar.get(Calendar.MONTH)!=today.get(Calendar.MONTH)
                     || calendar.get(Calendar.DAY_OF_MONTH)!=today.get(Calendar.DAY_OF_MONTH)) {
-                close();
+//                close();
             }
         }
 
         noticeView.setText("서버에서 데이터를 가져오고 있습니다.");
         //set menu
-        Log.d("intro", Data.categories.toString());
         Data.dbMenu.clear();
+        //TODO:
+        Data.dbOrder.clear();
+        Data.dbOrderMenu.clear();
         try {
             JSONArray menusJSN = new JSONArray(Http.get(Data.SERVER_URL + "menu", null));
             for (int i=0; i<menusJSN.length(); i++) {
@@ -117,7 +119,7 @@ public class Intro extends Activity {
         for (int i=0; i<queryResult.size(); i++) {
             org.jaram.ds.data.struct.Order order = queryResult.get(i);
             HashMap<String, Object> param = new HashMap<>();
-            param.put("time", new SimpleDateFormat().format(order.getDate()));
+            param.put("time", Data.dateFormat.format(order.getDate()));
             param.put("totalprice", order.getTotalprice());
             param.put("ordermenus", order.getOrdermenusAtJson());
             boolean isSuccess = true;

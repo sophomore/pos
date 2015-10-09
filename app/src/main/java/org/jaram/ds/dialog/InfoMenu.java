@@ -74,6 +74,7 @@ public class InfoMenu extends Dialog {
 
         if (menu != null) {
             nameForm.setText(menu.getName());
+            nameForm.setEnabled(false);
             priceForm.setText(menu.getPrice() + "");
             categoryForm.setSelection(categories.indexOf(menu.getCategory()));
         }

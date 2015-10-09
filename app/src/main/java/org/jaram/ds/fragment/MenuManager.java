@@ -26,6 +26,14 @@ import org.jaram.ds.util.Http;
  */
 public class MenuManager extends Fragment {
 
+    private static MenuManager view;
+    public static MenuManager getInstance() {
+        if (view == null) {
+            view = new MenuManager();
+        }
+        return view;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu_manager, container, false);

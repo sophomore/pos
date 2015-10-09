@@ -43,6 +43,14 @@ public class Order extends Fragment {
 
     boolean isConfirmView = false;
 
+    private static Order view;
+    public static Order getInstance() {
+        if (view == null) {
+            view = new Order();
+        }
+        return view;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);

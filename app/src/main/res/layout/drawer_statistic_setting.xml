@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#F5F6F7">
+
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="48dp"
+        android:padding="18dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="항목"
+            android:textSize="18sp"
+            android:textColor="@color/dark"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/type_saleBtn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/point_btn"
+                android:text="매출"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"/>
+            <Button
+                android:id="@+id/type_countBtn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/white_btn"
+                android:text="개수"
+                android:textSize="18sp"
+                android:textColor="@color/dark"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="단위"
+            android:textSize="18sp"
+            android:textColor="@color/dark"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/unit_hourBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/point_btn"
+                    android:text="시간"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"/>
+                <Button
+                    android:id="@+id/unit_dateBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_btn"
+                    android:text="일"
+                    android:textSize="18sp"
+                    android:textColor="@color/dark"/>
+                <Button
+                    android:id="@+id/unit_dayBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_btn"
+                    android:text="요일"
+                    android:textSize="18sp"
+                    android:textColor="@color/dark"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/unit_monthBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_btn"
+                    android:text="월"
+                    android:textSize="18sp"
+                    android:textColor="@color/dark"/>
+                <Button
+                    android:id="@+id/unit_quaterBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_btn"
+                    android:text="분기"
+                    android:textSize="18sp"
+                    android:textColor="@color/dark"/>
+                <Button
+                    android:id="@+id/unit_yearBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_btn"
+                    android:text="년"
+                    android:textSize="18sp"
+                    android:textColor="@color/dark"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="메뉴 선택"
+            android:textSize="18sp"
+            android:textColor="@color/dark"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF">
+
+            <Button
+                android:id="@+id/menu_cutletBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="8dp"
+                android:background="@drawable/white_btn"
+                android:text="@string/cutlet"/>
+            <GridView
+                android:id="@+id/menu_cutletList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical"
+            android:background="#FFFFFF">
+
+            <Button
+                android:id="@+id/menu_riceBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="8dp"
+                android:background="@drawable/white_btn"
+                android:text="@string/rice"/>
+            <GridView
+                android:id="@+id/menu_riceList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:visibility="gone" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical"
+            android:background="#FFFFFF">
+
+            <Button
+                android:id="@+id/menu_noodleBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="8dp"
+                android:background="@drawable/white_btn"
+                android:text="@string/noodle"/>
+            <GridView
+                android:id="@+id/menu_noodleList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:visibility="gone" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical"
+            android:background="#FFFFFF">
+
+            <Button
+                android:id="@+id/menu_etcBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="8dp"
+                android:background="@drawable/white_btn"
+                android:text="@string/etc"/>
+            <GridView
+                android:id="@+id/menu_etcList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/statisticBtn"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/point_btn"
+        android:text="분석"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"/>
+
+</FrameLayout>

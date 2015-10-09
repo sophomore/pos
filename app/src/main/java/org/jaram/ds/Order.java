@@ -21,7 +21,7 @@ public class Order extends Base {
         org.jaram.ds.fragment.Order orderView = new org.jaram.ds.fragment.Order();
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .replace(R.id.main_view, orderView)
+                .replace(R.id.main_view, org.jaram.ds.fragment.Order.getInstance())
                 .commit();
     }
 }

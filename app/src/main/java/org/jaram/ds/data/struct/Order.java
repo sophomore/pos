@@ -80,7 +80,7 @@ public class Order {
         JSONObject jo = new JSONObject();
         try {
             jo.put("id", id);
-            jo.put("date", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date));
+            jo.put("date", Data.dateFormat.format(date));
             jo.put("ordermenus", getOrdermenusAtJson());
             jo.put("totalprice", totalprice);
         } catch (JSONException e) {

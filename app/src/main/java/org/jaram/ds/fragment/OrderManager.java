@@ -41,6 +41,14 @@ public class OrderManager extends Fragment {
     OrderDetailMenuAdapter orderDetailAdapter = null;
     ArrayList<OrderMenu> ordermenus = null;
 
+    private static OrderManager view;
+    public static OrderManager getInstance() {
+        if (view == null) {
+            view = new OrderManager();
+        }
+        return view;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_manager, container, false);
