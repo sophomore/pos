@@ -1,10 +1,13 @@
 package org.jaram.ds;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import org.jaram.ds.data.Closing;
 import org.jaram.ds.fragment.MenuManager;
 import org.jaram.ds.fragment.OrderManager;
 import org.jaram.ds.fragment.Statistic;
@@ -46,20 +50,45 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
         switch(viewId) {
             case Base.STATISTIC:
                 addSwapBtn();
-                replace(Statistic.getInstance());
+                closingAfterReplace(Statistic.getInstance());
                 break;
             case Base.TAX:
                 addSwapBtn();
-                replace(Tax.getInstance());
+                closingAfterReplace(Tax.getInstance());
                 break;
             case Base.MANAGE_MENU:
-                replace(MenuManager.getInstance());
+                closingAfterReplace(MenuManager.getInstance());
                 break;
             case Base.MANAGE_ORDER:
                 replace(OrderManager.getInstance());
                 break;
         }
         current = viewId;
+    }
+
+    public void closingAfterReplace(final Fragment view) {
+        Log.d("admin", "do closing");
+        new Closing(Admin.this, new Closing.Listener() {
+            @Override
+            public void endClosing(boolean isSuccess) {
+                Log.d("admin", "done closing");
+                if (isSuccess) replace(view);
+                else {
+                    new AlertDialog.Builder(getApplicationContext(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                            .setTitle("오류")
+                            .setMessage("마감 작업을 하는 도중 오류가 발생했습니다. 앱을 종료합니다.")
+                            .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+        }, new ProgressDialog(Admin.this));
     }
 
     private void replace(Fragment view) {

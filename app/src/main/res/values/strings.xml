@@ -4,7 +4,7 @@
     <string name="manageOrder">주문관리</string>
     <string name="statistic">통계</string>
     <string name="manageMenu">메뉴관리</string>
-    <string name="exit">종료</string>
+    <string name="setting">설정</string>
     <!--Order-->
     <string name="app_name">Dear, Song</string>
     <string name="totalprice">전체 합계</string>

@@ -169,7 +169,7 @@ public class Statistic extends Fragment {
         analyticsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:
+                new GetStatisticInfo().execute();
             }
         });
 
@@ -1126,8 +1126,7 @@ public class Statistic extends Fragment {
         @Override
         protected LineData doInBackground(Void... params) {
             HashMap<String, Object> requestParams = new HashMap<>();
-//            requestParams.put("startDate", Data.onlyDateFormat.format(startCal.getTime())); TODO:
-            requestParams.put("startDate", "2014-04-30");
+            requestParams.put("startDate", Data.onlyDateFormat.format(startCal.getTime()));
             requestParams.put("endDate", Data.onlyDateFormat.format(endCal.getTime()));
             requestParams.put("unit", Integer.toString(unit));
             ArrayList<Menu> menus = new ArrayList<>();

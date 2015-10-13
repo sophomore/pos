@@ -3,10 +3,7 @@ package org.jaram.ds;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * Created by kjydiary on 15. 9. 20..
@@ -36,7 +34,7 @@ public abstract class Base extends FragmentActivity {
     protected Button drawer_manageOrderBtn;
     protected Button drawer_statisticBtn;
     protected Button drawer_manageMenuBtn;
-    protected Button drawer_exitBtn;
+    protected Button drawer_settingBtn;
 
     abstract int getCurrent();
 
@@ -60,7 +58,7 @@ public abstract class Base extends FragmentActivity {
         drawer_manageOrderBtn = (Button)findViewById(R.id.drawer_manageOrderBtn);
         drawer_statisticBtn = (Button)findViewById(R.id.drawer_statisticBtn);
         drawer_manageMenuBtn = (Button)findViewById(R.id.drawer_manageMenuBtn);
-        drawer_exitBtn = (Button)findViewById(R.id.drawer_exitBtn);
+        drawer_settingBtn = (Button)findViewById(R.id.drawer_settingBtn);
 
         BtnListener listener = new BtnListener();
 
@@ -68,7 +66,7 @@ public abstract class Base extends FragmentActivity {
         if (getCurrent() != MANAGE_ORDER) drawer_manageOrderBtn.setOnClickListener(listener);
         if (getCurrent() != STATISTIC || getCurrent() != TAX) drawer_statisticBtn.setOnClickListener(listener);
         if (getCurrent() != MANAGE_MENU) drawer_manageMenuBtn.setOnClickListener(listener);
-        drawer_exitBtn.setOnClickListener(listener);
+        drawer_settingBtn.setOnClickListener(listener);
     }
 
     private FrameLayout drawerView;
@@ -121,7 +119,8 @@ public abstract class Base extends FragmentActivity {
                 case R.id.drawer_manageMenuBtn: //TODO: 마감 처리 후 실행
                     startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_MENU));
                     break;
-                case R.id.drawer_exitBtn: //TODO: 안내 문구 띄우고 앱 종료
+                case R.id.drawer_settingBtn: //TODO: 설정화
+                    Toast.makeText(getApplicationContext(), "설정", Toast.LENGTH_SHORT).show();
                     break;
             }
             finish();

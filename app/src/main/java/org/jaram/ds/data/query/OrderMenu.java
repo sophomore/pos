@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.jaram.ds.data.DBQuery;
 import org.jaram.ds.data.Data;
+import org.jaram.ds.data.struct.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -57,11 +58,26 @@ public class OrderMenu extends DBQuery {
         c.moveToFirst();
         org.jaram.ds.data.struct.OrderMenu result = new org.jaram.ds.data.struct.OrderMenu(c.getInt(c.getColumnIndex("_id")),
                 Data.menus.get(c.getInt(c.getColumnIndex("menu_id"))),
-                Data.dbOrder.get(c.getInt(c.getColumnIndex("order_id"))),
                 c.getInt(c.getColumnIndex("pay")),
                 c.getInt(c.getColumnIndex("curry")) == 1,
                 c.getInt(c.getColumnIndex("twice")) == 1,
                 c.getInt(c.getColumnIndex("takeout")) == 1);
+        c.close();
+        return result;
+    }
+
+    public ArrayList<org.jaram.ds.data.struct.OrderMenu> getAll(org.jaram.ds.data.struct.Order order) {
+        Cursor c = readDB().query("ordermenu", null, "order_id=?", new String[]{Integer.toString(order.getId())}, null, null, null);
+        ArrayList<org.jaram.ds.data.struct.OrderMenu> result = new ArrayList<>();
+        while (c.moveToNext()) {
+            result.add(new org.jaram.ds.data.struct.OrderMenu(c.getInt(c.getColumnIndex("_id")),
+                    Data.menus.get(c.getInt(c.getColumnIndex("menu_id"))),
+                    order,
+                    c.getInt(c.getColumnIndex("pay")),
+                    c.getInt(c.getColumnIndex("curry")) == 1,
+                    c.getInt(c.getColumnIndex("twice")) == 1,
+                    c.getInt(c.getColumnIndex("takeout")) == 1));
+        }
         c.close();
         return result;
     }
@@ -71,10 +87,8 @@ public class OrderMenu extends DBQuery {
         Cursor c = readDB().query("ordermenu", null, "order_id=?", new String[]{Integer.toString(id)}, null, null, null);
         ArrayList<org.jaram.ds.data.struct.OrderMenu> result = new ArrayList<>();
         while (c.moveToNext()) {
-            Log.d("ordermenu query2", c.toString());
             result.add(new org.jaram.ds.data.struct.OrderMenu(c.getInt(c.getColumnIndex("_id")),
                     Data.menus.get(c.getInt(c.getColumnIndex("menu_id"))),
-                    Data.dbOrder.get(c.getInt(c.getColumnIndex("order_id"))),
                     c.getInt(c.getColumnIndex("pay")),
                     c.getInt(c.getColumnIndex("curry")) == 1,
                     c.getInt(c.getColumnIndex("twice")) == 1,
@@ -90,7 +104,6 @@ public class OrderMenu extends DBQuery {
         while (c.moveToNext()) {
             result.add(new org.jaram.ds.data.struct.OrderMenu(c.getInt(c.getColumnIndex("_id")),
                     Data.menus.get(c.getInt(c.getColumnIndex("menu_id"))),
-                    Data.dbOrder.get(c.getInt(c.getColumnIndex("order_id"))),
                     c.getInt(c.getColumnIndex("pay")),
                     c.getInt(c.getColumnIndex("curry")) == 1,
                     c.getInt(c.getColumnIndex("twice")) == 1,

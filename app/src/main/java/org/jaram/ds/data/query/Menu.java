@@ -19,8 +19,9 @@ public class Menu extends DBQuery {
         super(context);
     }
 
-    public void insert(String name, int price, org.jaram.ds.data.struct.Category category) {
+    public void insert(int id, String name, int price, org.jaram.ds.data.struct.Category category) {
         ContentValues values = new ContentValues();
+        values.put("_id", id);
         values.put("name", name);
         values.put("price", price);
         values.put("category_id", category.getId());

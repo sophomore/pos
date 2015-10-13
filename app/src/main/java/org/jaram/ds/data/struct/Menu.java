@@ -63,11 +63,12 @@ public class Menu {
     }
 
     public Menu putDB() {
-        Data.dbMenu.insert(this.getName(), this.getPrice(), this.getCategory());
+        Data.dbMenu.insert(this.getId(), this.getName(), this.getPrice(), this.getCategory());
         return this;
     }
 
     public Menu create() {
+        Log.d("menu create", id+"");
         regist();
         putDB();
         return this;

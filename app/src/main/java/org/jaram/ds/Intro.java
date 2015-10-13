@@ -3,6 +3,7 @@ package org.jaram.ds;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
 
+import org.jaram.ds.data.Closing;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.Category;
 import org.jaram.ds.data.struct.Menu;
@@ -56,23 +58,24 @@ public class Intro extends Activity {
             public void run() {
                 init();
             }
-        }, 1500);
+        }, 500);
     }
 
     private void startApp() {
-        startActivity(new Intent(Intro.this, Admin.class).putExtra("view", Base.STATISTIC));
+        startActivity(new Intent(Intro.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
         finish();
     }
 
     private void init() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         ArrayList<Category> categories = Data.dbCategory.getAll();
         for (int i=0; i<categories.size(); i++) {
             Data.categories.put(categories.get(i).getId(), categories.get(i));
         }
 
+        Data.dbOrder.clear();
+        Data.dbOrderMenu.clear();
+
+        boolean isDoClosing = false;
         ArrayList<Order> result = Data.dbOrder.getAll();
         if (result.size()>0) {
             org.jaram.ds.data.struct.Order order = result.get(0);
@@ -84,80 +87,63 @@ public class Intro extends Activity {
             if (calendar.get(Calendar.YEAR)!=today.get(Calendar.YEAR)
                     || calendar.get(Calendar.MONTH)!=today.get(Calendar.MONTH)
                     || calendar.get(Calendar.DAY_OF_MONTH)!=today.get(Calendar.DAY_OF_MONTH)) {
-//                close();
+                isDoClosing = true;
+                new Closing(Intro.this, new ClosingListener(), noticeView, Closing.VIEW_TEXTVIEW);
             }
         }
-
-        noticeView.setText("서버에서 데이터를 가져오고 있습니다.");
-        //set menu
-        Data.dbMenu.clear();
-        //TODO:
-        Data.dbOrder.clear();
-        Data.dbOrderMenu.clear();
-        try {
-            JSONArray menusJSN = new JSONArray(Http.get(Data.SERVER_URL + "menu", null));
-            for (int i=0; i<menusJSN.length(); i++) {
-                JSONObject jo = menusJSN.getJSONObject(i);
-                new Menu(jo.getInt("id"), jo.getString("name"), jo.getInt("price"),
-                        Data.categories.get(jo.getInt("category_id"))).create();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(!isDoClosing) {
+            postClosing();
         }
-        noticeView.setText("환영합니다!");
-        startApp();
     }
 
-    private void close() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+    private void postClosing() {
+        new GetMenu().execute();
+    }
 
-        noticeView.setText("서버에 로컬에 저장된 주문을 전송합니다.");
+    private void endInit() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                noticeView.setText("환영합니다!");
+                startApp();
+            }
+        }, 1000);
+    }
 
-        ArrayList<Order> queryResult = Data.dbOrder.getAll();
-        boolean isAllSuccess = true;
-        for (int i=0; i<queryResult.size(); i++) {
-            org.jaram.ds.data.struct.Order order = queryResult.get(i);
-            HashMap<String, Object> param = new HashMap<>();
-            param.put("time", Data.dateFormat.format(order.getDate()));
-            param.put("totalprice", order.getTotalprice());
-            param.put("ordermenus", order.getOrdermenusAtJson());
-            boolean isSuccess = true;
+    private class ClosingListener implements Closing.Listener {
+
+        @Override
+        public void endClosing(boolean isSuccess) {
+            postClosing();
+        }
+    }
+
+    private class GetMenu extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            noticeView.setText("서버에서 메뉴정보를 가져오고 있습니다.");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Data.dbMenu.clear();
             try {
-                int count = 0;
-                JSONObject result = null;
-                do {
-                    result = new JSONObject(Http.post(Data.SERVER_URL+"order", param));
-                    count++;
-                    if (count > 5) {
-                        isSuccess = false;
-                        break;
-                    }
-                } while(result.getString("result").equals("error"));
+                JSONArray menusJSN = new JSONArray(Http.get(Data.SERVER_URL + "menu", null));
+                for (int i=0; i<menusJSN.length(); i++) {
+                    JSONObject jo = menusJSN.getJSONObject(i);
+                    new Menu(jo.getInt("id"), jo.getString("name"), jo.getInt("price"),
+                            Data.categories.get(jo.getInt("category_id"))).create();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (isSuccess) {
-                order.putDB();
-            }
-            else {
-                isAllSuccess = false;
-            }
+            return null;
         }
-        if (!isAllSuccess) {
-            new AlertDialog.Builder(Intro.this, R.style.Base_V21_Theme_AppCompat_Light_Dialog)
-                    .setTitle("오류")
-                    .setMessage("서버에 주문 정보를 전송하는 도중 오류가 발생했습니다.\n재시도 하시겠습니까?" +
-                            "(취소를 누르시면 다음 마감 때 재시도하며 그 전까지는 통계에 반영되지 않으며 주문목록에 잘못 표시될 수 있습니다.")
-                    .setPositiveButton("재시도", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            close();
-                        }
-                    })
-                    .setNegativeButton("닫기", null)
-                    .setCancelable(false)
-                    .show();
+
+        @Override
+        protected void onPostExecute(Void result) {
+            noticeView.setText("서버에서 메뉴정보를 가져오는데 성공했습니다.");
+            endInit();
         }
     }
 }

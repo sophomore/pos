@@ -99,12 +99,21 @@ public class Order {
 
     public Order putDB() {
         setId(Data.dbOrder.insert(this.getDate(), this.getTotalprice()));
+        Log.d("order putDb", id+"");
         for (int i=0; i<ordermenus.size(); i++) {
             OrderMenu ordermenu = ordermenus.get(i);
-            Data.dbOrderMenu.insert(ordermenu.getMenu(), ordermenu.getOrder(), ordermenu.getPay(),
+            Data.dbOrderMenu.insert(ordermenu.getMenu(), this, ordermenu.getPay(),
                     ordermenu.isCurry(), ordermenu.isTwice(), ordermenu.isTakeout(), ordermenu.getTotalprice());
         }
         Log.d("order struct", ordermenus.toString()+" | "+this.toString());
         return this;
+    }
+
+    public void deleteDB() {
+        for (int i=0; i<ordermenus.size(); i++) {
+            ordermenus.get(i).delete();
+        }
+        Data.dbOrder.delete(this.getId());
+        this.setOrdermenus(null);
     }
 }

@@ -22,15 +22,10 @@ public class OrderMenu {
     private boolean takeout;
     private int totalprice;
     public OrderMenu(Menu menu, int pay, boolean curry, boolean twice, boolean takeout) {
-        this.menu = menu;
-        this.pay = pay;
-        this.curry = curry;
-        this.twice = twice;
-        this.takeout = takeout;
-        this.totalprice = menu.getPrice();
-        if (curry) totalprice += Data.CURRY;
-        if (twice) totalprice += Data.TWICE;
-        if (takeout) totalprice += Data.TAKEOUT;
+        this(0, menu, null, pay, curry, twice, takeout);
+    }
+    public OrderMenu(int id, Menu menu, int pay, boolean curry, boolean twice, boolean takeout) {
+        this(id, menu, null, pay, curry, twice, takeout);
     }
     public OrderMenu(int id, Menu menu, Order order, int pay, boolean curry, boolean twice, boolean takeout) {
         this.id = id;
@@ -107,14 +102,16 @@ public class OrderMenu {
     }
 
     public JSONObject toJson() {
+        Log.d("ordermenu toJson", getId()+"");
         JSONObject jo = new JSONObject();
         try {
             jo.put("id", getId());
-            jo.put("menu", getMenu().getId());
-            jo.put("order", getOrder().getId());
+            jo.put("menu_id", getMenu().getId());
+            jo.put("order_id", getOrder().getId());
             jo.put("pay", getPay());
             jo.put("curry", isCurry());
             jo.put("twice", isTwice());
+            jo.put("takeout", isTakeout());
             jo.put("totalprice", getTotalprice());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,5 +141,9 @@ public class OrderMenu {
         OrderMenu.this.setTwice(false);
         setTotalprice(getTotalprice() - Data.TWICE);
         getOrder().setTotalprice(getOrder().getTotalprice() - Data.TWICE);
+    }
+
+    public void delete() {
+        Data.dbOrderMenu.delete(this.getId());
     }
 }

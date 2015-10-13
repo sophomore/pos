@@ -17,6 +17,7 @@ import org.jaram.ds.data.struct.Order;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by kjydiary on 15. 9. 23..
@@ -61,10 +62,13 @@ public class OrderListAdapter extends BaseAdapter {
         else {
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초").format(order.getDate()));
+        holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초", Locale.KOREA).format(order.getDate()));
         holder.price.setText(order.getTotalprice() + "원");
         holder.ordermenuList.removeAllViews();
-        order.setOrdermenus(Data.dbOrderMenu.getAll(order.getId()));
+        Log.d("orderlist adapter", order.toJson().toString());
+        if (order.getOrdermenus().size() == 0 || order.getOrdermenus() == null) {
+            order.setOrdermenus(Data.dbOrderMenu.getAll(order));
+        }
         for (int i=0; i<order.getOrdermenus().size(); i++) {
             TextView ordermenuView = (TextView)((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.orderlist_menu_item, holder.ordermenuList, false);
@@ -80,7 +84,6 @@ public class OrderListAdapter extends BaseAdapter {
         else {
             convertView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         }
-        Log.d("OrderListAdapter", order.toString() +" | "+order.getOrdermenus().toString());
         return convertView;
     }
 

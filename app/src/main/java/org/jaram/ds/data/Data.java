@@ -12,7 +12,6 @@ import java.util.Locale;
  * Created by kjydiary on 15. 9. 20..
  */
 public class Data {
-
     public static final int PAY_CASH = 1;
     public static final int PAY_CARD = 2;
     public static final int PAY_SERVICE = 3;

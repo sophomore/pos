@@ -173,10 +173,6 @@ public class Order extends Fragment {
                 confirmBox.setVisibility(View.INVISIBLE);
                 endBtn.setText("전표 출력");
                 orderMenuAdapter.resetSelectedMenu();
-                if (chkAllPaied()) {
-                    endOrder(true);
-                    return;
-                }
                 listRefresh();
             }
         });

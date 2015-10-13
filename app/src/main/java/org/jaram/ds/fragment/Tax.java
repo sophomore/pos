@@ -108,7 +108,7 @@ public class Tax extends Fragment {
         analyticsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:
+                new GetAnalyticsData().execute();
             }
         });
 
@@ -133,13 +133,12 @@ public class Tax extends Fragment {
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
         chart.setDescription(null);
-        new GetAnalyticsData().execute();
         return view;
     }
 
     private void setBarData(BarData bardata) {
         chart.setData(bardata);
-        chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 
     @Override
@@ -157,8 +156,7 @@ public class Tax extends Fragment {
         @Override
         protected BarData doInBackground(Void... params) {
             HashMap<String, Object> param = new HashMap<String, Object>();
-//            param.put("startDate", Data.onlyDateFormat.format(startCal.getTime())); TODO:
-            param.put("startDate", "2015-04-30");
+            param.put("startDate", Data.onlyDateFormat.format(startCal.getTime()));
             param.put("endDate", Data.onlyDateFormat.format(startCal.getTime()));
             param.put("unit", 4);
             param.put("menus", "[]");
