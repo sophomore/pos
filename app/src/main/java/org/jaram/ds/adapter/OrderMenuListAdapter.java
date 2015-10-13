@@ -56,6 +56,7 @@ public class OrderMenuListAdapter extends BaseAdapter {
             holder.price = (TextView) convertView.findViewById(R.id.menu_price);
             holder.curry = (Button) convertView.findViewById(R.id.curryBtn);
             holder.twice = (Button) convertView.findViewById(R.id.twiceBtn);
+            holder.takeout = (Button) convertView.findViewById(R.id.takeoutBtn);
             convertView.setTag(holder);
         }
         else {
@@ -67,11 +68,13 @@ public class OrderMenuListAdapter extends BaseAdapter {
             holder.item.setAlpha(0.6f);
             holder.curry.setVisibility(View.GONE);
             holder.twice.setVisibility(View.GONE);
+            holder.takeout.setVisibility(View.GONE);
         }
         else {
             holder.item.setAlpha(1.0f);
             holder.curry.setVisibility(View.VISIBLE);
             holder.twice.setVisibility(View.VISIBLE);
+            holder.takeout.setVisibility(View.VISIBLE);
         }
         if (ordermenu.isCurry()) {
             holder.curry.setSelected(true);
@@ -89,6 +92,14 @@ public class OrderMenuListAdapter extends BaseAdapter {
             holder.twice.setSelected(false);
             holder.twice.setTextColor(Color.parseColor("#2185C5"));
         }
+        if (ordermenu.isTakeout()) {
+            holder.takeout.setSelected(true);
+            holder.takeout.setTextColor(Color.WHITE);
+        }
+        else {
+            holder.takeout.setSelected(false);
+            holder.takeout.setTextColor(Color.parseColor("#2185C5"));
+        }
         holder.curry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +110,12 @@ public class OrderMenuListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 listener.twiceClicked(ordermenu, (Button) v);
+            }
+        });
+        holder.takeout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.takeoutClicked(ordermenu, (Button) v);
             }
         });
         if (selectedMenus.contains(ordermenu)) {
@@ -150,10 +167,12 @@ public class OrderMenuListAdapter extends BaseAdapter {
         TextView price;
         Button curry;
         Button twice;
+        Button takeout;
     }
 
     public interface OrderMenuListener {
         void curryClicked(OrderMenu ordermenu, Button curryView);
         void twiceClicked(OrderMenu ordermenu, Button twiceView);
+        void takeoutClicked(OrderMenu ordermenu, Button takeoutView);
     }
 }

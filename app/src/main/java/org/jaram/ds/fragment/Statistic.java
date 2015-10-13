@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -1145,6 +1146,8 @@ public class Statistic extends Fragment {
                 recieveDataJsn = new JSONObject(Http.post(Data.SERVER_URL + "statistic/unit_menu_sum", requestParams));
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             switch(unit) {
                 default:
@@ -1209,6 +1212,8 @@ public class Statistic extends Fragment {
                     }
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;

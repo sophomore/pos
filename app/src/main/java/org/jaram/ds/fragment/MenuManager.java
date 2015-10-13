@@ -21,6 +21,8 @@ import org.jaram.ds.data.struct.Menu;
 import org.jaram.ds.dialog.InfoMenu;
 import org.jaram.ds.util.Http;
 
+import java.io.IOException;
+
 /**
  * Created by kjydiary on 15. 9. 23..
  */
@@ -82,7 +84,11 @@ public class MenuManager extends Fragment {
 
                                     @Override
                                     protected Void doInBackground(Void... params) {
-                                        Http.delete(Data.SERVER_URL + "menu/" + id, null);
+                                        try {
+                                            Http.delete(Data.SERVER_URL + "menu/" + id, null);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                         return null;
                                     }
 

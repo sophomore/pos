@@ -50,5 +50,17 @@
         android:background="@drawable/ordermenulist_button_background"
         style="?android:attr/borderlessButtonStyle"
         android:layout_margin="4dp"/>
+    <Button
+        android:id="@+id/takeoutBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_toLeftOf="@id/curryBtn"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:text="포장"
+        android:textColor="#2185C5"
+        android:background="@drawable/ordermenulist_button_background"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_margin="4dp"/>
 
 </RelativeLayout>

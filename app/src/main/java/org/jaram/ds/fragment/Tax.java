@@ -27,6 +27,7 @@ import org.jaram.ds.util.Http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -205,6 +206,8 @@ public class Tax extends Fragment {
                 dataSets.add(dataSet);
                 barData = new BarData(xVals, dataSets);
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return barData;

@@ -2,6 +2,7 @@ package org.jaram.ds.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,16 +28,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
 /**
  * Created by kjydiary on 15. 9. 23..
  */
-public class OrderManager extends Fragment {
+public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     OrderListAdapter adapter = null;
     ArrayList<org.jaram.ds.data.struct.Order> orders = null;
@@ -62,7 +65,7 @@ public class OrderManager extends Fragment {
 
         dialog = new ProgressDialog(getActivity());
 
-        //TODO: Get Orders from DB before close
+        //TODO: 포장 여부 추가
 
         orders = new ArrayList<org.jaram.ds.data.struct.Order>();
         adapter = new OrderListAdapter(orders, getActivity());
@@ -99,15 +102,23 @@ public class OrderManager extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: search Action
-                OrderSearch dialog = new OrderSearch(getActivity());
-                dialog.show();
+                new OrderSearch(OrderManager.this, menus).show();
             }
         });
 
         new GetAllMenuList().execute();
 
         return view;
+    }
+
+    @Override
+    public void refresh(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
+        String query = "SELECT * FROM `ordermenu` WHERE " +
+                Data.onlyDateFormat.format(startDate.getTime())+"<date" +
+                " AND " +
+                "date<"+Data.onlyDateFormat.format(endDate.getTime()) +
+                " AND ";
+        Data.dbOrder.readDB().rawQuery("", null);
     }
 
     private class GetOrder extends AsyncTask<Void, Void, JSONArray> {
@@ -129,6 +140,8 @@ public class OrderManager extends Fragment {
             try {
                 result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return result;
@@ -198,6 +211,8 @@ public class OrderManager extends Fragment {
                     }
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;

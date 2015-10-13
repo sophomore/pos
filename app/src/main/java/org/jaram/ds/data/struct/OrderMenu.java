@@ -97,6 +97,10 @@ public class OrderMenu {
         this.twice = twice;
     }
 
+    public void setTakeout(boolean takeout) {
+        this.takeout = takeout;
+    }
+
     public void setTotalprice(int totalprice) {
         this.totalprice = totalprice;
     }
@@ -131,6 +135,12 @@ public class OrderMenu {
         getOrder().setTotalprice(getOrder().getTotalprice() + Data.TWICE);
     }
 
+    public void setTakeout() {
+        OrderMenu.this.setTakeout(true);
+        setTotalprice(getTotalprice() + Data.TAKEOUT);
+        getOrder().setTotalprice(getOrder().getTotalprice() + Data.TAKEOUT);
+    }
+
     public void resetCurry() {
         OrderMenu.this.setCurry(false);
         setTotalprice(getTotalprice() - Data.CURRY);
@@ -141,6 +151,12 @@ public class OrderMenu {
         OrderMenu.this.setTwice(false);
         setTotalprice(getTotalprice() - Data.TWICE);
         getOrder().setTotalprice(getOrder().getTotalprice() - Data.TWICE);
+    }
+
+    public void resetTakeout() {
+        OrderMenu.this.setTakeout(false);
+        setTotalprice(getTotalprice() - Data.TAKEOUT);
+        getOrder().setTotalprice(getOrder().getTotalprice() - Data.TAKEOUT);
     }
 
     public void delete() {

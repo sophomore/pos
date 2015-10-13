@@ -17,6 +17,7 @@ import org.jaram.ds.util.Http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -107,6 +108,8 @@ public class Closing {
                         }
                     } while(result.getString("result").equals("error"));
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (isSuccess) {

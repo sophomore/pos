@@ -41,6 +41,9 @@ public class Order extends Fragment {
     TextView totalpriceView = null;
     TextView totalpriceLabelView = null;
 
+    Button endBtn;
+    View confirmBox;
+
     boolean isConfirmView = false;
 
     private static Order view;
@@ -125,8 +128,8 @@ public class Order extends Fragment {
         Button cardBtn = (Button)view.findViewById(R.id.pay_card);
         Button serviceBtn = (Button)view.findViewById(R.id.pay_service);
         Button creditBtn = (Button)view.findViewById(R.id.pay_credit);
-        final Button endBtn = (Button)view.findViewById(R.id.endBtn);
-        final View confirmBox = view.findViewById(R.id.pay_confirmBox);
+        endBtn = (Button)view.findViewById(R.id.endBtn);
+        confirmBox = view.findViewById(R.id.pay_confirmBox);
 
         PayBtnsClicked payListener = new PayBtnsClicked(confirmBox, endBtn);
 
@@ -141,26 +144,26 @@ public class Order extends Fragment {
                     Toast.makeText(getActivity(), "주문을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!chkAllPaied()) {
-                    new AlertDialog.Builder(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
-                            .setTitle("결제 확인")
-                            .setMessage("미결제된 상품이 있습니다. 외상으로 처리하시겠습니까?")
-                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    endOrder(true);
-                                }
-                            })
-                            .setNegativeButton("아니오", null)
-                            .show();
-                }
                 if (!isConfirmView) {
-                    if(chkAllPaied()) endOrder(true);
+                    if(chkAllPaied()) {
+                        endOrder(true);
+                    }
+                    else {
+                        Log.d("order", Boolean.toString(isConfirmView)+" | "+Boolean.toString(chkAllPaied()));
+                        new AlertDialog.Builder(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                                .setTitle("결제 확인")
+                                .setMessage("미결제된 상품이 있습니다. 외상으로 처리하시겠습니까?")
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        endOrder(true);
+                                    }
+                                })
+                                .setNegativeButton("아니오", null)
+                                .show();
+                    }
                 }
-                orderMenuAdapter.resetSelectedMenu();
-                confirmBox.setVisibility(View.INVISIBLE);
-                endBtn.setText("전표 출력");
-                listRefresh();
+                payRefresh();
             }
         });
         confirmBox.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +174,7 @@ public class Order extends Fragment {
                     selectedMenus.get(i).setPay((int)v.getTag());
                 }
                 confirmBox.setVisibility(View.INVISIBLE);
+                isConfirmView = false;
                 endBtn.setText("전표 출력");
                 orderMenuAdapter.resetSelectedMenu();
                 listRefresh();
@@ -211,7 +215,7 @@ public class Order extends Fragment {
 
     private void removeOrderMenu(OrderMenu ordermenu) {
         order.setTotalprice(order.getTotalprice() - ordermenu.getTotalprice());
-        ordermenus.remove(ordermenu); //TODO: 결제 완료 된 것에 대해서 처리
+        ordermenus.remove(ordermenu);
         if(orderMenuAdapter.getSelectedMenus().contains(ordermenu)) {
             orderMenuAdapter.removeSelectedMenu(ordermenu);
         }
@@ -246,6 +250,14 @@ public class Order extends Fragment {
         listRefresh();
     }
 
+    private void payRefresh() {
+        orderMenuAdapter.resetSelectedMenu();
+        confirmBox.setVisibility(View.INVISIBLE);
+        isConfirmView = false;
+        endBtn.setText("전표 출력");
+        listRefresh();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -255,6 +267,7 @@ public class Order extends Fragment {
 
         @Override
         public void onClick(Menu menu) {
+            payRefresh();
             addMenu(menu);
         }
 
@@ -275,7 +288,7 @@ public class Order extends Fragment {
 
         @Override
         public void onClick(View v) {
-            if (!(ordermenus.size() > 0)) {
+            if (!(ordermenus.size() > 0) || chkAllPaied()) {
                 Toast.makeText(getActivity(), "주문을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -306,6 +319,7 @@ public class Order extends Fragment {
             }
             overlayBox.setVisibility(View.VISIBLE);
             cancelBtn.setText("취소");
+            isConfirmView = true;
         }
     }
 
@@ -338,6 +352,21 @@ public class Order extends Fragment {
 //                twiceView.setTextColor(Color.WHITE);
             }
             twiceView.setSelected(!twiceView.isSelected());
+            listRefresh();
+        }
+
+        @Override
+        public void takeoutClicked(OrderMenu ordermenu, Button takeoutView) {
+            if (ordermenu.isTakeout()) {
+                ordermenu.resetTakeout();
+//                twiceView.setBackgroundResource(android.R.color.transparent);
+//                twiceView.setTextColor(getResources().getColor(R.color.point));
+            } else {
+                ordermenu.setTakeout();
+//                twiceView.setBackgroundResource(R.color.point);
+//                twiceView.setTextColor(Color.WHITE);
+            }
+            takeoutView.setSelected(!takeoutView.isSelected());
             listRefresh();
         }
     }

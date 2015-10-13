@@ -22,6 +22,7 @@ import org.jaram.ds.util.Http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -135,8 +136,12 @@ public class InfoMenu extends Dialog {
                         return menuObj.getJSONObject("menu");
                     }
                 }
+                throw new IOException();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+
             }
             return null;
         }
