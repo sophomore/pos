@@ -44,6 +44,16 @@
         android:text="곱배기"
         android:textSize="16sp"
         android:textColor="@color/point"/>
+    <TextView
+        android:id="@+id/addTakeout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/addTwice"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:text="포장"
+        android:textSize="16sp"
+        android:textColor="@color/point"/>
     <Spinner
         android:id="@+id/paySelector"
         android:layout_width="wrap_content"

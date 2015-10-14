@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -130,7 +130,7 @@ public class Closing {
                 if (notice_dialog.isShowing()) notice_dialog.dismiss();
                 return;
             }
-            new AlertDialog.Builder(context, R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+            new AlertDialog.Builder(context)
                     .setTitle("오류")
                     .setMessage("서버에 주문 정보를 전송하는 도중 오류가 발생했습니다.\n재시도 하시겠습니까?")
                     .setPositiveButton("재시도", new DialogInterface.OnClickListener() {

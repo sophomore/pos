@@ -57,6 +57,7 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
             holder.price = (TextView) convertView.findViewById(R.id.price);
             holder.addCurry = (TextView) convertView.findViewById(R.id.addCurry);
             holder.addTwice = (TextView) convertView.findViewById(R.id.addTwice);
+            holder.addTakeout = (TextView) convertView.findViewById(R.id.addTakeout);
             holder.paySelector = (Spinner) convertView.findViewById(R.id.paySelector);
             holder.paySelector.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, new String[]{"현금", "카드", "서비스", "외상"}));
             convertView.setTag(holder);
@@ -68,6 +69,7 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
         holder.price.setText(ordermenu.getTotalprice()+"원");
         holder.addCurry.setVisibility(ordermenu.isCurry() ? View.VISIBLE : View.GONE);
         holder.addTwice.setVisibility(ordermenu.isTwice() ? View.VISIBLE : View.GONE);
+        holder.addTakeout.setVisibility(ordermenu.isTakeout() ? View.VISIBLE : View.GONE);
         switch(ordermenu.getPay()) {
             case Data.PAY_CASH:
                 holder.paySelector.setSelection(0);
@@ -109,6 +111,7 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
         TextView price;
         TextView addCurry;
         TextView addTwice;
+        TextView addTakeout;
         Spinner paySelector;
     }
 }

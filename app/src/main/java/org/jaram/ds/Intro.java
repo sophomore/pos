@@ -2,16 +2,12 @@ package org.jaram.ds;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.TextView;
 
 import org.jaram.ds.data.Closing;
@@ -80,7 +76,7 @@ public class Intro extends Activity {
         noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
 
 //        if (isOnline(Intro.this)) {
-//            new AlertDialog.Builder(Intro.this, R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+//            new AlertDialog.Builder(Intro.this)
 //                    .setTitle("경고")
 //                    .setMessage("wifi에 연결되어 있지 않습니다. 일부 기능을 사용하실 수 없습니다.")
 //                    .setNegativeButton("닫기", null)

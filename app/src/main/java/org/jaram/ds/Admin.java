@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +64,7 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
                 break;
         }
         current = viewId;
+        super.doneAttatch();
     }
 
     public void closingAfterReplace(final Fragment view) {
@@ -74,7 +75,7 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
                 Log.d("admin", "done closing");
                 if (isSuccess) replace(view);
                 else {
-                    new AlertDialog.Builder(getApplicationContext(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                    new AlertDialog.Builder(getApplicationContext())
                             .setTitle("오류")
                             .setMessage("마감 작업을 하는 도중 오류가 발생했습니다. 앱을 종료합니다.")
                             .setNegativeButton("닫기", new DialogInterface.OnClickListener() {

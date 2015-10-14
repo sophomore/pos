@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +64,7 @@ public class MenuManager extends Fragment {
             @Override
             public void onLongClick(final Menu menu) {
                 final int id = menu.getId();
-                new AlertDialog.Builder(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                new AlertDialog.Builder(getActivity())
                         .setTitle("확인")
                         .setMessage("'"+menu.getName()+"'을/를 삭제하시겠습니까?")
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {

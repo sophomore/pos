@@ -23,5 +23,6 @@ public class Order extends Base {
         fm.beginTransaction()
                 .replace(R.id.main_view, org.jaram.ds.fragment.Order.getInstance())
                 .commit();
+        super.doneAttatch();
     }
 }

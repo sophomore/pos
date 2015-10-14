@@ -79,10 +79,10 @@ public class OrderListAdapter extends BaseAdapter {
             holder.ordermenuList.addView(ordermenuView);
         }
         if (position == currentSelected) {
-            convertView.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+            convertView.setBackgroundColor(Color.LTGRAY);
         }
         else {
-            convertView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+            convertView.setBackgroundColor(Color.WHITE);
         }
         return convertView;
     }

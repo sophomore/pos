@@ -1,10 +1,10 @@
 package org.jaram.ds.fragment;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,7 +150,7 @@ public class Order extends Fragment {
                     }
                     else {
                         Log.d("order", Boolean.toString(isConfirmView)+" | "+Boolean.toString(chkAllPaied()));
-                        new AlertDialog.Builder(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                        new AlertDialog.Builder(getActivity())
                                 .setTitle("결제 확인")
                                 .setMessage("미결제된 상품이 있습니다. 외상으로 처리하시겠습니까?")
                                 .setPositiveButton("예", new DialogInterface.OnClickListener() {

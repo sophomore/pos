@@ -2,8 +2,10 @@ package org.jaram.ds;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +64,31 @@ public abstract class Base extends FragmentActivity {
 
         BtnListener listener = new BtnListener();
 
-        if (getCurrent() != ORDER) drawer_orderBtn.setOnClickListener(listener);
-        if (getCurrent() != MANAGE_ORDER) drawer_manageOrderBtn.setOnClickListener(listener);
-        if (getCurrent() != STATISTIC || getCurrent() != TAX) drawer_statisticBtn.setOnClickListener(listener);
-        if (getCurrent() != MANAGE_MENU) drawer_manageMenuBtn.setOnClickListener(listener);
+        drawer_orderBtn.setOnClickListener(listener);
+        drawer_manageOrderBtn.setOnClickListener(listener);
+        drawer_statisticBtn.setOnClickListener(listener);
+        drawer_manageMenuBtn.setOnClickListener(listener);
         drawer_settingBtn.setOnClickListener(listener);
+    }
+
+    protected void doneAttatch() {
+        switch(getCurrent()) {
+            case MANAGE_ORDER:
+                drawer_manageOrderBtn.setSelected(true);
+                break;
+            case MANAGE_MENU:
+                drawer_manageMenuBtn.setSelected(true);
+                break;
+            case ORDER:
+                drawer_orderBtn.setSelected(true);
+                break;
+            case STATISTIC:
+                drawer_statisticBtn.setSelected(true);
+                break;
+            case TAX:
+                drawer_statisticBtn.setSelected(true);
+                break;
+        }
     }
 
     private FrameLayout drawerView;
@@ -102,28 +124,57 @@ public abstract class Base extends FragmentActivity {
         container.addView(view, 0);
     }
 
+    boolean isExitProgress = false;
+    @Override
+    public void onBackPressed() {
+        if (isExitProgress) {
+            finish();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "앱을 종료하시려면 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
+            isExitProgress = true;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    isExitProgress = false;
+                }
+            }, 1500);
+        }
+    }
+
     private class BtnListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
-                case R.id.drawer_orderBtn: //TODO: 변경된 사항이 있는지 확인 및 처리 후 주문화면 보여주기
-                    startActivity(new Intent(Base.this, Order.class));
+                case R.id.drawer_orderBtn:
+                    if (getCurrent() != ORDER) {
+                        startActivity(new Intent(Base.this, Order.class));
+                        finish();
+                    }
                     break;
-                case R.id.drawer_manageOrderBtn: //TODO: 마감 처리 후 실행
-                    startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
+                case R.id.drawer_manageOrderBtn:
+                    if (getCurrent() != MANAGE_ORDER) {
+                        startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
+                        finish();
+                    }
                     break;
-                case R.id.drawer_statisticBtn: //TODO: 마감 처리 후 실행
-                    startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.TAX));
+                case R.id.drawer_statisticBtn:
+                    if (getCurrent() != STATISTIC && getCurrent() != TAX) {
+                        startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.TAX));
+                        finish();
+                    }
                     break;
-                case R.id.drawer_manageMenuBtn: //TODO: 마감 처리 후 실행
-                    startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_MENU));
+                case R.id.drawer_manageMenuBtn:
+                    if (getCurrent() != MANAGE_MENU) {
+                        startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_MENU));
+                        finish();
+                    }
                     break;
-                case R.id.drawer_settingBtn: //TODO: 설정화
-                    Toast.makeText(getApplicationContext(), "설정", Toast.LENGTH_SHORT).show();
+                case R.id.drawer_settingBtn: //TODO: 설정화면
+//                    Toast.makeText(getApplicationContext(), "설정", Toast.LENGTH_SHORT).show();
+                    finish();
                     break;
             }
-            finish();
         }
     }
 }

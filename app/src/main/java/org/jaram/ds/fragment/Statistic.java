@@ -136,7 +136,7 @@ public class Statistic extends Fragment {
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog,
+                new DatePickerDialog(getActivity(),
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -153,7 +153,7 @@ public class Statistic extends Fragment {
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(), R.style.Base_V21_Theme_AppCompat_Light_Dialog,
+                new DatePickerDialog(getActivity(),
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -354,8 +354,15 @@ public class Statistic extends Fragment {
 
     private class MenuCategoryListener implements View.OnClickListener {
 
+        int currentOpen;
         @Override
         public void onClick(View v) {
+            if (currentOpen == v.getId()) {
+                menuCategoryCloseAll();
+                currentOpen = 0;
+                return;
+            }
+            currentOpen = v.getId();
             switch(v.getId()) {
                 case R.id.menu_cutletBtn:
                     menuCategoryOpen(1);
