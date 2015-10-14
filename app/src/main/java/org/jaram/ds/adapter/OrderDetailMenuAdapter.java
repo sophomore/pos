@@ -91,7 +91,7 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
         holder.paySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                modified.add(ordermenu);
+                //TODO: send modify info to server
             }
 
             @Override
@@ -100,10 +100,6 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
             }
         });
         return convertView;
-    }
-
-    public ArrayList<OrderMenu> getModifyList() {
-        return modified;
     }
 
     private class ViewHolder {

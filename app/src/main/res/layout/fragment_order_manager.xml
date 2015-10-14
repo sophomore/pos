@@ -56,7 +56,7 @@
                     android:paddingBottom="12dp"
                     style="?android:attr/borderlessButtonStyle"
                     android:background="@drawable/default_btn"
-                    android:text="수정"
+                    android:text="전표출력"
                     android:textColor="@color/point"/>
                 <Button
                     android:id="@+id/deleteBtn"

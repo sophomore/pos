@@ -65,8 +65,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         dialog = new ProgressDialog(getActivity());
 
-        //TODO: 포장 여부 추가
-
         orders = new ArrayList<org.jaram.ds.data.struct.Order>();
         adapter = new OrderListAdapter(orders, getActivity());
 
