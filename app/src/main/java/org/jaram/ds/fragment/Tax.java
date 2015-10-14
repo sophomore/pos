@@ -2,6 +2,7 @@ package org.jaram.ds.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,11 +16,15 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Highlight;
 
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
@@ -45,6 +50,13 @@ public class Tax extends Fragment {
     Calendar endCal;
     BarChart chart;
 
+    TextView rangeCashView;
+    TextView rangeCardView;
+    TextView rangeTotalView;
+    TextView monthCashView;
+    TextView monthCardView;
+    TextView monthTotalView;
+
     private static Tax view;
     public static Tax getInstance() {
         if (view == null) {
@@ -58,6 +70,13 @@ public class Tax extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tax, container, false);
 
         RelativeLayout actionbaritem = (RelativeLayout)inflater.inflate(R.layout.statistic_date, null, false);
+
+        rangeCashView = (TextView)view.findViewById(R.id.rangeCash);
+        rangeCardView = (TextView)view.findViewById(R.id.rangeCard);
+        rangeTotalView = (TextView)view.findViewById(R.id.rangeTotal);
+        monthCashView = (TextView)view.findViewById(R.id.monthCash);
+        monthCardView = (TextView)view.findViewById(R.id.monthCard);
+        monthTotalView = (TextView)view.findViewById(R.id.monthTotal);
 
         final Button startDate = (Button)actionbaritem.findViewById(R.id.startDate);
         final Button endDate = (Button) actionbaritem.findViewById(R.id.endDate);
@@ -134,6 +153,20 @@ public class Tax extends Fragment {
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
         chart.setDescription(null);
+        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                float[] datas = ((BarEntry)e).getVals();
+                monthCashView.setText((int)datas[0]+"원");
+                monthCardView.setText((int)datas[1]+"원");
+                monthTotalView.setText(((int)datas[0]+(int)datas[1]+(int)datas[2])+"원");
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
         return view;
     }
 
@@ -154,11 +187,22 @@ public class Tax extends Fragment {
 
     private class GetAnalyticsData extends AsyncTask<Void, Void, BarData> {
 
+        ProgressDialog dialog;
+        int rangeCash = 0;
+        int rangeCard = 0;
+        int rangeTotal = 0;
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("서버에서 데이터를 가져오는 중입니다.");
+            dialog.show();
+        }
+
         @Override
         protected BarData doInBackground(Void... params) {
             HashMap<String, Object> param = new HashMap<String, Object>();
             param.put("startDate", Data.onlyDateFormat.format(startCal.getTime()));
-            param.put("endDate", Data.onlyDateFormat.format(startCal.getTime()));
+            param.put("endDate", Data.onlyDateFormat.format(endCal.getTime()));
             param.put("unit", 4);
             param.put("menus", "[]");
             BarData barData = null;
@@ -193,13 +237,16 @@ public class Tax extends Fragment {
                         BarEntry yVal = new BarEntry(vals, n);
                         yVals.add(yVal);
                         xVals.add(yearKey+"."+monthKey);
+                        rangeCash += dataJsn.getInt("cashtotal");
+                        rangeCard += dataJsn.getInt("cardtotal");
+                        rangeTotal += dataJsn.getInt("total");
                         n++;
                     }
                 }
                 BarDataSet dataSet = new BarDataSet(yVals, "판매금액");
-                dataSet.setHighLightColor(getResources().getColor(R.color.dark));
                 dataSet.setColors(new int[]{Color.parseColor("#FFB14A"), Color.parseColor("#FE7E39"), Color.parseColor("#E5404C")});
                 dataSet.setValueTextColor(getResources().getColor(R.color.dark));
+                dataSet.setHighLightAlpha(0);
                 dataSet.setValueTextSize(16.0f);
                 dataSet.setStackLabels(new String[] {"현금", "카드", "기타"});
                 ArrayList<BarDataSet> dataSets = new ArrayList<>();
@@ -216,6 +263,10 @@ public class Tax extends Fragment {
         @Override
         protected void onPostExecute(BarData result) {
             setBarData(result);
+            dialog.dismiss();
+            rangeCashView.setText(rangeCash + "원");
+            rangeCardView.setText(rangeCard+"원");
+            rangeTotalView.setText(rangeTotal+"원");
         }
     }
 }
