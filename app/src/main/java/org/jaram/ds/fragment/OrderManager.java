@@ -64,6 +64,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         View view = inflater.inflate(R.layout.fragment_order_manager, container, false);
 
         dialog = new ProgressDialog(getActivity());
+        dialog.setCancelable(false);
 
         orders = new ArrayList<org.jaram.ds.data.struct.Order>();
         adapter = new OrderListAdapter(orders, getActivity());

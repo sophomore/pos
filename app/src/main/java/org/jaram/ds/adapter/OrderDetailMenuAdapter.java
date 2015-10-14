@@ -23,11 +23,9 @@ import java.util.ArrayList;
 public class OrderDetailMenuAdapter extends BaseAdapter {
 
     ArrayList<OrderMenu> ordermenus = null;
-    ArrayList<OrderMenu> modified = null;
     Context context = null;
     public OrderDetailMenuAdapter(ArrayList<OrderMenu> ordermenus, Context context) {
         this.ordermenus = ordermenus;
-        this.modified = new ArrayList<OrderMenu>();
         this.context = context;
     }
 

@@ -35,7 +35,7 @@ public class InfoMenu extends Dialog {
     Category selectedCategory;
 
     public InfoMenu(Context context, Menu menu) {
-        super(context, android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+        super(context, R.style.Theme_AppCompat_Light_Dialog);
         this.menu = menu;
     }
 
@@ -114,6 +114,7 @@ public class InfoMenu extends Dialog {
         @Override
         protected void onPreExecute() {
             dialog = ProgressDialog.show(context, "메뉴 관리", "메뉴 정보를 변경하고 있습니다.", true, false);
+            dialog.setCancelable(false);
         }
 
         @Override

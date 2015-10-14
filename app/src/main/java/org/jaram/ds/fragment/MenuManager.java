@@ -78,6 +78,7 @@ public class MenuManager extends Fragment {
                                     @Override
                                     protected void onPreExecute() {
                                         dialog = new ProgressDialog(getActivity());
+                                        dialog.setCancelable(false);
                                         dialog.setMessage("삭제하는 중입니다.");
                                         dialog.show();
                                     }

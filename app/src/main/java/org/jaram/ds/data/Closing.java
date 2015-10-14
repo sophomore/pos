@@ -45,6 +45,7 @@ public class Closing {
         this.listener = listener;
         this.notice_dialog = dialog;
         this.notice_viewType = VIEW_PROGRESSDIALOG;
+        notice_dialog.setCancelable(false);
         doClose();
     }
 

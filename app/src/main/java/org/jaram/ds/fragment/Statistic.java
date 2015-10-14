@@ -1127,6 +1127,7 @@ public class Statistic extends Fragment {
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(getActivity());
+            dialog.setCancelable(false);
             dialog.setMessage("서버에서 데이터를 가져오는 중입니다.");
             dialog.show();
         }
@@ -1189,6 +1190,7 @@ public class Statistic extends Fragment {
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(getActivity());
+            dialog.setCancelable(false);
             dialog.setMessage("서버에서 메뉴 데이터를 가져오는 중입니다.");
             dialog.show();
         }
