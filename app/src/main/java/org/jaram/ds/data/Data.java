@@ -16,7 +16,7 @@ public class Data {
     public static final int PAY_CARD = 2;
     public static final int PAY_SERVICE = 3;
     public static final int PAY_CREDIT = 4;
-    public static final String SERVER_URL = "http://61.77.77.20/";
+    public static final String SERVER_URL = "http://192.168.0.101/";
     public static final int CURRY = 2500;
     public static final int TWICE = 2500;
     public static final int TAKEOUT = 500;
