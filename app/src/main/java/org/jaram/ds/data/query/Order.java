@@ -72,7 +72,6 @@ public class Order extends DBQuery {
             }
         }
         c.close();
-        Log.d("order", result.toString());
         return result;
     }
 }

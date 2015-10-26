@@ -11,7 +11,7 @@
     <string name="totalprice">전체 합계</string>
     <string name="init_totalprice_value">0원</string>
     <string name="ordermenuList_empty">오른쪽에서 메뉴를 선택해주세요</string>
-    <string name="orderEnd">전표 출력</string>
+    <string name="orderEnd">주문 완료</string>
     <string name="pay_confirm">으로 결제처리 하시겠습니까?</string>
     <string name="cutlet">돈까스</string>
     <string name="rice">덮밥</string>

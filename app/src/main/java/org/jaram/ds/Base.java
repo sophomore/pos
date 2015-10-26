@@ -124,23 +124,6 @@ public abstract class Base extends FragmentActivity {
         container.addView(view, 0);
     }
 
-    boolean isExitProgress = false;
-    @Override
-    public void onBackPressed() {
-        if (isExitProgress) {
-            finish();
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "앱을 종료하시려면 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
-            isExitProgress = true;
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    isExitProgress = false;
-                }
-            }, 1500);
-        }
-    }
-
     private class BtnListener implements View.OnClickListener {
 
         @Override
@@ -149,23 +132,22 @@ public abstract class Base extends FragmentActivity {
                 case R.id.drawer_orderBtn:
                     if (getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Order.class));
-                        finish();
                     }
                     break;
                 case R.id.drawer_manageOrderBtn:
-                    if (getCurrent() != MANAGE_ORDER) {
+                    if (getCurrent() != MANAGE_ORDER && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
                         finish();
                     }
                     break;
                 case R.id.drawer_statisticBtn:
-                    if (getCurrent() != STATISTIC && getCurrent() != TAX) {
+                    if (getCurrent() != STATISTIC && getCurrent() != TAX && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.TAX));
                         finish();
                     }
                     break;
                 case R.id.drawer_manageMenuBtn:
-                    if (getCurrent() != MANAGE_MENU) {
+                    if (getCurrent() != MANAGE_MENU && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_MENU));
                         finish();
                     }

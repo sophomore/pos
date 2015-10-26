@@ -55,7 +55,7 @@ public class Menu extends DBQuery {
     }
 
     public ArrayList<org.jaram.ds.data.struct.Menu> getAll() {
-        Cursor c = readDB().query("category", null, null, null, null, null, null);
+        Cursor c = readDB().query("menu", null, null, null, null, null, null);
         ArrayList<org.jaram.ds.data.struct.Menu> result = new ArrayList<>();
         while (c.moveToNext()) {
             result.add(new org.jaram.ds.data.struct.Menu(c.getInt(c.getColumnIndex("_id")),

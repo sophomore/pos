@@ -1,5 +1,7 @@
 package org.jaram.ds.data;
 
+import android.content.SharedPreferences;
+
 import org.jaram.ds.data.struct.Category;
 import org.jaram.ds.data.struct.Menu;
 
@@ -25,6 +27,7 @@ public class Data {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
     public static final SimpleDateFormat onlyDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
+    public static SharedPreferences pref;
     public static org.jaram.ds.data.query.Category dbCategory;
     public static org.jaram.ds.data.query.Menu dbMenu;
     public static org.jaram.ds.data.query.Order dbOrder;

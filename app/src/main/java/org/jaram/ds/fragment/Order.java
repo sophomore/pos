@@ -194,12 +194,13 @@ public class Order extends Fragment {
     public void endOrder(boolean isSave) {
         if (isSave) {
             order.setDate(new Date());
-            order.putDB();
+            order.store();
         }
 
         //TODO: 전표 출력
-        listRefresh();
-        newOrder();
+        getActivity().finish();
+//        listRefresh();
+//        newOrder();
     }
 
     private void newOrder() {

@@ -1,31 +1,24 @@
 package org.jaram.ds;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.jaram.ds.data.Closing;
 import org.jaram.ds.data.Data;
-import org.jaram.ds.data.struct.Category;
-import org.jaram.ds.data.struct.Menu;
-import org.jaram.ds.data.struct.Order;
+import org.jaram.ds.data.struct.*;
 import org.jaram.ds.util.Http;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by kjydiary on 15. 9. 20..
@@ -40,32 +33,12 @@ public class Intro extends Activity {
 
     private TextView noticeView;
 
-    private static boolean isOnline(Context context) { // network 연결 상태 확인
-        try {
-            ConnectivityManager conMan = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            NetworkInfo.State wifi = conMan.getNetworkInfo(1).getState(); // wifi
-            if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
-                return true;
-            }
-
-//            NetworkInfo.State mobile = conMan.getNetworkInfo(0).getState(); // mobile ConnectivityManager.TYPE_MOBILE
-//            if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
-//                return true;
-//            }
-
-        } catch (NullPointerException e) {
-            return false;
-        }
-
-        return false;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        Data.pref = getSharedPreferences("state", 0);
         Data.dbCategory = new org.jaram.ds.data.query.Category(Intro.this);
         Data.dbMenu = new org.jaram.ds.data.query.Menu(Intro.this);
         Data.dbOrder = new org.jaram.ds.data.query.Order(Intro.this);
@@ -74,14 +47,7 @@ public class Intro extends Activity {
         noticeView = (TextView)findViewById(R.id.intro_notice);
 
         noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
-
-//        if (isOnline(Intro.this)) {
-//            new AlertDialog.Builder(Intro.this)
-//                    .setTitle("경고")
-//                    .setMessage("wifi에 연결되어 있지 않습니다. 일부 기능을 사용하실 수 없습니다.")
-//                    .setNegativeButton("닫기", null)
-//                    .show();
-//        }
+        Log.d("intro", "before init");
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -91,39 +57,63 @@ public class Intro extends Activity {
     }
 
     private void startApp() {
+        Log.d("intro", Boolean.toString(Data.pref.getBoolean("network", false)));
         startActivity(new Intent(Intro.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
         finish();
     }
 
     private void init() {
+        Log.d("intro", "init");
+        final SharedPreferences.Editor ed = Data.pref.edit();
+        ed.putBoolean("network", true);
+        ed.apply();
         ArrayList<Category> categories = Data.dbCategory.getAll();
         for (int i=0; i<categories.size(); i++) {
             Data.categories.put(categories.get(i).getId(), categories.get(i));
         }
+        new AsyncTask<Void, Void, Boolean>() {
 
-        boolean isDoClosing = false;
-        ArrayList<Order> result = Data.dbOrder.getAll();
-        if (result.size()>0) {
-            org.jaram.ds.data.struct.Order order = result.get(0);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(order.getDate());
-            Calendar today = Calendar.getInstance();
-            today.setTime(new Date());
-            if (calendar.get(Calendar.YEAR)!=today.get(Calendar.YEAR)
-                    || calendar.get(Calendar.MONTH)!=today.get(Calendar.MONTH)
-                    || calendar.get(Calendar.DAY_OF_MONTH)!=today.get(Calendar.DAY_OF_MONTH)) {
-                isDoClosing = true;
-                new Closing(Intro.this, new ClosingListener(), noticeView, Closing.VIEW_TEXTVIEW);
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Log.d("intro", "process");
+                try {
+                    Log.d("intro", Http.get(Data.SERVER_URL, null));
+                } catch (IOException e) {
+                    return false;
+                }
+                return true;
             }
-        }
-        if(!isDoClosing) {
-            postClosing();
-        }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (result) {
+                    Log.d("intro", "success");
+                    new GetMenu().execute();
+                }
+                else {
+                    Log.d("intro", "fail");
+                    noticeView.setText("서버에 접속할 수 없습니다.");
+                    ed.putBoolean("network", false);
+                    ed.apply();
+                    loadSavedData();
+                    endInit();
+                }
+            }
+
+            private void loadSavedData() {
+                ArrayList<Menu> menuJSN = Data.dbMenu.getAll();
+                for(Menu menu : menuJSN) {
+                    menu.regist();
+                }
+            }
+        }.execute();
     }
 
-    private void postClosing() {
-        new GetMenu().execute();
+    private void postGetMenu() {
+        ArrayList<org.jaram.ds.data.struct.Order> orders = Data.dbOrder.getAll();
+        if (orders.size()>0) {
+            new Closing(Intro.this, new ClosingListener(), noticeView, Closing.VIEW_TEXTVIEW);
+        }
     }
 
     private void endInit() {
@@ -139,11 +129,11 @@ public class Intro extends Activity {
 
         @Override
         public void endClosing(boolean isSuccess) {
-            postClosing();
+            postGetMenu();
         }
     }
 
-    private class GetMenu extends AsyncTask<Void, Void, Void> {
+    private class GetMenu extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -151,7 +141,7 @@ public class Intro extends Activity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             try {
                 String recieveData = Http.get(Data.SERVER_URL + "menu", null);
                 Data.dbMenu.clear();
@@ -162,15 +152,19 @@ public class Intro extends Activity {
                             Data.categories.get(jo.getInt("category_id"))).create();
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                return false;
             } catch (IOException e) {
+                SharedPreferences.Editor ed = Data.pref.edit();
+                ed.putBoolean("network", false);
+                ed.apply();
+                return false;
             }
-            return null;
+            return true;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            noticeView.setText("메뉴정보를 가져오는데 성공했습니다.");
+        protected void onPostExecute(Boolean result) {
+            noticeView.setText("메뉴정보를 성공적으로 가져왔습니다.");
             endInit();
         }
     }

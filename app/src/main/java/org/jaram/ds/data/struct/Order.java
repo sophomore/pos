@@ -1,16 +1,21 @@
 package org.jaram.ds.data.struct;
 
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jaram.ds.data.Data;
 import org.jaram.ds.exception.NotExistException;
+import org.jaram.ds.util.Http;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by kjydiary on 15. 9. 21..
@@ -115,5 +120,41 @@ public class Order {
         }
         Data.dbOrder.delete(this.getId());
         this.setOrdermenus(null);
+    }
+
+    public void store() {
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... param) {
+                boolean success = true;
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("time", Data.dateFormat.format(Order.this.getDate()));
+                params.put("totalprice", Order.this.getTotalprice());
+                params.put("ordermenus", Order.this.getOrdermenusAtJson());
+                try {
+                    Http.post(Data.SERVER_URL+"order", params);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    success = false;
+                }
+                return success;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (!result) {
+                    putDB();
+                }
+            }
+        }.execute();
+    }
+
+    public void print_statement() {
+        //TODO:
+    }
+
+    public void print_receipt() {
+        //TODO:
     }
 }

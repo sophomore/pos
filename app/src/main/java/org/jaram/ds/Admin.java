@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.jaram.ds.data.Closing;
 import org.jaram.ds.fragment.MenuManager;
@@ -77,7 +79,7 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
                 else {
                     new AlertDialog.Builder(getApplicationContext())
                             .setTitle("오류")
-                            .setMessage("마감 작업을 하는 도중 오류가 발생했습니다. 앱을 종료합니다.")
+                            .setMessage("오류가 발생했습니다. 앱을 종료합니다.")
                             .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -103,6 +105,7 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
             actionbar.removeViewAt(i);
         }
         ft.replace(R.id.main_view, view).commit();
+        System.gc();
     }
 
     private boolean isAlreadyAdded = false;
@@ -142,5 +145,22 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
     @Override
     public void addViewAtActionBar(View view, ViewGroup.LayoutParams params) {
         super.addViewAtActionBar(view, params);
+    }
+
+    boolean isExitProgress = false;
+    @Override
+    public void onBackPressed() {
+        if (isExitProgress) {
+            finish();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "앱을 종료하시려면 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
+            isExitProgress = true;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    isExitProgress = false;
+                }
+            }, 1500);
+        }
     }
 }

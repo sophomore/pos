@@ -70,7 +70,6 @@ public class MenuManager extends Fragment {
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface alertDialog, int which) {
-                                //TODO: remove at db and server
                                 new AsyncTask<Void, Void, Void>() {
 
                                     ProgressDialog dialog;

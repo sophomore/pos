@@ -383,6 +383,7 @@ public class Statistic extends Fragment {
     private void setLineChartData(LineData data) {
         lineChart.setData(data);
 //        lineChart.notifyDataSetChanged();
+        lineChart.getChartBitmap().recycle();
         lineChart.invalidate();
     }
 
@@ -415,35 +416,24 @@ public class Statistic extends Fragment {
             ArrayList<String> xVals = new ArrayList<String>();
             try {
                 Iterator<String> keyIter = recieveDataJsn.keys();
-                ArrayList<Integer> keys = new ArrayList<>();
-                while(keyIter.hasNext()) {
-                    keys.add(Integer.parseInt(keyIter.next()));
-                }
-                Collections.sort(keys);
-                for (int i=0; i<keys.size(); i++) {
-                    String key = Integer.toString(keys.get(i));
-                    JSONObject dataJsn = recieveDataJsn.getJSONObject(key);
-                    JSONObject menuJsn = dataJsn.getJSONObject("menu");
-                    Iterator<String> menuKeyIter = menuJsn.keys();
-                    ArrayList<Integer> menuKeys = new ArrayList<>();
-                    while(menuKeyIter.hasNext()) {
-                        menuKeys.add(Integer.parseInt(menuKeyIter.next()));
-                    }
-                    Collections.sort(menuKeys);
-
-                    for (int j=0; j<menuKeys.size(); j++) {
-                        if (menuCountData.containsKey(menuKeys.get(j)+"")) {
-                            LineDataSet dataSet = menuCountData.get(menuKeys.get(j)+"");
-                            dataSet.addEntry(new Entry(menuJsn.getJSONObject(menuKeys.get(j)+"").getInt("count"), i));
+                boolean isAddedLabel = false;
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
                         else {
-                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(j)+""); //TODO: 키 -> 이름
-                            dataSet.addEntry(new Entry(menuJsn.getJSONObject(menuKeys.get(j)+"").getInt("count"), i));
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                             dataSet.setColor(colors[random.nextInt(colors.length)]);
-                            menuCountData.put(menuKeys.get(j)+"", dataSet);
+                            menuCountData.put(key, dataSet);
                         }
+                        if (!isAddedLabel) xVals.add(j+"시");
                     }
-                    xVals.add(key+"시");
+                    isAddedLabel = true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -457,68 +447,35 @@ public class Statistic extends Fragment {
         }
 
         private LineData convertCountDateLineData(JSONObject recieveDataJsn) {
-            ArrayList<String> xVals = new ArrayList<String>();
             HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-
-            int n=0;
-
-            Iterator<String> yearKeyIter = recieveDataJsn.keys();
-            ArrayList<Integer> yearKeys = new ArrayList<>();
-            while(yearKeyIter.hasNext()) {
-                yearKeys.add(Integer.parseInt(yearKeyIter.next()));
-            }
-            Collections.sort(yearKeys);
-            for (int y=0; y<yearKeys.size(); y++) {
-                String yearKey = yearKeys.get(y)+"";
-                try {
-                    JSONObject monthJsn = recieveDataJsn.getJSONObject(yearKey);
-                    Iterator<String> monthKeyIter = monthJsn.keys();
-                    ArrayList<Integer> monthKeys = new ArrayList<>();
-                    while(monthKeyIter.hasNext()) {
-                        monthKeys.add(Integer.parseInt(monthKeyIter.next()));
-                    }
-                    Collections.sort(monthKeys);
-
-                    for (int m=0; m<monthKeys.size(); m++) {
-                        String monthKey = monthKeys.get(m)+"";
-                        JSONObject dateJsn = monthJsn.getJSONObject(monthKey);
-                        Iterator<String> dateKeyIter = dateJsn.keys();
-                        ArrayList<Integer> dateKeys = new ArrayList<>();
-                        while(dateKeyIter.hasNext()) {
-                            dateKeys.add(Integer.parseInt(dateKeyIter.next()));
+            ArrayList<String> xVals = new ArrayList<String>();
+            try {
+                Iterator<String> keyIter = recieveDataJsn.keys();
+                boolean isAddedLabel = false;
+                Calendar date = (Calendar) startCal.clone();
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
-                        Collections.sort(dateKeys);
-
-                        for (int d=0; d<dateKeys.size(); d++) {
-                            String dateKey = dateKeys.get(d)+"";
-                            JSONObject dataJsn = dateJsn.getJSONObject(dateKey);
-                            xVals.add(yearKey+"."+monthKey+"."+dateKey);
-
-                            Iterator<String> menuKeyIter = dataJsn.getJSONObject("count").keys();
-                            ArrayList<Integer> menuKeys = new ArrayList<>();
-                            while(menuKeyIter.hasNext()) {
-                                menuKeys.add(Integer.parseInt(menuKeyIter.next()));
-                            }
-                            Collections.sort(menuKeys);
-
-                            for (int i=0; i<menuKeys.size(); i++) {
-                                if (menuCountData.containsKey(menuKeys.get(i)+"")) {
-                                    LineDataSet dataSet = menuCountData.get(menuKeys.get(i)+"");
-                                    dataSet.addEntry(new Entry(dataJsn.getJSONObject("count").getInt(menuKeys.get(i)+""), n));
-                                }
-                                else {
-                                    LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(i)+""); //TODO: 키 -> 이름
-                                    dataSet.addEntry(new Entry(dataJsn.getJSONObject("count").getInt(menuKeys.get(i)+""), n));
-                                    dataSet.setColor(colors[random.nextInt(colors.length)]);
-                                    menuCountData.put(menuKeys.get(i)+"", dataSet);
-                                }
-                            }
-                            n++;
+                        else {
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
+                            dataSet.setColor(colors[random.nextInt(colors.length)]);
+                            menuCountData.put(key, dataSet);
+                        }
+                        if (!isAddedLabel) {
+                            xVals.add(Data.onlyDateFormat.format(date.getTime()));
+                            date.add(Calendar.DAY_OF_MONTH, 1);
                         }
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    isAddedLabel = true;
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             ArrayList<LineDataSet> countData = new ArrayList<>();
@@ -531,59 +488,30 @@ public class Statistic extends Fragment {
         private LineData convertCountDayLineData(JSONObject recieveDataJsn) {
             HashMap<String, LineDataSet> menuCountData = new HashMap<>();
             ArrayList<String> xVals = new ArrayList<String>();
+            xVals.add("월요일");
+            xVals.add("화요일");
+            xVals.add("수요일");
+            xVals.add("목요일");
+            xVals.add("금요일");
+            xVals.add("토요일");
+            xVals.add("일요일");
+
             try {
                 Iterator<String> keyIter = recieveDataJsn.keys();
-                ArrayList<Integer> keys = new ArrayList<>();
-                while(keyIter.hasNext()) {
-                    keys.add(Integer.parseInt(keyIter.next()));
-                }
-                Collections.sort(keys);
-                for (int i=0; i<keys.size(); i++) {
-                    String key = Integer.toString(keys.get(i));
-                    JSONObject dataJsn = recieveDataJsn.getJSONObject(key);
-                    JSONObject menuJsn = dataJsn.getJSONObject("count");
-                    Iterator<String> menuKeyIter = menuJsn.keys();
-                    ArrayList<Integer> menuKeys = new ArrayList<>();
-                    while(menuKeyIter.hasNext()) {
-                        menuKeys.add(Integer.parseInt(menuKeyIter.next()));
-                    }
-                    Collections.sort(menuKeys);
-
-                    for (int j=0; j<menuKeys.size(); j++) {
-                        if (menuCountData.containsKey(menuKeys.get(j)+"")) {
-                            LineDataSet dataSet = menuCountData.get(menuKeys.get(j)+"");
-                            dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), i));
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
                         else {
-                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(j)+""); //TODO: 키 -> 이름
-                            dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), i));
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                             dataSet.setColor(colors[random.nextInt(colors.length)]);
-                            menuCountData.put(menuKeys.get(j)+"", dataSet);
+                            menuCountData.put(key, dataSet);
                         }
-                    }
-                    if(key.equals("0")) {
-                        xVals.add("월요일");
-                    }
-                    else if (key.equals("1")) {
-                        xVals.add("화요일");
-                    }
-                    else if (key.equals("2")) {
-                        xVals.add("수요일");
-                    }
-                    else if (key.equals("3")) {
-                        xVals.add("목요일");
-                    }
-                    else if (key.equals("4")) {
-                        xVals.add("금요일");
-                    }
-                    else if (key.equals("5")) {
-                        xVals.add("토요일");
-                    }
-                    else if (key.equals("6")) {
-                        xVals.add("일요일");
-                    }
-                    else {
-                        xVals.add(key);
                     }
                 }
             } catch (JSONException e) {
@@ -601,50 +529,29 @@ public class Statistic extends Fragment {
             HashMap<String, LineDataSet> menuCountData = new HashMap<>();
             ArrayList<String> xVals = new ArrayList<String>();
             try {
-                Iterator<String> yearKeysIter = recieveDataJsn.keys();
-                ArrayList<Integer> yearKeys = new ArrayList<>();
-                while(yearKeysIter.hasNext()) {
-                    yearKeys.add(Integer.parseInt(yearKeysIter.next()));
-                }
-                Collections.sort(yearKeys);
-                int n=0;
-                for (int y=0; y<yearKeys.size(); y++) {
-                    String yearKey = Integer.toString(yearKeys.get(y));
-                    JSONObject monthJsn = recieveDataJsn.getJSONObject(yearKey);
-                    Iterator<String> monthKeysIter = monthJsn.keys();
-                    ArrayList<Integer> monthKeys = new ArrayList<>();
-                    while (monthKeysIter.hasNext()) {
-                        monthKeys.add(Integer.parseInt(monthKeysIter.next()));
-                    }
-                    Collections.sort(monthKeys);
-
-                    for (int m=0; m<monthKeys.size(); m++) {
-                        String monthKey = Integer.toString(monthKeys.get(m));
-                        JSONObject dataJsn = monthJsn.getJSONObject(monthKey);
-                        JSONObject menuJsn = dataJsn.getJSONObject("count");
-                        Iterator<String> menuKeyIter = menuJsn.keys();
-                        ArrayList<Integer> menuKeys = new ArrayList<>();
-                        while(menuKeyIter.hasNext()) {
-                            menuKeys.add(Integer.parseInt(menuKeyIter.next()));
+                Iterator<String> keyIter = recieveDataJsn.keys();
+                boolean isAddedLabel = false;
+                Calendar date = (Calendar) startCal.clone();
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
-                        Collections.sort(menuKeys);
-
-                        for (int j=0; j<menuKeys.size(); j++) {
-                            if (menuCountData.containsKey(menuKeys.get(j)+"")) {
-                                LineDataSet dataSet = menuCountData.get(menuKeys.get(j)+"");
-                                dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
-                            }
-                            else {
-                                LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(j)+""); //TODO: 키 -> 이름
-                                dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
-                                dataSet.setColor(colors[random.nextInt(colors.length)]);
-                                menuCountData.put(menuKeys.get(j)+"", dataSet);
-                            }
+                        else {
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
+                            dataSet.setColor(colors[random.nextInt(colors.length)]);
+                            menuCountData.put(key, dataSet);
                         }
-
-                        xVals.add(yearKey+"."+monthKey);
-                        n++;
+                        if (!isAddedLabel) {
+                            xVals.add(Data.onlyDateFormat.format(date.getTime()));
+                            date.add(Calendar.MONTH, 1);
+                        }
                     }
+                    isAddedLabel = true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -661,50 +568,29 @@ public class Statistic extends Fragment {
             HashMap<String, LineDataSet> menuCountData = new HashMap<>();
             ArrayList<String> xVals = new ArrayList<String>();
             try {
-                Iterator<String> yearKeysIter = recieveDataJsn.keys();
-                ArrayList<Integer> yearKeys = new ArrayList<>();
-                while(yearKeysIter.hasNext()) {
-                    yearKeys.add(Integer.parseInt(yearKeysIter.next()));
-                }
-                Collections.sort(yearKeys);
-                int n=0;
-                for (int y=0; y<yearKeys.size(); y++) {
-                    String yearKey = Integer.toString(yearKeys.get(y));
-                    JSONObject quaterJsn = recieveDataJsn.getJSONObject(yearKey);
-                    Iterator<String> quaterKeysIter = quaterJsn.keys();
-                    ArrayList<Integer> quaterKeys = new ArrayList<>();
-                    while (quaterKeysIter.hasNext()) {
-                        quaterKeys.add(Integer.parseInt(quaterKeysIter.next()));
-                    }
-                    Collections.sort(quaterKeys);
-
-                    for (int m=0; m<quaterKeys.size(); m++) {
-                        String quaterKey = Integer.toString(quaterKeys.get(m));
-                        JSONObject dataJsn = quaterJsn.getJSONObject(quaterKey);
-                        JSONObject menuJsn = dataJsn.getJSONObject("count");
-                        Iterator<String> menuKeyIter = menuJsn.keys();
-                        ArrayList<Integer> menuKeys = new ArrayList<>();
-                        while(menuKeyIter.hasNext()) {
-                            menuKeys.add(Integer.parseInt(menuKeyIter.next()));
+                Iterator<String> keyIter = recieveDataJsn.keys();
+                boolean isAddedLabel = false;
+                Calendar date = (Calendar) startCal.clone();
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
-                        Collections.sort(menuKeys);
-
-                        for (int j=0; j<menuKeys.size(); j++) {
-                            if (menuCountData.containsKey(menuKeys.get(j)+"")) {
-                                LineDataSet dataSet = menuCountData.get(menuKeys.get(j)+"");
-                                dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
-                            }
-                            else {
-                                LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(j)+""); //TODO: 키 -> 이름
-                                dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
-                                dataSet.setColor(colors[random.nextInt(colors.length)]);
-                                menuCountData.put(menuKeys.get(j)+"", dataSet);
-                            }
+                        else {
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
+                            dataSet.setColor(colors[random.nextInt(colors.length)]);
+                            menuCountData.put(key, dataSet);
                         }
-
-                        xVals.add(yearKey+"년 "+quaterKey+"분기");
-                        n++;
+                        if (!isAddedLabel) {
+                            xVals.add(date.get(Calendar.YEAR)+"년 "+(date.get(Calendar.MONTH)/4+1)+"분기");
+                            date.add(Calendar.MONTH, 3-date.get(Calendar.MONTH)%3);
+                        }
                     }
+                    isAddedLabel = true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -721,39 +607,29 @@ public class Statistic extends Fragment {
             HashMap<String, LineDataSet> menuCountData = new HashMap<>();
             ArrayList<String> xVals = new ArrayList<String>();
             try {
-                Iterator<String> yearKeysIter = recieveDataJsn.keys();
-                ArrayList<Integer> yearKeys = new ArrayList<>();
-                while(yearKeysIter.hasNext()) {
-                    yearKeys.add(Integer.parseInt(yearKeysIter.next()));
-                }
-                Collections.sort(yearKeys);
-                int n=0;
-                for (int y=0; y<yearKeys.size(); y++) {
-                    String yearKey = Integer.toString(yearKeys.get(y));
-                    JSONObject dataJsn = recieveDataJsn.getJSONObject(yearKey);
-                    JSONObject menuJsn = dataJsn.getJSONObject("count");
-                    Iterator<String> menuKeyIter = menuJsn.keys();
-                    ArrayList<Integer> menuKeys = new ArrayList<>();
-                    while(menuKeyIter.hasNext()) {
-                        menuKeys.add(Integer.parseInt(menuKeyIter.next()));
-                    }
-                    Collections.sort(menuKeys);
-
-                    for (int j=0; j<menuKeys.size(); j++) {
-                        if (menuCountData.containsKey(menuKeys.get(j)+"")) {
-                            LineDataSet dataSet = menuCountData.get(menuKeys.get(j)+"");
-                            dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
+                Iterator<String> keyIter = recieveDataJsn.keys();
+                boolean isAddedLabel = false;
+                Calendar date = (Calendar) startCal.clone();
+                while (keyIter.hasNext()) {
+                    String key = keyIter.next();
+                    JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
+                    for (int j=0; j<dataJsn.length(); j++) {
+                        if (menuCountData.containsKey(key)) {
+                            LineDataSet dataSet = menuCountData.get(key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                         }
                         else {
-                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), menuKeys.get(j)+""); //TODO: 키 -> 이름
-                            dataSet.addEntry(new Entry(menuJsn.getInt(menuKeys.get(j) + ""), n));
+                            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
+                            dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt("count"), j));
                             dataSet.setColor(colors[random.nextInt(colors.length)]);
-                            menuCountData.put(menuKeys.get(j)+"", dataSet);
+                            menuCountData.put(key, dataSet);
+                        }
+                        if (!isAddedLabel) {
+                            xVals.add(date.get(Calendar.YEAR) + "년 ");
+                            date.add(Calendar.YEAR, 1);
                         }
                     }
-
-                    xVals.add(yearKey+"년 ");
-                    n++;
+                    isAddedLabel = true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1151,7 +1027,7 @@ public class Statistic extends Fragment {
 
             JSONObject recieveDataJsn = null;
             try {
-                recieveDataJsn = new JSONObject(Http.post(Data.SERVER_URL + "statistic/unit_menu_sum", requestParams));
+                recieveDataJsn = new JSONObject(Http.post(Data.SERVER_URL + "statistic/linechart", requestParams));
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {

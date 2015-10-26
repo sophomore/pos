@@ -2,7 +2,8 @@ package org.jaram.ds.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,14 +15,13 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jaram.ds.R;
 import org.jaram.ds.adapter.OrderDetailMenuAdapter;
 import org.jaram.ds.adapter.OrderListAdapter;
-import org.jaram.ds.data.Closing;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.*;
-import org.jaram.ds.data.struct.Order;
 import org.jaram.ds.dialog.OrderSearch;
 import org.jaram.ds.util.Http;
 import org.json.JSONArray;
@@ -44,6 +44,9 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     OrderListAdapter adapter = null;
     ArrayList<org.jaram.ds.data.struct.Order> orders = null;
 
+    ListView orderList;
+    TextView totalpriceView;
+    TextView dateView;
     OrderDetailMenuAdapter orderDetailAdapter = null;
     ArrayList<OrderMenu> ordermenus = null;
 
@@ -71,10 +74,10 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         menus = new HashMap<>();
 
-        ListView orderList = (ListView)view.findViewById(R.id.orderList);
+        orderList = (ListView)view.findViewById(R.id.orderList);
 
-        final TextView totalpriceView = (TextView)view.findViewById(R.id.totalprice);
-        final TextView dateView = (TextView)view.findViewById(R.id.date);
+        totalpriceView = (TextView)view.findViewById(R.id.totalprice);
+        dateView = (TextView)view.findViewById(R.id.date);
 
         orderList.setAdapter(adapter);
         orderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,27 +100,65 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         ListView ordermenuList = (ListView)view.findViewById(R.id.ordermenuDetailList);
         ordermenuList.setAdapter(orderDetailAdapter);
 
-        ImageButton searchBtn = (ImageButton)view.findViewById(R.id.searchBtn);
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+        ImageButton orderBtn = (ImageButton)view.findViewById(R.id.orderBtn);
+        orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new OrderSearch(OrderManager.this, menus).show();
+                newOrder();
             }
         });
 
-        new GetAllMenuList().execute();
+        refresh();
+
+        //TODO: Detail Btn set listener
 
         return view;
     }
 
+    private void newOrder() {
+        startActivity(new Intent(getActivity(), org.jaram.ds.Order.class));
+    }
+
+    private void refresh() {
+        orders.clear();
+        orders.addAll(Data.dbOrder.getAll());
+        adapter.notifyDataSetChanged();
+
+        if (Data.pref.getBoolean("network", false)) {
+            new GetAllMenuList().execute();
+        }
+        else {
+            Toast.makeText(getActivity(), "서버에 접속할 수 없어 일부 기능을 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
+            //TODO: button disable
+        }
+    }
+
+    private void doSelectFirstItem() {
+        adapter.setCurrentSelected(0);
+        org.jaram.ds.data.struct.Order order = orders.get(0);
+        ordermenus.clear();
+        ordermenus.addAll(order.getOrdermenus());
+        orderDetailAdapter.notifyDataSetChanged();
+        totalpriceView.setText("총 " + order.getTotalprice() + "원");
+        dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초", Locale.KOREA).format(order.getDate()));
+        adapter.setCurrentSelected(0);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
-    public void refresh(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
+    public void applySearchResult(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
         String query = "SELECT * FROM `ordermenu` WHERE " +
                 Data.onlyDateFormat.format(startDate.getTime())+"<date" +
                 " AND " +
                 "date<"+Data.onlyDateFormat.format(endDate.getTime()) +
                 " AND ";
         Data.dbOrder.readDB().rawQuery("", null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
     }
 
     private class GetOrder extends AsyncTask<Void, Void, JSONArray> {
@@ -130,7 +171,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         @Override
         protected void onPreExecute() {
             dialog.setMessage("주문 목록을 로드하고 있습니다");
-            orders.addAll(Data.dbOrder.getAll());
+            dialog.show();
         }
 
         @Override
@@ -142,6 +183,9 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+                SharedPreferences.Editor ed = Data.pref.edit();
+                ed.putBoolean("network", false);
+                ed.apply();
             }
             return result;
         }
@@ -176,6 +220,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 Log.e("DateFormatParse Error", e.toString());
             }
             adapter.notifyDataSetChanged();
+            doSelectFirstItem();
             dialog.dismiss();
         }
     }
@@ -213,13 +258,19 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+                SharedPreferences.Editor ed = Data.pref.edit();
+                ed.putBoolean("network", false);
+                ed.apply();
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            new GetOrder(getActivity()).execute();
+            if (Data.pref.getBoolean("network", false)) {
+                new GetOrder(getActivity()).execute();
+            }
+            dialog.dismiss();
         }
     }
 }

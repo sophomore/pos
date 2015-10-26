@@ -1,6 +1,8 @@
 package org.jaram.ds.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.OrderMenu;
+import org.jaram.ds.util.Http;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by kjydiary on 15. 9. 23..
@@ -88,8 +93,34 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
         }
         holder.paySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                 //TODO: send modify info to server
+                new AsyncTask<Void, Void, Void>() {
+                    ProgressDialog dialog;
+                    @Override
+                    protected void onPreExecute() {
+                        dialog = new ProgressDialog(context);
+                        dialog.setMessage("정보를 수정하고 있습니다");
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        HashMap<String, Object> param = new HashMap<String, Object>();
+                        param.put("pay", position + 1);
+                        try {
+                            Http.post(Data.SERVER_URL+"order/menu/"+ordermenu.getId(), param);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        ordermenu.setPay(position+1);
+                        dialog.dismiss();
+                    }
+                }.execute();
             }
 
             @Override

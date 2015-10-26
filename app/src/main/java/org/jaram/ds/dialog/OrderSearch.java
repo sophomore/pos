@@ -2,7 +2,6 @@ package org.jaram.ds.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -17,12 +16,10 @@ import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.Menu;
 import org.jaram.ds.fragment.OrderManager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by kjydiary on 15. 9. 30..
@@ -189,7 +186,7 @@ public class OrderSearch extends Dialog {
         View.OnClickListener btnListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getId() == R.id.confirmBtn) callbacks.refresh(startDate, endDate, selectedMenus, cash, card, service, credit);
+                if (v.getId() == R.id.confirmBtn) callbacks.applySearchResult(startDate, endDate, selectedMenus, cash, card, service, credit);
                 dismiss();
             }
         };
@@ -198,7 +195,7 @@ public class OrderSearch extends Dialog {
     }
 
     public interface Callbacks {
-        void refresh(Calendar startDate, Calendar endDate, ArrayList<Menu> menus,
-                     boolean cash, boolean card, boolean service, boolean credit);
+        void applySearchResult(Calendar startDate, Calendar endDate, ArrayList<Menu> menus,
+                               boolean cash, boolean card, boolean service, boolean credit);
     }
 }
