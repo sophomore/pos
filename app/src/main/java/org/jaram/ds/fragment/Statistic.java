@@ -228,6 +228,7 @@ public class Statistic extends Fragment {
             @Override
             public void onClick(View v) {
                 new GetStatisticInfo().execute();
+                callbacks.closeLeftDrawer();
             }
         });
 
@@ -293,6 +294,7 @@ public class Statistic extends Fragment {
     public interface Callbacks {
         void setDrawer(FrameLayout drawer);
         void addViewAtActionBar(View view, ViewGroup.LayoutParams params);
+        void closeLeftDrawer();
     }
 
     private class TypeListener implements View.OnClickListener {

@@ -108,6 +108,7 @@ public abstract class Base extends FragmentActivity {
 
     protected void resetLeftDrawer() {
         if (drawerView != null) {
+            actionbar.findViewById(R.id.actionbar_titleBox).setOnClickListener(null);
             base_container.removeView(drawerView);
             base_container.findViewById(R.id.open_leftDrawerBtn).setOnClickListener(null);
             base_container.findViewById(R.id.open_leftDrawerBtn).setVisibility(View.GONE);
@@ -128,6 +129,7 @@ public abstract class Base extends FragmentActivity {
 
         @Override
         public void onClick(View v) {
+            base_container.closeDrawer(Gravity.RIGHT);
             switch(v.getId()) {
                 case R.id.drawer_orderBtn:
                     if (getCurrent() != ORDER) {

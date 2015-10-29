@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -111,6 +112,27 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         refresh();
 
         //TODO: Detail Btn set listener
+        ((Button)view.findViewById(R.id.printReceiptBtn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                org.jaram.ds.data.struct.Order.print_receipt(orders.get(adapter.getCurrentSelected()).getId());
+                refresh();
+            }
+        });
+        ((Button)view.findViewById(R.id.printStatementBtn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                org.jaram.ds.data.struct.Order.print_statement(orders.get(adapter.getCurrentSelected()).getId());
+                refresh();
+            }
+        });
+        ((Button)view.findViewById(R.id.deleteBtn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                org.jaram.ds.data.struct.Order.delete(orders.get(adapter.getCurrentSelected()).getId());
+                refresh();
+            }
+        });
 
         return view;
     }

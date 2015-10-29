@@ -99,18 +99,18 @@ public class Order extends Fragment {
         ordermenuView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (ordermenus.get(position).getPay() == Data.PAY_CREDIT) {
+                if (!ordermenus.get(position).isPay()) {
                     if (orderMenuAdapter.isSelected(ordermenus.get(position))) {
                         orderMenuAdapter.removeSelectedMenu(ordermenus.get(position));
                     }
                     else {
                         orderMenuAdapter.addSelectedMenu(ordermenus.get(position));
                     }
-                    listRefresh();
                 }
                 else {
                     Toast.makeText(getActivity(), "이미 결제된 메뉴입니다.", Toast.LENGTH_SHORT).show();
                 }
+                listRefresh();
             }
         });
 
@@ -172,10 +172,11 @@ public class Order extends Fragment {
                 ArrayList<OrderMenu> selectedMenus = orderMenuAdapter.getSelectedMenus();
                 for (int i=0; i<selectedMenus.size(); i++) {
                     selectedMenus.get(i).setPay((int)v.getTag());
+                    selectedMenus.get(i).setPay();
                 }
                 confirmBox.setVisibility(View.INVISIBLE);
                 isConfirmView = false;
-                endBtn.setText("전표 출력");
+                endBtn.setText(getResources().getString(R.string.orderEnd));
                 orderMenuAdapter.resetSelectedMenu();
                 listRefresh();
             }
@@ -186,7 +187,7 @@ public class Order extends Fragment {
 
     public boolean chkAllPaied() {
         for (int i=0; i<ordermenus.size(); i++) {
-            if (ordermenus.get(i).getPay() == Data.PAY_CREDIT) return false;
+            if (!ordermenus.get(i).isPay()) return false;
         }
         return true;
     }
@@ -197,7 +198,6 @@ public class Order extends Fragment {
             order.store();
         }
 
-        //TODO: 전표 출력
         getActivity().finish();
 //        listRefresh();
 //        newOrder();
@@ -255,7 +255,7 @@ public class Order extends Fragment {
         orderMenuAdapter.resetSelectedMenu();
         confirmBox.setVisibility(View.INVISIBLE);
         isConfirmView = false;
-        endBtn.setText("전표 출력");
+        endBtn.setText(getResources().getString(R.string.orderEnd));
         listRefresh();
     }
 
@@ -295,7 +295,7 @@ public class Order extends Fragment {
             }
             else if (orderMenuAdapter.getSelectedMenus().size() == 0) {
                 for (int i=0; i<ordermenus.size(); i++) {
-                    if (ordermenus.get(i).getPay() == Data.PAY_CREDIT) {
+                    if (!ordermenus.get(i).isPay()) {
                         orderMenuAdapter.addSelectedMenu(ordermenus.get(i));
                     }
                 }

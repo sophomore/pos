@@ -21,6 +21,7 @@ public class OrderMenu {
     private boolean twice;
     private boolean takeout;
     private int totalprice;
+    private boolean isPay;
     public OrderMenu(Menu menu, int pay, boolean curry, boolean twice, boolean takeout) {
         this(0, menu, null, pay, curry, twice, takeout);
     }
@@ -39,6 +40,7 @@ public class OrderMenu {
         if (curry) totalprice += Data.CURRY;
         if (twice) totalprice += Data.TWICE;
         if (takeout) totalprice += Data.TAKEOUT;
+        this.isPay = false;
     }
 
     public int getId() {
@@ -71,6 +73,10 @@ public class OrderMenu {
 
     public int getTotalprice() {
         return totalprice;
+    }
+
+    public boolean isPay() {
+        return isPay;
     }
 
     public void setId(int id) {
@@ -141,6 +147,10 @@ public class OrderMenu {
         getOrder().setTotalprice(getOrder().getTotalprice() + Data.TAKEOUT);
     }
 
+    public void setPay() {
+        isPay = true;
+    }
+
     public void resetCurry() {
         OrderMenu.this.setCurry(false);
         setTotalprice(getTotalprice() - Data.CURRY);
@@ -157,6 +167,10 @@ public class OrderMenu {
         OrderMenu.this.setTakeout(false);
         setTotalprice(getTotalprice() - Data.TAKEOUT);
         getOrder().setTotalprice(getOrder().getTotalprice() - Data.TAKEOUT);
+    }
+
+    public void resetPay() {
+        isPay = false;
     }
 
     public void delete() {

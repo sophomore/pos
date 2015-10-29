@@ -64,7 +64,7 @@ public class OrderMenuListAdapter extends BaseAdapter {
         }
         holder.name.setText(ordermenu.getMenu().getName());
         holder.price.setText(ordermenu.getTotalprice() + "원");
-        if (ordermenu.getPay() != Data.PAY_CREDIT) {
+        if (ordermenu.isPay()) {
             holder.item.setAlpha(0.6f);
             holder.curry.setVisibility(View.GONE);
             holder.twice.setVisibility(View.GONE);

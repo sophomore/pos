@@ -150,11 +150,48 @@ public class Order {
         }.execute();
     }
 
-    public void print_statement() {
-        //TODO:
+    public static void print_statement(final int id) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Http.get(Data.SERVER_URL+"order/"+id+"/print/statement", null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 
-    public void print_receipt() {
-        //TODO:
+    public static void print_receipt(final int id) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Http.get(Data.SERVER_URL+"order/"+id+"/print/receipt", null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    public static void delete(final int id) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Http.delete(Data.SERVER_URL+"order/"+id, null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 }

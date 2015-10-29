@@ -91,6 +91,10 @@ public class OrderListAdapter extends BaseAdapter {
         currentSelected = position;
     }
 
+    public int getCurrentSelected() {
+        return currentSelected;
+    }
+
     private class ViewHolder {
         TextView date;
         TextView price;

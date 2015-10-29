@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -145,6 +146,11 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
     @Override
     public void addViewAtActionBar(View view, ViewGroup.LayoutParams params) {
         super.addViewAtActionBar(view, params);
+    }
+
+    @Override
+    public void closeLeftDrawer() {
+        base_container.closeDrawer(Gravity.LEFT);
     }
 
     boolean isExitProgress = false;

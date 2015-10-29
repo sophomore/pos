@@ -26,5 +26,6 @@ public class Order extends Base {
                 .commit();
         super.doneAttatch();
         super.open_rightDrawerBtn.setVisibility(View.GONE);
+        super.base_container.removeViewAt(1);
     }
 }
