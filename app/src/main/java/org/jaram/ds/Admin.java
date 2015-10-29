@@ -38,8 +38,6 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks, O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO: 마감 작업
-
         Intent intent = getIntent();
         current = intent.getIntExtra("view", Base.MANAGE_ORDER);
 

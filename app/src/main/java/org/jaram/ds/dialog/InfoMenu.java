@@ -91,7 +91,6 @@ public class InfoMenu extends Dialog {
         ((Button) findViewById(R.id.confirmBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: save
                 int menuId = -1;
                 if (menu != null) menuId = menu.getId();
 

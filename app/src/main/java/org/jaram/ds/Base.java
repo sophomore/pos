@@ -156,6 +156,7 @@ public abstract class Base extends FragmentActivity {
                     break;
                 case R.id.drawer_settingBtn: //TODO: 설정화면
 //                    Toast.makeText(getApplicationContext(), "설정", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Base.this, Setting.class));
                     finish();
                     break;
             }

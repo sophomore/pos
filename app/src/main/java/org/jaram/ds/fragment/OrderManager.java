@@ -200,12 +200,12 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             menu_ids.add(menus.get(i).getId());
         }
         searchParam.put("menus", menu_ids.toString());
-        searchParam.put("pay", "[" +
-                (cash?"1, ":"")+
-                (card?"2, ":"")+
-                (service?"3, ":"")+
-                (credit?"4":"")+
-                "]");
+        ArrayList<Integer> pays = new ArrayList<>();
+        if (cash) pays.add(1);
+        if (card) pays.add(2);
+        if (service) pays.add(3);
+        if (credit) pays.add(4);
+        searchParam.put("pay", pays.toString());
         new GetOrder(getActivity()).execute();
     }
 
