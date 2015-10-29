@@ -29,6 +29,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.util.Http;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -208,42 +209,25 @@ public class Tax extends Fragment {
             param.put("menus", "[]");
             BarData barData = null;
             try {
-                JSONObject yearJsn = new JSONObject(Http.post(Data.SERVER_URL + "statistic/unit_menu_sum", param));
+                JSONArray yearJsn = new JSONArray(Http.post(Data.SERVER_URL + "statistic/barchart", param));
                 ArrayList<String> xVals = new ArrayList<>();
                 ArrayList<BarEntry> yVals = new ArrayList<>();
 
-                Iterator<String> yearKeysIter = yearJsn.keys();
-                ArrayList<Integer> yearKeys = new ArrayList<>();
-                while(yearKeysIter.hasNext()) {
-                    yearKeys.add(Integer.parseInt(yearKeysIter.next()));
-                }
-                Collections.sort(yearKeys);
-                int n=0;
-                for (int y=0; y<yearKeys.size(); y++) {
-                    String yearKey = Integer.toString(yearKeys.get(y));
-                    JSONObject monthJsn = yearJsn.getJSONObject(yearKey);
-                    Iterator<String> monthKeysIter = monthJsn.keys();
-                    ArrayList<Integer> monthKeys = new ArrayList<>();
-                    while (monthKeysIter.hasNext()) {
-                        monthKeys.add(Integer.parseInt(monthKeysIter.next()));
-                    }
-                    Collections.sort(monthKeys);
+                Calendar current = (Calendar) startCal.clone();
 
-                    for (int m=0; m<monthKeys.size(); m++) {
-                        String monthKey = Integer.toString(monthKeys.get(m));
-                        JSONObject dataJsn = monthJsn.getJSONObject(monthKey);
-                        float[] vals = {(float)dataJsn.getInt("cashtotal"),
-                                (float)dataJsn.getInt("cardtotal"),
-                                (float)(dataJsn.getInt("total")-dataJsn.getInt("cardtotal")-dataJsn.getInt("cashtotal"))};
-                        BarEntry yVal = new BarEntry(vals, n);
-                        yVals.add(yVal);
-                        xVals.add(yearKey+"."+monthKey);
-                        rangeCash += dataJsn.getInt("cashtotal");
-                        rangeCard += dataJsn.getInt("cardtotal");
-                        rangeTotal += dataJsn.getInt("total");
-                        n++;
-                    }
+                for (int i=0; i<yearJsn.length(); i++) {
+                    JSONObject dataJsn = yearJsn.getJSONObject(i);
+                    float[] vals = {(float)dataJsn.getInt("cashtotal"),
+                            (float)dataJsn.getInt("cardtotal"),
+                            (float)(dataJsn.getInt("totalprice")-dataJsn.getInt("cardtotal")-dataJsn.getInt("cashtotal"))};
+                    yVals.add(new BarEntry(vals, i));
+                    xVals.add(current.get(Calendar.YEAR)+"년 "+(current.get(Calendar.MONTH)+1)+"월");
+                    current.add(Calendar.MONTH, 1);
+                    rangeCash += dataJsn.getInt("cashtotal");
+                    rangeCard += dataJsn.getInt("cardtotal");
+                    rangeTotal += dataJsn.getInt("totalprice");
                 }
+
                 BarDataSet dataSet = new BarDataSet(yVals, "판매금액");
                 dataSet.setColors(new int[]{Color.parseColor("#FFB14A"), Color.parseColor("#FE7E39"), Color.parseColor("#E5404C")});
                 dataSet.setValueTextColor(getResources().getColor(R.color.dark));
