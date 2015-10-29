@@ -38,7 +38,7 @@ public class OrderSearch extends Dialog {
     boolean credit = false;
 
     public OrderSearch(OrderManager om, HashMap<Integer, Menu> menus) {
-        super(om.getActivity(), android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+        super(om.getActivity(), R.style.Theme_AppCompat_Light_Dialog);
         callbacks = (Callbacks)om;
         this.menus = menus;
         selectedMenus = new ArrayList<>();

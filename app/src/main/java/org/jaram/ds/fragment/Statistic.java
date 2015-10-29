@@ -384,8 +384,6 @@ public class Statistic extends Fragment {
 
     private void setLineChartData(LineData data) {
         lineChart.setData(data);
-//        lineChart.notifyDataSetChanged();
-        lineChart.getChartBitmap().recycle();
         lineChart.invalidate();
     }
 
