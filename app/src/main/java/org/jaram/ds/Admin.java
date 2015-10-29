@@ -28,7 +28,7 @@ import org.jaram.ds.fragment.Tax;
 /**
  * Created by kjydiary on 15. 9. 23..
  */
-public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
+public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks, OrderManager.Callbacks {
 
     FragmentManager fm;
 
@@ -168,5 +168,10 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks {
                 }
             }, 1500);
         }
+    }
+
+    @Override
+    public void addActionBarBtn(View view) {
+        super.addButtonAtActionBar(view);
     }
 }

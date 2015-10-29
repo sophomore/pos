@@ -94,7 +94,6 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
         holder.paySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-                //TODO: send modify info to server
                 new AsyncTask<Void, Void, Void>() {
                     ProgressDialog dialog;
                     @Override
@@ -118,6 +117,7 @@ public class OrderDetailMenuAdapter extends BaseAdapter {
                     @Override
                     protected void onPostExecute(Void result) {
                         ordermenu.setPay(position+1);
+                        OrderDetailMenuAdapter.this.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 }.execute();

@@ -61,8 +61,8 @@ public class OrderSearch extends Dialog {
         final Button endDateBtn = (Button)findViewById(R.id.endDate);
         final Button menuSelectBtn = (Button)findViewById(R.id.menuSelectBtn);
 
-        startDateBtn.setText(Data.dateFormat.format(date));
-        endDateBtn.setText(Data.dateFormat.format(date));
+        startDateBtn.setText(Data.onlyDateFormat.format(date));
+        endDateBtn.setText(Data.onlyDateFormat.format(date));
 
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

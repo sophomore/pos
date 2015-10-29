@@ -1,5 +1,6 @@
 package org.jaram.ds.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -55,6 +56,8 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     ProgressDialog dialog = null;
 
+    Callbacks callbacks;
+
     private static OrderManager view;
     public static OrderManager getInstance() {
         if (view == null) {
@@ -96,7 +99,14 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         });
 
         ordermenus = new ArrayList<OrderMenu>();
-        orderDetailAdapter = new OrderDetailMenuAdapter(ordermenus, getActivity());
+        orderDetailAdapter = new OrderDetailMenuAdapter(ordermenus, getActivity()) {
+
+            @Override
+            public void notifyDataSetChanged() {
+                super.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+            }
+        };
 
         ListView ordermenuList = (ListView)view.findViewById(R.id.ordermenuDetailList);
         ordermenuList.setAdapter(orderDetailAdapter);
@@ -111,7 +121,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         refresh();
 
-        //TODO: Detail Btn set listener
         ((Button)view.findViewById(R.id.printReceiptBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,6 +142,19 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 refresh();
             }
         });
+        final OrderSearch searchView = new OrderSearch(OrderManager.this, menus);
+        searchView.setCancelable(false);
+
+        ImageButton searchBtn = new ImageButton(getActivity());
+        searchBtn.setImageResource(R.drawable.ic_search_white_24dp);
+        searchBtn.setBackgroundResource(R.drawable.default_btn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.show();
+            }
+        });
+        callbacks.addActionBarBtn(searchBtn);
 
         return view;
     }
@@ -167,20 +189,36 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         adapter.notifyDataSetChanged();
     }
 
+    HashMap<String, Object> searchParam = new HashMap<>();
+
     @Override
     public void applySearchResult(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
-        String query = "SELECT * FROM `ordermenu` WHERE " +
-                Data.onlyDateFormat.format(startDate.getTime())+"<date" +
-                " AND " +
-                "date<"+Data.onlyDateFormat.format(endDate.getTime()) +
-                " AND ";
-        Data.dbOrder.readDB().rawQuery("", null);
+        searchParam.put("startDate", Data.onlyDateFormat.format(startDate.getTime()));
+        searchParam.put("endDate", Data.onlyDateFormat.format(endDate.getTime()));
+        ArrayList<Integer> menu_ids = new ArrayList<>();
+        for (int i=0; i<menus.size(); i++) {
+            menu_ids.add(menus.get(i).getId());
+        }
+        searchParam.put("menus", menu_ids.toString());
+        searchParam.put("pay", "[" +
+                (cash?"1, ":"")+
+                (card?"2, ":"")+
+                (service?"3, ":"")+
+                (credit?"4":"")+
+                "]");
+        new GetOrder(getActivity()).execute();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         refresh();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        callbacks = (Callbacks)activity;
     }
 
     private class GetOrder extends AsyncTask<Void, Void, JSONArray> {
@@ -200,7 +238,12 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         protected JSONArray doInBackground(Void... params) {
             JSONArray result = null;
             try {
-                result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
+                if (searchParam.containsKey("startDate")) {
+                    result = new JSONArray(Http.post(Data.SERVER_URL+"order/search", searchParam));
+                }
+                else {
+                    result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -215,6 +258,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         @Override
         protected void onPostExecute(JSONArray result) {
             try {
+                orders.clear();
                 for (int i=0; i<result.length(); i++) {
                     JSONObject jo = result.getJSONObject(i);
                     org.jaram.ds.data.struct.Order order =
@@ -294,5 +338,9 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             }
             dialog.dismiss();
         }
+    }
+
+    public interface Callbacks {
+        void addActionBarBtn(View view);
     }
 }
