@@ -1,6 +1,10 @@
 package org.jaram.ds;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -10,11 +14,30 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.jaram.ds.data.Data;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by kjydiary on 15. 9. 20..
@@ -154,12 +177,88 @@ public abstract class Base extends FragmentActivity {
                         finish();
                     }
                     break;
-                case R.id.drawer_settingBtn: //TODO: 설정화면
-//                    Toast.makeText(getApplicationContext(), "설정", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Base.this, Setting.class));
-                    finish();
+                case R.id.drawer_settingBtn:
+                    new AlertDialog.Builder(Base.this)
+                            .setTitle("설정")
+                            .setItems(new String[]{"서버 주소 설정", "주문 내역 가져오기", "주문 내역 내보내기"}, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch(which) {
+                                        case 0:
+                                            final EditText ed = new EditText(Base.this);
+                                            ed.setText(Data.pref.getString("url", ""));
+                                            LinearLayout layout = new LinearLayout(Base.this);
+                                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                            layoutParams.setMargins(48, 0, 48, 0);
+                                            layout.addView(ed, layoutParams);
+                                            new AlertDialog.Builder(Base.this)
+                                                    .setTitle("서버 주소 설정")
+                                                    .setMessage("서버의 주소와 포트를 'url:port' 형식으로 입력해주세요.")
+                                                    .setView(layout)
+                                                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            SharedPreferences.Editor editor = Data.pref.edit();
+                                                            editor.putString("url", "http://"+ed.getText().toString()+"/");
+                                                            editor.apply();
+                                                            Log.d("setting", ed.getText().toString());
+                                                        }
+                                                    })
+                                                    .setNegativeButton("취소", null)
+                                                    .show();
+                                            break;
+                                        case 1:
+                                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                            intent.setType("*/*");
+                                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), 0);
+                                            break;
+                                        case 2:
+                                            break;
+                                    }
+                                }
+                            })
+                            .setNegativeButton("닫기", null)
+                            .show();
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    String addr = Data.SERVER_URL+"file/input";
+                    RequestParams params = new RequestParams();
+                    try {
+                        File file = new File(uri.getPath());
+                        Log.d("base", file.getAbsolutePath());
+                        params.put("file", file, "multipart/form-data");
+                    } catch(FileNotFoundException e) {}
+
+// send request
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.post(addr, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] bytes) {
+                            // handle success response
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] bytes, Throwable throwable) {
+                            // handle failure response
+                            Log.d("base", statusCode+"");
+                            for (int i=0; i<headers.length; i++) {
+                                Log.d("base", headers[i].getName() + " : " + headers[i].getValue());
+                            }
+                        }
+                    });
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

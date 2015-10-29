@@ -64,6 +64,7 @@ public class Intro extends Activity {
 
     private void init() {
         Log.d("intro", "init");
+        Data.SERVER_URL = Data.pref.getString("url", "http://192.168.0.101:80/");
         final SharedPreferences.Editor ed = Data.pref.edit();
         ed.putBoolean("network", true);
         ed.apply();

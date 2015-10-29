@@ -113,7 +113,7 @@ public class OrderSearch extends Dialog {
                     }
                     i++;
                 }
-                new AlertDialog.Builder(getContext(), R.style.Base_V21_Theme_AppCompat_Light_Dialog)
+                new AlertDialog.Builder(getContext())
                         .setTitle("메뉴 선택")
                         .setMultiChoiceItems(menuNames, menuSelectArr, new OnMultiChoiceClickListener() {
                             @Override

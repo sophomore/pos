@@ -125,14 +125,12 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             @Override
             public void onClick(View v) {
                 org.jaram.ds.data.struct.Order.print_receipt(orders.get(adapter.getCurrentSelected()).getId());
-                refresh();
             }
         });
         ((Button)view.findViewById(R.id.printStatementBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 org.jaram.ds.data.struct.Order.print_statement(orders.get(adapter.getCurrentSelected()).getId());
-                refresh();
             }
         });
         ((Button)view.findViewById(R.id.deleteBtn)).setOnClickListener(new View.OnClickListener() {
@@ -286,7 +284,9 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 Log.e("DateFormatParse Error", e.toString());
             }
             adapter.notifyDataSetChanged();
-            doSelectFirstItem();
+            if (orders.size() > 0) {
+                doSelectFirstItem();
+            }
             dialog.dismiss();
         }
     }

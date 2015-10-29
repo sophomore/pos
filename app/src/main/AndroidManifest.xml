@@ -14,8 +14,6 @@
         </activity>
         <activity android:name=".Order"/>
         <activity android:name=".Admin"/>
-        <activity android:name=".Setting"/>
-
     </application>
 
 </manifest>
