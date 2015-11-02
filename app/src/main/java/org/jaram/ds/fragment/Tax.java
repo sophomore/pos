@@ -19,12 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
@@ -154,13 +156,14 @@ public class Tax extends Fragment {
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
         chart.setDescription(null);
+        chart.setNoDataTextDescription("기간을 입력하시고 검색버튼을 눌러주세요");
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                float[] datas = ((BarEntry)e).getVals();
-                monthCashView.setText((int)datas[0]+"원");
-                monthCardView.setText((int)datas[1]+"원");
-                monthTotalView.setText(((int)datas[0]+(int)datas[1]+(int)datas[2])+"원");
+                float[] datas = ((BarEntry) e).getVals();
+                monthCashView.setText((int) datas[0] + "원");
+                monthCardView.setText((int) datas[1] + "원");
+                monthTotalView.setText(((int) datas[0] + (int) datas[1] + (int) datas[2]) + "원");
             }
 
             @Override
@@ -233,7 +236,7 @@ public class Tax extends Fragment {
                 dataSet.setValueTextColor(getResources().getColor(R.color.dark));
                 dataSet.setHighLightAlpha(0);
                 dataSet.setValueTextSize(16.0f);
-                dataSet.setStackLabels(new String[] {"현금", "카드", "기타"});
+                dataSet.setStackLabels(new String[]{"현금", "카드", "기타"});
                 ArrayList<BarDataSet> dataSets = new ArrayList<>();
                 dataSets.add(dataSet);
                 barData = new BarData(xVals, dataSets);

@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -111,6 +112,7 @@ public class Statistic extends Fragment {
         lineChart.setDoubleTapToZoomEnabled(false);
         lineChart.setPinchZoom(false);
         lineChart.setDescription(null);
+        lineChart.setNoDataTextDescription("기간과 검색 조건을 입력하시고 검색버튼을 눌러주세요");
 
         setActionBar();
         setDrawer();
@@ -141,6 +143,12 @@ public class Statistic extends Fragment {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 startCal.set(year, monthOfYear, dayOfMonth);
+
+                                if (startCal.compareTo(endCal)>0) {
+                                    Toast.makeText(getActivity(), "시작 날짜가 종료 날짜보다 이후면 안됩니다", Toast.LENGTH_SHORT).show();
+                                    startCal = (Calendar) endCal.clone();
+                                }
+
                                 startDate.setText(Data.onlyDateFormat.format(startCal.getTime()));
                             }
                         },
@@ -158,6 +166,12 @@ public class Statistic extends Fragment {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 endCal.set(year, monthOfYear, dayOfMonth);
+
+                                if (startCal.compareTo(endCal)<0) {
+                                    Toast.makeText(getActivity(), "시작 날짜가 종료 날짜보다 이후면 안됩니다", Toast.LENGTH_SHORT).show();
+                                    endCal = (Calendar) startCal.clone();
+                                }
+
                                 endDate.setText(Data.onlyDateFormat.format(endCal.getTime()));
                             }
                         },

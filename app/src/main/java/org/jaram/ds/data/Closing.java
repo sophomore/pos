@@ -128,7 +128,7 @@ public class Closing {
             if (result) {
                 notice("서버에 데이터를 전송하는데 성공했습니다.");
                 listener.endClosing(true);
-                if (notice_dialog.isShowing()) notice_dialog.dismiss();
+                if (notice_dialog != null) notice_dialog.dismiss();
                 return;
             }
             new AlertDialog.Builder(context)

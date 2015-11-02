@@ -11,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import com.wefika.flowlayout.FlowLayout;
+
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.Order;
@@ -56,7 +58,7 @@ public class OrderListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.orderlist_item, parent, false);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.price = (TextView) convertView.findViewById(R.id.price);
-            holder.ordermenuList = (GridLayout)convertView.findViewById(R.id.ordermenuList);
+            holder.ordermenuList = (FlowLayout)convertView.findViewById(R.id.ordermenuList);
             convertView.setTag(holder);
         }
         else {
@@ -98,6 +100,6 @@ public class OrderListAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView date;
         TextView price;
-        GridLayout ordermenuList;
+        FlowLayout ordermenuList;
     }
 }

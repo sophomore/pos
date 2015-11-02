@@ -110,13 +110,6 @@ public class Intro extends Activity {
         }.execute();
     }
 
-    private void postGetMenu() {
-        ArrayList<org.jaram.ds.data.struct.Order> orders = Data.dbOrder.getAll();
-        if (orders.size()>0) {
-            new Closing(Intro.this, new ClosingListener(), noticeView, Closing.VIEW_TEXTVIEW);
-        }
-    }
-
     private void endInit() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -130,7 +123,7 @@ public class Intro extends Activity {
 
         @Override
         public void endClosing(boolean isSuccess) {
-            postGetMenu();
+            endInit();
         }
     }
 
@@ -166,7 +159,12 @@ public class Intro extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
             noticeView.setText("메뉴정보를 성공적으로 가져왔습니다.");
-            endInit();
+            if (Data.dbOrder.getAll().size() > 0) {
+                new Closing(getApplicationContext(), new ClosingListener(), noticeView, Closing.VIEW_TEXTVIEW);
+            }
+            else {
+                endInit();
+            }
         }
     }
 }

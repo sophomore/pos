@@ -6,11 +6,11 @@
     android:padding="12dp"
     android:background="#FFFFFF">
 
-    <GridLayout
+    <com.wefika.flowlayout.FlowLayout
         android:id="@+id/ordermenuList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnCount="4"/>
+        android:gravity="start|top"/>
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"

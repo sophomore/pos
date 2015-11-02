@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,6 +67,7 @@ public abstract class Base extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.base);
 
         actionbar = (RelativeLayout)findViewById(R.id.actionbarBox);
@@ -152,6 +154,10 @@ public abstract class Base extends FragmentActivity {
 
         @Override
         public void onClick(View v) {
+            if (!Data.pref.getBoolean("network", false)) {
+                Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
+                return;
+            }
             base_container.closeDrawer(Gravity.RIGHT);
             switch(v.getId()) {
                 case R.id.drawer_orderBtn:

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
@@ -91,15 +92,29 @@ public class InfoMenu extends Dialog {
         ((Button) findViewById(R.id.confirmBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int menuId = -1;
-                if (menu != null) menuId = menu.getId();
+                if (chkForm()) {
+                    int menuId = -1;
+                    if (menu != null) menuId = menu.getId();
 
-                Menu newMenu = new Menu(menuId, nameForm.getText().toString(),
-                        Integer.parseInt(priceForm.getText().toString()),
-                        Data.categories.get(selectedCategory.getId()));
-                new AddMenuTask(getContext()).execute(newMenu.getId() + "", newMenu.getName(), newMenu.getPrice() + "", newMenu.getCategory().getId() + "");
+                    Menu newMenu = new Menu(menuId, nameForm.getText().toString(),
+                            Integer.parseInt(priceForm.getText().toString()),
+                            Data.categories.get(selectedCategory.getId()));
+                    new AddMenuTask(getContext()).execute(newMenu.getId() + "", newMenu.getName(), newMenu.getPrice() + "", newMenu.getCategory().getId() + "");
+                }
             }
         });
+    }
+
+    private boolean chkForm() {
+        if (((EditText)findViewById(R.id.menu_nameContent)).getText().toString().length()==0) {
+            Toast.makeText(getContext(), "메뉴 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (((EditText)findViewById(R.id.menu_priceContent)).getText().toString().length()==0) {
+            Toast.makeText(getContext(), "메뉴 가격을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     public class AddMenuTask extends AsyncTask<String, Void, JSONObject> {

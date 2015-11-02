@@ -195,9 +195,13 @@ public class Order extends Fragment {
     public void endOrder(boolean isSave) {
         if (isSave) {
             order.setDate(new Date());
-            order.store();
+            if (Data.pref.getBoolean("network", false)) {
+                order.store();
+            }
+            else {
+                order.putDB();
+            }
         }
-
         getActivity().finish();
 //        listRefresh();
 //        newOrder();

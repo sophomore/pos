@@ -1,8 +1,10 @@
 package org.jaram.ds.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -35,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -57,6 +60,10 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     ProgressDialog dialog = null;
 
     Callbacks callbacks;
+
+    boolean isEnableBtn = false;
+
+    Date lastDate = null;
 
     private static OrderManager view;
     public static OrderManager getInstance() {
@@ -124,20 +131,36 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         ((Button)view.findViewById(R.id.printReceiptBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                org.jaram.ds.data.struct.Order.print_receipt(orders.get(adapter.getCurrentSelected()).getId());
+                if (isEnableBtn && Data.pref.getBoolean("network", false)) {
+                    org.jaram.ds.data.struct.Order.print_receipt(orders.get(adapter.getCurrentSelected()).getId());
+                }
             }
         });
         ((Button)view.findViewById(R.id.printStatementBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                org.jaram.ds.data.struct.Order.print_statement(orders.get(adapter.getCurrentSelected()).getId());
+                if (isEnableBtn && Data.pref.getBoolean("network", false)) {
+                    org.jaram.ds.data.struct.Order.print_statement(orders.get(adapter.getCurrentSelected()).getId());
+                }
             }
         });
         ((Button)view.findViewById(R.id.deleteBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                org.jaram.ds.data.struct.Order.delete(orders.get(adapter.getCurrentSelected()).getId());
-                refresh();
+                if (isEnableBtn) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("주문 삭제")
+                            .setMessage("정말로 주문을 삭제하시겠습니까")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    org.jaram.ds.data.struct.Order.delete(orders.get(adapter.getCurrentSelected()).getId());
+                                    refresh();
+                                }
+                            })
+                            .setNegativeButton("아니오", null)
+                            .show();
+                }
             }
         });
         final OrderSearch searchView = new OrderSearch(OrderManager.this, menus);
@@ -168,10 +191,14 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         if (Data.pref.getBoolean("network", false)) {
             new GetAllMenuList().execute();
+            isEnableBtn = true;
         }
         else {
-            Toast.makeText(getActivity(), "서버에 접속할 수 없어 일부 기능을 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
+            if (orders.size() > 0) {
+                doSelectFirstItem();
+            }
             //TODO: button disable
+            isEnableBtn = false;
         }
     }
 
@@ -191,20 +218,25 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     @Override
     public void applySearchResult(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
-        searchParam.put("startDate", Data.onlyDateFormat.format(startDate.getTime()));
-        searchParam.put("endDate", Data.onlyDateFormat.format(endDate.getTime()));
-        ArrayList<Integer> menu_ids = new ArrayList<>();
-        for (int i=0; i<menus.size(); i++) {
-            menu_ids.add(menus.get(i).getId());
+        if (Data.pref.getBoolean("network", false)) {
+            searchParam.put("startDate", Data.onlyDateFormat.format(startDate.getTime()));
+            searchParam.put("endDate", Data.onlyDateFormat.format(endDate.getTime()));
+            ArrayList<Integer> menu_ids = new ArrayList<>();
+            for (int i=0; i<menus.size(); i++) {
+                menu_ids.add(menus.get(i).getId());
+            }
+            searchParam.put("menus", menu_ids.toString());
+            ArrayList<Integer> pays = new ArrayList<>();
+            if (cash) pays.add(1);
+            if (card) pays.add(2);
+            if (service) pays.add(3);
+            if (credit) pays.add(4);
+            searchParam.put("pay", pays.toString());
+            new GetOrder(getActivity()).execute();
         }
-        searchParam.put("menus", menu_ids.toString());
-        ArrayList<Integer> pays = new ArrayList<>();
-        if (cash) pays.add(1);
-        if (card) pays.add(2);
-        if (service) pays.add(3);
-        if (credit) pays.add(4);
-        searchParam.put("pay", pays.toString());
-        new GetOrder(getActivity()).execute();
+        else {
+            Toast.makeText(getActivity(), "서버에 접속할 수 없어 주문을 검색할 수 없습니다", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -238,9 +270,17 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             try {
                 if (searchParam.containsKey("startDate")) {
                     result = new JSONArray(Http.post(Data.SERVER_URL+"order/search", searchParam));
+                    lastDate = null;
                 }
                 else {
-                    result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
+                    if (lastDate == null) {
+                        result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
+                    }
+                    else {
+                        HashMap<String, Object> param = new HashMap<>();
+                        param.put("lastDate", Data.dateFormat.format(lastDate));
+                        result = new JSONArray(Http.put(Data.SERVER_URL+"order", param));
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -286,6 +326,15 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             adapter.notifyDataSetChanged();
             if (orders.size() > 0) {
                 doSelectFirstItem();
+                isEnableBtn = true;
+                lastDate = orders.get(orders.size()-1).getDate();
+            }
+            else {
+                ordermenus.clear();
+                orderDetailAdapter.notifyDataSetChanged();
+                totalpriceView.setText("");
+                dateView.setText("");
+                isEnableBtn = false;
             }
             dialog.dismiss();
         }
