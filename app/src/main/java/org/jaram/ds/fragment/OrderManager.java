@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -104,6 +106,16 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 adapter.notifyDataSetChanged();
             }
         });
+        ImageButton moreBtn = new ImageButton(getActivity());
+        moreBtn.setImageResource(R.drawable.ic_arrow_drop_down_black_48dp);
+        moreBtn.setBackgroundResource(R.drawable.white_btn);
+        moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetOrder(getActivity()).execute();
+            }
+        });
+        orderList.addFooterView(moreBtn);
 
         ordermenus = new ArrayList<OrderMenu>();
         orderDetailAdapter = new OrderDetailMenuAdapter(ordermenus, getActivity()) {
@@ -203,6 +215,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     }
 
     private void doSelectFirstItem() {
+        orderList.setSelection(0);
         adapter.setCurrentSelected(0);
         org.jaram.ds.data.struct.Order order = orders.get(0);
         ordermenus.clear();
@@ -275,6 +288,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 else {
                     if (lastDate == null) {
                         result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
+                        orders.clear();
                     }
                     else {
                         HashMap<String, Object> param = new HashMap<>();
@@ -296,7 +310,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         @Override
         protected void onPostExecute(JSONArray result) {
             try {
-                orders.clear();
                 for (int i=0; i<result.length(); i++) {
                     JSONObject jo = result.getJSONObject(i);
                     org.jaram.ds.data.struct.Order order =
@@ -325,7 +338,9 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             }
             adapter.notifyDataSetChanged();
             if (orders.size() > 0) {
-                doSelectFirstItem();
+                if (lastDate == null) {
+                    doSelectFirstItem();
+                }
                 isEnableBtn = true;
                 lastDate = orders.get(orders.size()-1).getDate();
             }
