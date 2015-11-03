@@ -214,12 +214,14 @@ public abstract class Base extends FragmentActivity {
                                                     .show();
                                             break;
                                         case 1:
-                                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                            intent.setType("*/*");
-                                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                                            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), 0);
+//                                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                                            intent.setType("*/*");
+//                                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                                            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), 0);
+                                            Toast.makeText(getApplicationContext(), "해당 기능은 준비중입니다", Toast.LENGTH_SHORT).show();
                                             break;
                                         case 2:
+                                            Toast.makeText(getApplicationContext(), "해당 기능은 준비중입니다", Toast.LENGTH_SHORT).show();
                                             break;
                                     }
                                 }

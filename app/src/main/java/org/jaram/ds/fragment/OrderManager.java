@@ -198,6 +198,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     private void refresh() {
         orders.clear();
+        lastDate = null;
         orders.addAll(Data.dbOrder.getAll());
         adapter.notifyDataSetChanged();
 
@@ -215,7 +216,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     }
 
     private void doSelectFirstItem() {
-        orderList.setSelection(0);
+//        orderList.setSelection(0);
         adapter.setCurrentSelected(0);
         org.jaram.ds.data.struct.Order order = orders.get(0);
         ordermenus.clear();
@@ -255,6 +256,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     @Override
     public void onResume() {
         super.onResume();
+        lastDate = null;
         refresh();
     }
 
