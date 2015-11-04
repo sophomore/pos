@@ -36,6 +36,7 @@ public class OrderListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        Log.d("order adapter", orders.size()+"");
         return orders.size();
     }
 
@@ -51,6 +52,7 @@ public class OrderListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        Log.d("order adapter",  position+" getview");
         final Order order = orders.get(position);
         ViewHolder holder;
         if (convertView == null) {

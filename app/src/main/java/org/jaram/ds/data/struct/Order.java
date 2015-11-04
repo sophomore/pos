@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import org.jaram.ds.data.Data;
 import org.jaram.ds.exception.NotExistException;
+import org.jaram.ds.fragment.OrderManager;
 import org.jaram.ds.util.Http;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,7 +123,7 @@ public class Order {
         this.setOrdermenus(null);
     }
 
-    public void store() {
+    public void store(final Listener listener) {
         new AsyncTask<Void, Void, Boolean>() {
 
             @Override
@@ -146,6 +147,7 @@ public class Order {
                 if (!result) {
                     putDB();
                 }
+                listener.stored(result);
             }
         }.execute();
     }
@@ -193,5 +195,9 @@ public class Order {
                 return null;
             }
         }.execute();
+    }
+
+    public interface Listener {
+        void stored(boolean result);
     }
 }

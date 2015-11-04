@@ -112,10 +112,29 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetOrder(getActivity()).execute();
+                if (Data.pref.getBoolean("network", false)) {
+                    new GetOrder(getActivity()).execute();
+                }
             }
         });
         orderList.addFooterView(moreBtn);
+
+//        orderList.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    final int lastItem = firstVisibleItem + visibleItemCount;
+//                    if(lastItem == totalItemCount){
+//                        if (Data.pref.getBoolean("network", false)) {
+//                            new GetOrder(getActivity()).execute();
+//                        }
+//                    }
+//            }
+//        });
 
         ordermenus = new ArrayList<OrderMenu>();
         orderDetailAdapter = new OrderDetailMenuAdapter(ordermenus, getActivity()) {
@@ -137,8 +156,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 newOrder();
             }
         });
-
-        refresh();
 
         ((Button)view.findViewById(R.id.printReceiptBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,14 +227,13 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             if (orders.size() > 0) {
                 doSelectFirstItem();
             }
-            //TODO: button disable
             isEnableBtn = false;
         }
+        Log.d("order manager2", "call refresh");
     }
 
     private void doSelectFirstItem() {
 //        orderList.setSelection(0);
-        adapter.setCurrentSelected(0);
         org.jaram.ds.data.struct.Order order = orders.get(0);
         ordermenus.clear();
         ordermenus.addAll(order.getOrdermenus());
@@ -246,6 +262,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
             if (service) pays.add(3);
             if (credit) pays.add(4);
             searchParam.put("pay", pays.toString());
+            lastDate = null;
             new GetOrder(getActivity()).execute();
         }
         else {
@@ -256,7 +273,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     @Override
     public void onResume() {
         super.onResume();
-        lastDate = null;
         refresh();
     }
 
@@ -290,7 +306,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 else {
                     if (lastDate == null) {
                         result = new JSONArray(Http.get(Data.SERVER_URL+"order", null));
-                        orders.clear();
                     }
                     else {
                         HashMap<String, Object> param = new HashMap<>();
@@ -311,7 +326,11 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         @Override
         protected void onPostExecute(JSONArray result) {
+            Log.d("order manager2", "call postExecute");
             try {
+                if (lastDate == null) {
+                    orders.clear();
+                }
                 for (int i=0; i<result.length(); i++) {
                     JSONObject jo = result.getJSONObject(i);
                     org.jaram.ds.data.struct.Order order =

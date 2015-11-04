@@ -196,13 +196,18 @@ public class Order extends Fragment {
         if (isSave) {
             order.setDate(new Date());
             if (Data.pref.getBoolean("network", false)) {
-                order.store();
+                order.store(new org.jaram.ds.data.struct.Order.Listener() {
+                    @Override
+                    public void stored(boolean result) {
+                        getActivity().finish();
+                    }
+                });
             }
             else {
                 order.putDB();
+                getActivity().finish();
             }
         }
-        getActivity().finish();
 //        listRefresh();
 //        newOrder();
     }

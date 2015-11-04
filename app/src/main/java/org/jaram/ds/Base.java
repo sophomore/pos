@@ -154,10 +154,6 @@ public abstract class Base extends FragmentActivity {
 
         @Override
         public void onClick(View v) {
-            if (!Data.pref.getBoolean("network", false)) {
-                Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
-                return;
-            }
             base_container.closeDrawer(Gravity.RIGHT);
             switch(v.getId()) {
                 case R.id.drawer_orderBtn:
@@ -172,12 +168,20 @@ public abstract class Base extends FragmentActivity {
                     }
                     break;
                 case R.id.drawer_statisticBtn:
+                    if (!Data.pref.getBoolean("network", false)) {
+                        Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if (getCurrent() != STATISTIC && getCurrent() != TAX && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.TAX));
                         finish();
                     }
                     break;
                 case R.id.drawer_manageMenuBtn:
+                    if (!Data.pref.getBoolean("network", false)) {
+                        Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if (getCurrent() != MANAGE_MENU && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_MENU));
                         finish();
