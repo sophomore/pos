@@ -66,7 +66,7 @@ public class OrderListAdapter extends BaseAdapter {
         else {
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초", Locale.KOREA).format(order.getDate()));
+        holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA).format(order.getDate()));
         holder.price.setText(order.getTotalprice() + "원");
         holder.ordermenuList.removeAllViews();
         Log.d("orderlist adapter", order.toJson().toString());

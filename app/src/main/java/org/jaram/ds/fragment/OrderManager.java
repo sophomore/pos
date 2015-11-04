@@ -101,7 +101,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 ordermenus.addAll(order.getOrdermenus());
                 orderDetailAdapter.notifyDataSetChanged();
                 totalpriceView.setText("총 " + order.getTotalprice() + "원");
-                dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초", Locale.KOREA).format(order.getDate()));
+                dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA).format(order.getDate()));
                 adapter.setCurrentSelected(position);
                 adapter.notifyDataSetChanged();
             }
@@ -239,7 +239,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         ordermenus.addAll(order.getOrdermenus());
         orderDetailAdapter.notifyDataSetChanged();
         totalpriceView.setText("총 " + order.getTotalprice() + "원");
-        dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초", Locale.KOREA).format(order.getDate()));
+        dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA).format(order.getDate()));
         adapter.setCurrentSelected(0);
         adapter.notifyDataSetChanged();
     }
