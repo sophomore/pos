@@ -72,6 +72,8 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     TextView today_total;
 
+    HashMap<String, Object> searchParam;
+
     private static OrderManager view;
     public static OrderManager getInstance() {
         if (view == null) {
@@ -83,6 +85,8 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_manager, container, false);
+
+        searchParam  = new HashMap<>();
 
         dialog = new ProgressDialog(getActivity());
         dialog.setCancelable(false);
@@ -257,8 +261,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         adapter.setCurrentSelected(0);
         adapter.notifyDataSetChanged();
     }
-
-    HashMap<String, Object> searchParam = new HashMap<>();
 
     @Override
     public void applySearchResult(Calendar startDate, Calendar endDate, ArrayList<Menu> menus, boolean cash, boolean card, boolean service, boolean credit) {
