@@ -2,6 +2,7 @@ package org.jaram.ds.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jaram.ds.Admin;
+import org.jaram.ds.Base;
 import org.jaram.ds.R;
 import org.jaram.ds.adapter.MenuListAdapter;
 import org.jaram.ds.adapter.OrderMenuListAdapter;
@@ -149,7 +152,6 @@ public class Order extends Fragment {
                         endOrder(true);
                     }
                     else {
-                        Log.d("order", Boolean.toString(isConfirmView)+" | "+Boolean.toString(chkAllPaied()));
                         new AlertDialog.Builder(getActivity())
                                 .setTitle("결제 확인")
                                 .setMessage("미결제된 상품이 있습니다. 외상으로 처리하시겠습니까?")
@@ -199,6 +201,7 @@ public class Order extends Fragment {
                 order.store(new org.jaram.ds.data.struct.Order.Listener() {
                     @Override
                     public void stored(boolean result) {
+                        Log.d("order check", "stored");
                         getActivity().finish();
                     }
                 });
@@ -241,7 +244,6 @@ public class Order extends Fragment {
         }
         orderMenuAdapter.notifyDataSetChanged();
         priceRefresh();
-        Log.d("order", ordermenus.toString());
     }
 
     private void priceRefresh() {

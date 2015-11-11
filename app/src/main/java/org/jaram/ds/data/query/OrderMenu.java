@@ -31,7 +31,6 @@ public class OrderMenu extends DBQuery {
         values.put("takeout", takeout?1:0);
         values.put("totalprice", totalprice);
         writeDB().insert("ordermenu", null, values);
-        Log.d("ordermenu query", values.toString());
     }
 
     public void update(int id, org.jaram.ds.data.struct.Menu menu, org.jaram.ds.data.struct.Order order, int pay, boolean curry, boolean twice, boolean takeout) {
@@ -83,7 +82,6 @@ public class OrderMenu extends DBQuery {
     }
 
     public ArrayList<org.jaram.ds.data.struct.OrderMenu> getAll(int id) {
-        Log.d("ordermenu query", id+"");
         Cursor c = readDB().query("ordermenu", null, "order_id=?", new String[]{Integer.toString(id)}, null, null, null);
         ArrayList<org.jaram.ds.data.struct.OrderMenu> result = new ArrayList<>();
         while (c.moveToNext()) {

@@ -67,7 +67,6 @@ public class Http {
         }
         httpCon.disconnect();
 
-        Log.d("Http Request", "method : "+method + "\nresult : "+result);
         return result;
     }
 }

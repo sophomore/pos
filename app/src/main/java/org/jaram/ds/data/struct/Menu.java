@@ -68,7 +68,6 @@ public class Menu {
     }
 
     public Menu create() {
-        Log.d("menu create", id+"");
         regist();
         putDB();
         return this;

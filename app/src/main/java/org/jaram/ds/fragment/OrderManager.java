@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,8 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     OrderDetailMenuAdapter orderDetailAdapter = null;
     ArrayList<OrderMenu> ordermenus = null;
 
+    ImageButton moreBtn;
+
     HashMap<Integer, Menu> menus = null;
 
     ProgressDialog dialog = null;
@@ -66,6 +69,8 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
     boolean isEnableBtn = false;
 
     Date lastDate = null;
+
+    TextView today_total;
 
     private static OrderManager view;
     public static OrderManager getInstance() {
@@ -106,7 +111,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                 adapter.notifyDataSetChanged();
             }
         });
-        ImageButton moreBtn = new ImageButton(getActivity());
+        moreBtn = new ImageButton(getActivity());
         moreBtn.setImageResource(R.drawable.ic_arrow_drop_down_black_48dp);
         moreBtn.setBackgroundResource(R.drawable.white_btn);
         moreBtn.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +211,14 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         });
         callbacks.addActionBarBtn(searchBtn);
 
+        RelativeLayout actionbaritem = (RelativeLayout)LayoutInflater.from(getActivity()).inflate(R.layout.ordermanager_total, null, false);
+
+        today_total = (TextView)actionbaritem.findViewById(R.id.today_total);
+
+        new SetTodayTotal().execute();
+
+        callbacks.addViewAtActionBar(actionbaritem, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         return view;
     }
 
@@ -222,18 +235,19 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         if (Data.pref.getBoolean("network", false)) {
             new GetAllMenuList().execute();
             isEnableBtn = true;
+            moreBtn.setClickable(true);
         }
         else {
             if (orders.size() > 0) {
                 doSelectFirstItem();
             }
             isEnableBtn = false;
+            moreBtn.setClickable(false);
         }
-        Log.d("order manager2", "call refresh");
     }
 
     private void doSelectFirstItem() {
-//        orderList.setSelection(0);
+        orderList.setSelection(0);
         org.jaram.ds.data.struct.Order order = orders.get(0);
         ordermenus.clear();
         ordermenus.addAll(order.getOrdermenus());
@@ -282,6 +296,27 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
         callbacks = (Callbacks)activity;
     }
 
+    private class SetTodayTotal extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            try {
+                JSONObject priceJsn = new JSONObject(Http.get(Data.SERVER_URL+"today", null));
+                return priceJsn.getInt("price");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer price) {
+            today_total.setText("오늘 하루 매출 : "+price+"원");
+        }
+    }
+
     private class GetOrder extends AsyncTask<Void, Void, JSONArray> {
 
         Context context;
@@ -326,7 +361,13 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         @Override
         protected void onPostExecute(JSONArray result) {
-            Log.d("order manager2", "call postExecute");
+            if (result == null) return;
+            if (searchParam.containsKey("startDate")) {
+                moreBtn.setClickable(false);
+            }
+            else {
+                moreBtn.setClickable(true);
+            }
             try {
                 if (lastDate == null) {
                     orders.clear();
@@ -343,7 +384,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
                     ArrayList<OrderMenu> ordermenus = new ArrayList<OrderMenu>();
                     for (int j=0; j<ordermenusJSN.length(); j++) {
                         JSONObject ordermenuObj = ordermenusJSN.getJSONObject(j);
-                        Log.d("ordermanager", menus.toString());
                         ordermenus.add(new OrderMenu(ordermenuObj.getInt("id"),
                                 menus.get(ordermenuObj.getInt("menu_id")), order,
                                 ordermenuObj.getInt("pay"), ordermenuObj.getBoolean("curry"),
@@ -427,5 +467,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
     public interface Callbacks {
         void addActionBarBtn(View view);
+        void addViewAtActionBar(View view, ViewGroup.LayoutParams params);
     }
 }

@@ -81,7 +81,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(ORDER_TABLE_CREATE);
         db.execSQL(ORDERMENU_TABLE_CREATE);
         db.execSQL(INIT_CATEGORY);
-        Log.d("dbhelper", "created");
 //        db.execSQL(INIT_CATEGORY_2);
 //        db.execSQL(INIT_CATEGORY_3);
 //        db.execSQL(INIT_CATEGORY_4);

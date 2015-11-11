@@ -86,7 +86,6 @@ public class Closing {
         @Override
         protected Boolean doInBackground(Void... params) {
             ArrayList<Order> queryResult = Data.dbOrder.getAll();
-            Log.d("closing1", queryResult.toString());
             boolean isAllSuccess = true;
             for (int i=0; i<queryResult.size(); i++) {
                 org.jaram.ds.data.struct.Order order = queryResult.get(i);
@@ -94,7 +93,6 @@ public class Closing {
                 HashMap<String, Object> param = new HashMap<>();
                 param.put("time", Data.dateFormat.format(order.getDate()));
                 param.put("totalprice", order.getTotalprice());
-                Log.d("closing2", order.getOrdermenusAtJson().toString());
                 param.put("ordermenus", order.getOrdermenusAtJson());
                 boolean isSuccess = true;
                 try {

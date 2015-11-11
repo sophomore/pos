@@ -211,7 +211,6 @@ public abstract class Base extends FragmentActivity {
                                                             SharedPreferences.Editor editor = Data.pref.edit();
                                                             editor.putString("url", "http://"+ed.getText().toString()+"/");
                                                             editor.apply();
-                                                            Log.d("setting", ed.getText().toString());
                                                         }
                                                     })
                                                     .setNegativeButton("취소", null)
@@ -247,7 +246,6 @@ public abstract class Base extends FragmentActivity {
                     RequestParams params = new RequestParams();
                     try {
                         File file = new File(uri.getPath());
-                        Log.d("base", file.getAbsolutePath());
                         params.put("file", file, "multipart/form-data");
                     } catch(FileNotFoundException e) {}
 
@@ -262,10 +260,6 @@ public abstract class Base extends FragmentActivity {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] bytes, Throwable throwable) {
                             // handle failure response
-                            Log.d("base", statusCode+"");
-                            for (int i=0; i<headers.length; i++) {
-                                Log.d("base", headers[i].getName() + " : " + headers[i].getValue());
-                            }
                         }
                     });
                 }

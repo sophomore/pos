@@ -1,13 +1,18 @@
 package org.jaram.ds;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.madx.updatechecker.lib.UpdateRunnable;
 
 import org.jaram.ds.data.Closing;
 import org.jaram.ds.data.Data;
@@ -16,6 +21,7 @@ import org.jaram.ds.util.Http;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,13 +53,86 @@ public class Intro extends Activity {
         noticeView = (TextView)findViewById(R.id.intro_notice);
 
         noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
-        Log.d("intro", "before init");
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                init();
+                chkNewVersion();
             }
         }, 500);
+    }
+
+    private void chkNewVersion() {
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected void onPreExecute() {
+                noticeView.setText("앱의 새로운 버전을 확인하고 있습니다");
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                return web_update();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (result) {
+                    noticeView.setText("새로운 버전이 있습니다");
+                    new AlertDialog.Builder(Intro.this)
+                            .setTitle("알림")
+                            .setMessage("새 버전이 있습니다. 업데이트를 하시겠습니까?")
+                            .setPositiveButton("업데이트 하기", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.jaram.ds")));
+                                }
+                            })
+                            .setNegativeButton("나중에", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
+                                    init();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+                else {
+                    noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
+                    init();
+                }
+            }
+        }.execute();
+    }
+
+    private boolean web_update(){
+        try {
+            String curVersion = getApplicationContext().getPackageManager().getPackageInfo("org.jaram.ds", 0).versionName;
+            String newVersion = curVersion;
+            newVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=org.jaram.ds&hl=en")
+                    .timeout(30000)
+                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                    .referrer("http://www.google.com")
+                    .get()
+                    .select("div[itemprop=softwareVersion]")
+                    .first()
+                    .ownText();
+            return value(curVersion) < value(newVersion);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private long value(String string) {
+        string = string.trim();
+        if( string.contains( "." )){
+            final int index = string.lastIndexOf( "." );
+            return value( string.substring( 0, index ))* 100 + value( string.substring( index + 1 ));
+        }
+        else {
+            return Long.valueOf( string );
+        }
     }
 
     private void startApp() {
@@ -63,7 +142,6 @@ public class Intro extends Activity {
     }
 
     private void init() {
-        Log.d("intro", "init");
         Data.SERVER_URL = Data.pref.getString("url", "http://192.168.0.101:80/");
         final SharedPreferences.Editor ed = Data.pref.edit();
         ed.putBoolean("network", true);
@@ -76,7 +154,6 @@ public class Intro extends Activity {
 
             @Override
             protected Boolean doInBackground(Void... params) {
-                Log.d("intro", "process");
                 try {
                     Log.d("intro", Http.get(Data.SERVER_URL, null));
                 } catch (IOException e) {

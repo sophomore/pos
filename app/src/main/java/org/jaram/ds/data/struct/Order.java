@@ -105,13 +105,11 @@ public class Order {
 
     public Order putDB() {
         setId(Data.dbOrder.insert(this.getDate(), this.getTotalprice()));
-        Log.d("order putDb", id+"");
         for (int i=0; i<ordermenus.size(); i++) {
             OrderMenu ordermenu = ordermenus.get(i);
             Data.dbOrderMenu.insert(ordermenu.getMenu(), this, ordermenu.getPay(),
                     ordermenu.isCurry(), ordermenu.isTwice(), ordermenu.isTakeout(), ordermenu.getTotalprice());
         }
-        Log.d("order struct", ordermenus.toString()+" | "+this.toString());
         return this;
     }
 
@@ -134,7 +132,7 @@ public class Order {
                 params.put("totalprice", Order.this.getTotalprice());
                 params.put("ordermenus", Order.this.getOrdermenusAtJson());
                 try {
-                    Http.post(Data.SERVER_URL+"order", params);
+                    Log.d("order check", Http.post(Data.SERVER_URL+"order", params));
                 } catch (IOException e) {
                     e.printStackTrace();
                     success = false;
@@ -147,6 +145,7 @@ public class Order {
                 if (!result) {
                     putDB();
                 }
+                Log.d("order check", "stored order");
                 listener.stored(result);
             }
         }.execute();

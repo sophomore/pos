@@ -69,11 +69,9 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks, O
     }
 
     public void closingAfterReplace(final Fragment view) {
-        Log.d("admin", "do closing");
         new Closing(Admin.this, new Closing.Listener() {
             @Override
             public void endClosing(boolean isSuccess) {
-                Log.d("admin", "done closing");
                 if (isSuccess) replace(view);
                 else {
                     new AlertDialog.Builder(getApplicationContext())

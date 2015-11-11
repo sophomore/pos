@@ -36,7 +36,6 @@ public class OrderListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        Log.d("order adapter", orders.size()+"");
         return orders.size();
     }
 
@@ -52,7 +51,6 @@ public class OrderListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Log.d("order adapter",  position+" getview");
         final Order order = orders.get(position);
         ViewHolder holder;
         if (convertView == null) {
@@ -69,7 +67,6 @@ public class OrderListAdapter extends BaseAdapter {
         holder.date.setText(new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA).format(order.getDate()));
         holder.price.setText(order.getTotalprice() + "원");
         holder.ordermenuList.removeAllViews();
-        Log.d("orderlist adapter", order.toJson().toString());
         if (order.getOrdermenus().size() == 0 || order.getOrdermenus() == null) {
             order.setOrdermenus(Data.dbOrderMenu.getAll(order));
         }

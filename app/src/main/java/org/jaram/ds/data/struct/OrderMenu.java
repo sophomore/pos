@@ -112,7 +112,6 @@ public class OrderMenu {
     }
 
     public JSONObject toJson() {
-        Log.d("ordermenu toJson", getId()+"");
         JSONObject jo = new JSONObject();
         try {
             jo.put("id", getId());
