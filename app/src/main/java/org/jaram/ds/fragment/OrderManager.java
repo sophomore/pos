@@ -219,8 +219,6 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         today_total = (TextView)actionbaritem.findViewById(R.id.today_total);
 
-        new SetTodayTotal().execute();
-
         callbacks.addViewAtActionBar(actionbaritem, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         return view;
@@ -238,6 +236,7 @@ public class OrderManager extends Fragment implements OrderSearch.Callbacks {
 
         if (Data.pref.getBoolean("network", false)) {
             new GetAllMenuList().execute();
+            new SetTodayTotal().execute();
             isEnableBtn = true;
             moreBtn.setClickable(true);
         }
