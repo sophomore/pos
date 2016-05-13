@@ -12,8 +12,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.madx.updatechecker.lib.UpdateRunnable;
+import com.crashlytics.android.Crashlytics;
 
+import io.fabric.sdk.android.Fabric;
 import org.jaram.ds.data.Closing;
 import org.jaram.ds.data.Data;
 import org.jaram.ds.data.struct.*;
@@ -42,6 +43,7 @@ public class Intro extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_intro);
 
         Data.pref = getSharedPreferences("state", 0);
@@ -50,7 +52,7 @@ public class Intro extends Activity {
         Data.dbOrder = new org.jaram.ds.data.query.Order(Intro.this);
         Data.dbOrderMenu = new org.jaram.ds.data.query.OrderMenu(Intro.this);
 
-        noticeView = (TextView)findViewById(R.id.intro_notice);
+        noticeView = (TextView)findViewById(R.id.notice);
 
         noticeView.setText("앱 실행을 위한 준비를 하고있습니다.");
 

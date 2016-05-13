@@ -1,8 +1,40 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorControlHighlight">@color/point</item>
+        <item name="colorPrimary">@color/point</item>
+        <item name="colorPrimaryDark">@color/dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="AppTheme.CircularProgressBar" parent="CircularProgressBar">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">@dimen/progress_size_normal</item>
+        <item name="android:layout_height">@dimen/progress_size_normal</item>
+        <item name="cpb_color">?colorAccent</item>
+    </style>
+
+    <style name="AppTheme.CircularProgressBar.ProgressButton">
+        <item name="android:layout_width">@dimen/progress_size_micro</item>
+        <item name="android:layout_height">@dimen/progress_size_micro</item>
+        <item name="cpb_color">?colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.CircularProgressBar.Small">
+        <item name="android:layout_width">@dimen/progress_size_small</item>
+        <item name="android:layout_height">@dimen/progress_size_small</item>
+        <item name="cpb_stroke_width">2dp</item>
+    </style>
+
+    <style name="AppTheme.CircularProgressBar.Micro">
+        <item name="android:layout_width">@dimen/progress_size_micro</item>
+        <item name="android:layout_height">@dimen/progress_size_micro</item>
+        <item name="cpb_stroke_width">1dp</item>
     </style>
 
 </resources>

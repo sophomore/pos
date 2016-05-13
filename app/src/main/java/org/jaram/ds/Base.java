@@ -5,12 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,23 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import org.jaram.ds.data.Data;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by kjydiary on 15. 9. 20..
@@ -81,11 +62,11 @@ public abstract class Base extends FragmentActivity {
             }
         });
 
-        drawer_orderBtn = (Button)findViewById(R.id.drawer_orderBtn);
-        drawer_manageOrderBtn = (Button)findViewById(R.id.drawer_manageOrderBtn);
-        drawer_statisticBtn = (Button)findViewById(R.id.drawer_statisticBtn);
-        drawer_manageMenuBtn = (Button)findViewById(R.id.drawer_manageMenuBtn);
-        drawer_settingBtn = (Button)findViewById(R.id.drawer_settingBtn);
+        drawer_orderBtn = (Button)findViewById(R.id.order);
+        drawer_manageOrderBtn = (Button)findViewById(R.id.orderManage);
+        drawer_statisticBtn = (Button)findViewById(R.id.statistic);
+        drawer_manageMenuBtn = (Button)findViewById(R.id.menuManage);
+        drawer_settingBtn = (Button)findViewById(R.id.setting);
 
         BtnListener listener = new BtnListener();
 
@@ -156,18 +137,18 @@ public abstract class Base extends FragmentActivity {
         public void onClick(View v) {
             base_container.closeDrawer(Gravity.RIGHT);
             switch(v.getId()) {
-                case R.id.drawer_orderBtn:
+                case R.id.order:
                     if (getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Order.class));
                     }
                     break;
-                case R.id.drawer_manageOrderBtn:
+                case R.id.orderManage:
                     if (getCurrent() != MANAGE_ORDER && getCurrent() != ORDER) {
                         startActivity(new Intent(Base.this, Admin.class).putExtra("view", Base.MANAGE_ORDER));
                         finish();
                     }
                     break;
-                case R.id.drawer_statisticBtn:
+                case R.id.statistic:
                     if (!Data.pref.getBoolean("network", false)) {
                         Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
                         return;
@@ -177,7 +158,7 @@ public abstract class Base extends FragmentActivity {
                         finish();
                     }
                     break;
-                case R.id.drawer_manageMenuBtn:
+                case R.id.menuManage:
                     if (!Data.pref.getBoolean("network", false)) {
                         Toast.makeText(getApplicationContext(), "서버에 접속할 수 없어 일부 기능이 제한되었습니다", Toast.LENGTH_SHORT).show();
                         return;
@@ -187,7 +168,7 @@ public abstract class Base extends FragmentActivity {
                         finish();
                     }
                     break;
-                case R.id.drawer_settingBtn:
+                case R.id.setting:
                     new AlertDialog.Builder(Base.this)
                             .setTitle("설정")
                             .setItems(new String[]{"서버 주소 설정", "주문 내역 가져오기", "주문 내역 내보내기"}, new DialogInterface.OnClickListener() {
@@ -241,27 +222,6 @@ public abstract class Base extends FragmentActivity {
         switch (requestCode) {
             case 0:
                 if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    String addr = Data.SERVER_URL+"file/input";
-                    RequestParams params = new RequestParams();
-                    try {
-                        File file = new File(uri.getPath());
-                        params.put("file", file, "multipart/form-data");
-                    } catch(FileNotFoundException e) {}
-
-// send request
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    client.post(addr, params, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] bytes) {
-                            // handle success response
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] bytes, Throwable throwable) {
-                            // handle failure response
-                        }
-                    });
                 }
                 break;
         }

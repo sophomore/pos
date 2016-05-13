@@ -131,7 +131,7 @@ public class Order extends Fragment {
         Button cardBtn = (Button)view.findViewById(R.id.pay_card);
         Button serviceBtn = (Button)view.findViewById(R.id.pay_service);
         Button creditBtn = (Button)view.findViewById(R.id.pay_credit);
-        endBtn = (Button)view.findViewById(R.id.endBtn);
+        endBtn = (Button)view.findViewById(R.id.end);
         confirmBox = view.findViewById(R.id.pay_confirmBox);
 
         PayBtnsClicked payListener = new PayBtnsClicked(confirmBox, endBtn);

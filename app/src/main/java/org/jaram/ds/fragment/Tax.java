@@ -19,14 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.jaram.ds.R;
 import org.jaram.ds.data.Data;
@@ -38,10 +37,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by kjydiary on 15. 10. 5..
@@ -70,7 +67,7 @@ public class Tax extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tax, container, false);
+        View view = inflater.inflate(R.layout.fragment_simple_statistic, container, false);
 
         RelativeLayout actionbaritem = (RelativeLayout)inflater.inflate(R.layout.statistic_date, null, false);
 
@@ -83,7 +80,7 @@ public class Tax extends Fragment {
 
         final Button startDate = (Button)actionbaritem.findViewById(R.id.startDate);
         final Button endDate = (Button) actionbaritem.findViewById(R.id.endDate);
-        ImageButton analyticsBtn = (ImageButton)actionbaritem.findViewById(R.id.analyticsBtn);
+        ImageButton analyticsBtn = (ImageButton)actionbaritem.findViewById(R.id.submit);
         callbacks.addViewAtActionBar(actionbaritem, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         startCal = Calendar.getInstance();
@@ -135,8 +132,7 @@ public class Tax extends Fragment {
             }
         });
 
-        final LinearLayout infoBox = (LinearLayout)view.findViewById(R.id.infoBox);
-        final ImageButton infoBtn = (ImageButton)view.findViewById(R.id.infoBtn);
+        final ImageButton infoBtn = (ImageButton)view.findViewById(R.id.toggleInfo);
         final GridLayout infoView = (GridLayout)view.findViewById(R.id.infoView);
         infoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +148,7 @@ public class Tax extends Fragment {
             }
         });
 
-        chart = (BarChart)view.findViewById(R.id.tax_barChart);
+        chart = (BarChart)view.findViewById(R.id.chart);
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
         chart.setDescription(null);
@@ -237,7 +233,7 @@ public class Tax extends Fragment {
                 dataSet.setHighLightAlpha(0);
                 dataSet.setValueTextSize(16.0f);
                 dataSet.setStackLabels(new String[]{"현금", "카드", "기타"});
-                ArrayList<BarDataSet> dataSets = new ArrayList<>();
+                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
                 dataSets.add(dataSet);
                 barData = new BarData(xVals, dataSets);
             } catch (JSONException e) {

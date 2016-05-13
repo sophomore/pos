@@ -45,9 +45,9 @@ public class InfoMenu extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_info_menu);
 
-        final EditText nameForm = (EditText)findViewById(R.id.menu_nameContent);
-        final EditText priceForm = (EditText)findViewById(R.id.menu_priceContent);
-        final Spinner categoryForm = (Spinner)findViewById(R.id.menu_categoryContent);
+        final EditText nameForm = (EditText)findViewById(R.id.name);
+        final EditText priceForm = (EditText)findViewById(R.id.price);
+        final Spinner categoryForm = (Spinner)findViewById(R.id.category);
 
         final ArrayList<Category> categories = new ArrayList<Category>();
         for (Object category : Data.categories.values().toArray()) {
@@ -106,11 +106,11 @@ public class InfoMenu extends Dialog {
     }
 
     private boolean chkForm() {
-        if (((EditText)findViewById(R.id.menu_nameContent)).getText().toString().length()==0) {
+        if (((EditText)findViewById(R.id.name)).getText().toString().length()==0) {
             Toast.makeText(getContext(), "메뉴 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (((EditText)findViewById(R.id.menu_priceContent)).getText().toString().length()==0) {
+        if (((EditText)findViewById(R.id.price)).getText().toString().length()==0) {
             Toast.makeText(getContext(), "메뉴 가격을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }

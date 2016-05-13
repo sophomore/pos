@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Begin spacing constants -->
+    <dimen name="spacing_huge">24dp</dimen>
+    <dimen name="spacing_larger">20dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_normal">12dp</dimen>
+    <dimen name="spacing_small">10dp</dimen>
+    <dimen name="spacing_smaller">8dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+    <!-- End spacing constants -->
+
+    <dimen name="progress_size_micro">10dp</dimen>
+    <dimen name="progress_size_small">15dp</dimen>
+    <dimen name="progress_size_normal">25dp</dimen>
+
+    <dimen name="button_line_stroke">1dp</dimen>
+
+    <dimen name="collapse_menu_item_spacing">2dp</dimen>
+</resources>

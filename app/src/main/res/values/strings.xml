@@ -30,4 +30,23 @@
     <string name="rangeTotal">기간 내 총액</string>
     <string name="monthTotal">월별 총액</string>
     <string name="total">총액</string>
+
+    <string name="label.statistic_setting">통계 설정</string>
+    <string name="label.statistic">통계</string>
+
+
+
+
+
+    <!--Screen names-->
+    <string name="screen.splash">스플래시</string>
+    <string name="screen.ordermanager">주문관리</string>
+    <string name="screen.order">주문하기</string>
+
+
+    <string name="label.refresh">새로고침</string>
+
+    <string name="message.confirm.pay">%s(으)로 결제하시려면 다시 한 번 터치하세요</string>
+    <string name="message.empty.retry">내용이 없습니다.\n다시 시도해보시겠어요?</string>
+    <string name="message.loading">정보를 받아오고 있습니다.</string>
 </resources>

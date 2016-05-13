@@ -23,6 +23,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.jaram.ds.R;
 import org.jaram.ds.adapter.StatisticMenuAdapter;
@@ -45,7 +46,7 @@ import java.util.Random;
 /**
  * Created by kjydiary on 15. 9. 23..
  */
-public class Statistic extends Fragment {
+public class Statistic extends BaseFragment {
 
     public static final int TYPE_SALE = 1;
     public static final int TYPE_COUNT = 2;
@@ -96,19 +97,18 @@ public class Statistic extends Fragment {
     private int type = TYPE_SALE;
     private int unit = UNIT_HOUR;
 
-    private static Statistic view;
-    public static Statistic getInstance() {
-        if (view == null) {
-            view = new Statistic();
-        }
-        return view;
+    public static Statistic newInstance() {
+        return new Statistic();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_statistic, container, false);
+    protected int getLayoutResource() {
+        return R.layout.fragment_statistic;
+    }
 
-        lineChart = (LineChart)view.findViewById(R.id.statistic_lineChart);
+    @Override
+    protected void setupLayout(View view) {
+        lineChart = (LineChart)view.findViewById(R.id.chart);
         lineChart.setDoubleTapToZoomEnabled(false);
         lineChart.setPinchZoom(false);
         lineChart.setDescription(null);
@@ -116,8 +116,6 @@ public class Statistic extends Fragment {
 
         setActionBar();
         setDrawer();
-
-        return view;
     }
 
     private void setActionBar() {
@@ -130,7 +128,7 @@ public class Statistic extends Fragment {
 
         final Button startDate = (Button)actionbaritem.findViewById(R.id.startDate);
         final Button endDate = (Button) actionbaritem.findViewById(R.id.endDate);
-        ImageButton analyticsBtn = (ImageButton)actionbaritem.findViewById(R.id.analyticsBtn);
+        ImageButton analyticsBtn = (ImageButton)actionbaritem.findViewById(R.id.submit);
 
         startDate.setText(Data.onlyDateFormat.format(startCal.getTime()));
         endDate.setText(Data.onlyDateFormat.format(startCal.getTime()));
@@ -195,19 +193,19 @@ public class Statistic extends Fragment {
         FrameLayout drawer = (FrameLayout) LayoutInflater.from(getActivity()).inflate(R.layout.drawer_statistic_setting, null);
 
         TypeListener typeListener = new TypeListener();
-        saleBtn = (Button)drawer.findViewById(R.id.type_saleBtn);
-        countBtn = (Button)drawer.findViewById(R.id.type_countBtn);
+        saleBtn = (Button)drawer.findViewById(R.id.typeSale);
+        countBtn = (Button)drawer.findViewById(R.id.typeCount);
 
         saleBtn.setOnClickListener(typeListener);
         countBtn.setOnClickListener(typeListener);
 
         UnitListener unitListener = new UnitListener();
-        hourBtn = (Button)drawer.findViewById(R.id.unit_hourBtn);
-        dateBtn = (Button)drawer.findViewById(R.id.unit_dateBtn);
-        dayBtn = (Button)drawer.findViewById(R.id.unit_dayBtn);
-        monthBtn = (Button)drawer.findViewById(R.id.unit_monthBtn);
-        quaterBtn = (Button)drawer.findViewById(R.id.unit_quaterBtn);
-        yearBtn = (Button)drawer.findViewById(R.id.unit_yearBtn);
+        hourBtn = (Button)drawer.findViewById(R.id.unitHour);
+        dateBtn = (Button)drawer.findViewById(R.id.unitDate);
+        dayBtn = (Button)drawer.findViewById(R.id.unitDay);
+        monthBtn = (Button)drawer.findViewById(R.id.unitMonth);
+        quaterBtn = (Button)drawer.findViewById(R.id.unitQuarter);
+        yearBtn = (Button)drawer.findViewById(R.id.unitYear);
 
         hourBtn.setOnClickListener(unitListener);
         dateBtn.setOnClickListener(unitListener);
@@ -215,11 +213,11 @@ public class Statistic extends Fragment {
         monthBtn.setOnClickListener(unitListener);
         quaterBtn.setOnClickListener(unitListener);
         yearBtn.setOnClickListener(unitListener);
-        
-        cutletList = (GridView)drawer.findViewById(R.id.menu_cutletList);
-        riceList = (GridView)drawer.findViewById(R.id.menu_riceList);
-        noodleList = (GridView)drawer.findViewById(R.id.menu_noodleList);
-        etcList = (GridView)drawer.findViewById(R.id.menu_etcList);
+
+        cutletList = (GridView)drawer.findViewById(R.id.cutletList);
+        riceList = (GridView)drawer.findViewById(R.id.riceList);
+        noodleList = (GridView)drawer.findViewById(R.id.noodleList);
+        etcList = (GridView)drawer.findViewById(R.id.etcList);
 
         cutletList.setAdapter(cutletAdapter);
         riceList.setAdapter(riceAdapter);
@@ -227,17 +225,17 @@ public class Statistic extends Fragment {
         etcList.setAdapter(etcAdapter);
 
         MenuCategoryListener menuCategoryListener = new MenuCategoryListener();
-        cutletBtn = (Button)drawer.findViewById(R.id.menu_cutletBtn);
-        riceBtn = (Button)drawer.findViewById(R.id.menu_riceBtn);
-        noodleBtn = (Button)drawer.findViewById(R.id.menu_noodleBtn);
-        etcBtn = (Button)drawer.findViewById(R.id.menu_etcBtn);
+        cutletBtn = (Button)drawer.findViewById(R.id.cutlet);
+        riceBtn = (Button)drawer.findViewById(R.id.rice);
+        noodleBtn = (Button)drawer.findViewById(R.id.noodle);
+        etcBtn = (Button)drawer.findViewById(R.id.etc);
 
         cutletBtn.setOnClickListener(menuCategoryListener);
         riceBtn.setOnClickListener(menuCategoryListener);
         noodleBtn.setOnClickListener(menuCategoryListener);
         etcBtn.setOnClickListener(menuCategoryListener);
 
-        statisticBtn = (Button)drawer.findViewById(R.id.statisticBtn);
+        statisticBtn = (Button)drawer.findViewById(R.id.statistic);
         statisticBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -316,11 +314,11 @@ public class Statistic extends Fragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.type_saleBtn:
+                case R.id.typeSale:
                     setUnClickedView(countBtn);
                     type = TYPE_SALE;
                     break;
-                case R.id.type_countBtn:
+                case R.id.typeCount:
                     setUnClickedView(saleBtn);
                     type = TYPE_COUNT;
                     break;
@@ -340,27 +338,27 @@ public class Statistic extends Fragment {
             setUnClickedView(quaterBtn);
             setUnClickedView(yearBtn);
             switch (v.getId()) {
-                case R.id.unit_hourBtn:
+                case R.id.unitHour:
                     setClickedView(hourBtn);
                     unit = UNIT_HOUR;
                     break;
-                case R.id.unit_dateBtn:
+                case R.id.unitDate:
                     setClickedView(dateBtn);
                     unit = UNIT_DATE;
                     break;
-                case R.id.unit_dayBtn:
+                case R.id.unitDay:
                     setClickedView(dayBtn);
                     unit = UNIT_DAY;
                     break;
-                case R.id.unit_monthBtn:
+                case R.id.unitMonth:
                     setClickedView(monthBtn);
                     unit = UNIT_MONTH;
                     break;
-                case R.id.unit_quaterBtn:
+                case R.id.unitQuarter:
                     setClickedView(quaterBtn);
                     unit = UNIT_QUATER;
                     break;
-                case R.id.unit_yearBtn:
+                case R.id.unitYear:
                     setClickedView(yearBtn);
                     unit = UNIT_YEAR;
                     break;
@@ -380,16 +378,16 @@ public class Statistic extends Fragment {
             }
             currentOpen = v.getId();
             switch(v.getId()) {
-                case R.id.menu_cutletBtn:
+                case R.id.cutlet:
                     menuCategoryOpen(1);
                     break;
-                case R.id.menu_riceBtn:
+                case R.id.rice:
                     menuCategoryOpen(2);
                     break;
-                case R.id.menu_noodleBtn:
+                case R.id.noodle:
                     menuCategoryOpen(3);
                     break;
-                case R.id.menu_etcBtn:
+                case R.id.etc:
                     menuCategoryOpen(4);
                     break;
             }
@@ -453,7 +451,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }
@@ -492,7 +490,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }
@@ -532,7 +530,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }
@@ -571,7 +569,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }
@@ -610,7 +608,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }
@@ -649,7 +647,7 @@ public class Statistic extends Fragment {
                 e.printStackTrace();
             }
 
-            ArrayList<LineDataSet> countData = new ArrayList<>();
+            ArrayList<ILineDataSet> countData = new ArrayList<>();
             for (LineDataSet dataSet : menuCountData.values()) {
                 countData.add(dataSet);
             }

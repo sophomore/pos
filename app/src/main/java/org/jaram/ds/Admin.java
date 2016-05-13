@@ -51,7 +51,7 @@ public class Admin extends Base implements Statistic.Callbacks, Tax.Callbacks, O
         switch(viewId) {
             case Base.STATISTIC:
                 addSwapBtn();
-                closingAfterReplace(Statistic.getInstance());
+                closingAfterReplace(Statistic.newInstance());
                 break;
             case Base.TAX:
                 addSwapBtn();

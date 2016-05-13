@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <!--전체 합계-->
     <RelativeLayout
         android:id="@+id/totalpriceBox"
         android:layout_width="320dp"
         android:layout_height="120dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:padding="10dp"
-        android:background="@color/point">
+        android:layout_alignParentStart="true"
+        android:background="@color/point"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/totalpriceLabel"
@@ -22,12 +22,13 @@
             android:text="@string/totalprice"
             android:textColor="#F9F2F2"
             android:textSize="16sp"/>
+
         <TextView
             android:id="@+id/totalprice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:text="@string/init_totalprice_value"
             android:textColor="#FFF6E5"
             android:textSize="48sp"/>
@@ -38,33 +39,30 @@
         android:id="@+id/list_empty"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_above="@id/totalpriceBox"
-        android:gravity="center"
+        android:layout_alignParentTop="true"
         android:background="#FFFFFF"
+        android:gravity="center"
         android:text="@string/ordermenuList_empty"/>
-    <ListView
-        android:id="@+id/ordermenuList"
+
+    <org.jaram.ds.views.BaseRecyclerView
+        android:id="@+id/orderMenuList"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_above="@id/totalpriceBox"
-        android:visibility="invisible"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        android:drawSelectorOnTop="true"/>
+        android:layout_alignParentTop="true"/>
+
     <RelativeLayout
         android:id="@+id/payBox"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/totalpriceBox"
         android:background="@color/dark">
 
-        <!--전표 출력-->
         <Button
-            android:id="@+id/endBtn"
+            android:id="@+id/end"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -77,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/endBtn">
+            android:layout_toStartOf="@id/end">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,10 +91,12 @@
                     android:text="@string/cash"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="#777777"/>
+
                 <Button
                     android:id="@+id/pay_card"
                     android:layout_width="wrap_content"
@@ -106,10 +106,12 @@
                     android:text="@string/card"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="#777777"/>
+
                 <Button
                     android:id="@+id/pay_service"
                     android:layout_width="wrap_content"
@@ -119,10 +121,12 @@
                     android:text="@string/service"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="#777777"/>
+
                 <Button
                     android:id="@+id/pay_credit"
                     android:layout_width="wrap_content"
@@ -134,6 +138,7 @@
                     android:textSize="24sp"/>
 
             </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/pay_confirmBox"
                 android:layout_width="match_parent"
@@ -155,109 +160,14 @@
 
     </RelativeLayout>
     <!--메뉴 목록-->
-    <LinearLayout
+    <org.jaram.ds.views.MenuListView
+        android:id="@+id/menuList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@id/ordermenuList"
         android:layout_above="@id/payBox"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:gravity="center"
-                android:text="@string/cutlet"
-                android:textColor="@color/dark"
-                android:textSize="26sp"/>
-            <ListView
-                android:id="@+id/cutlet_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="4dp"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:gravity="center"
-                android:text="@string/rice"
-                android:textColor="@color/dark"
-                android:textSize="26sp"/>
-            <ListView
-                android:id="@+id/rice_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="4dp"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:gravity="center"
-                android:text="@string/noodle"
-                android:textColor="@color/dark"
-                android:textSize="26sp"/>
-            <ListView
-                android:id="@+id/noodle_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="4dp"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:gravity="center"
-                android:text="@string/etc"
-                android:textColor="@color/dark"
-                android:textSize="26sp"/>
-            <ListView
-                android:id="@+id/etc_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="4dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/orderMenuList"
+        android:orientation="horizontal"/>
 
 </RelativeLayout>
