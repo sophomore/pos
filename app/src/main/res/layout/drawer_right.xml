@@ -17,7 +17,7 @@
             android:layout_height="80dp"
             android:layout_margin="12dp"
             android:background="@drawable/circle"
-            android:text="@string/order"
+            android:text="@string/screen.order"
             android:textColor="#eee"
             android:textSize="16sp"/>
 
@@ -27,7 +27,7 @@
             android:layout_height="80dp"
             android:layout_margin="12dp"
             android:background="@drawable/circle"
-            android:text="@string/manageOrder"
+            android:text="@string/screen.order_manage"
             android:textColor="#eee"
             android:textSize="16sp"/>
 
@@ -37,7 +37,7 @@
             android:layout_height="80dp"
             android:layout_margin="12dp"
             android:background="@drawable/circle"
-            android:text="@string/statistic"
+            android:text="@string/screen.statistic"
             android:textColor="#eee"
             android:textSize="16sp"/>
 
@@ -47,7 +47,7 @@
             android:layout_height="80dp"
             android:layout_margin="12dp"
             android:background="@drawable/circle"
-            android:text="@string/manageMenu"
+            android:text="@string/screen.menu_manage"
             android:textColor="#eee"
             android:textSize="16sp"/>
 
@@ -57,9 +57,8 @@
             android:layout_height="80dp"
             android:layout_margin="12dp"
             android:background="@drawable/circle"
-            android:text="@string/setting"
+            android:text="@string/screen.setting"
             android:textColor="#eee"
             android:textSize="16sp"/>
-
     </LinearLayout>
 </RelativeLayout>

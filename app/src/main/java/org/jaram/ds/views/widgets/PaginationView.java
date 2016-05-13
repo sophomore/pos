@@ -1,4 +1,4 @@
-package org.jaram.ds.views;
+package org.jaram.ds.views.widgets;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import org.jaram.ds.R;
-import org.jaram.ds.adapter.HeaderViewRecyclerAdapter;
+import org.jaram.ds.views.adapters.HeaderViewRecyclerAdapter;
 import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
-import org.jaram.ds.views.adapter.PaginationAdapter;
+import org.jaram.ds.views.adapters.PaginationAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

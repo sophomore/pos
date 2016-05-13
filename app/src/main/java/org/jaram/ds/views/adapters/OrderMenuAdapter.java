@@ -1,4 +1,4 @@
-package org.jaram.ds.views.adapter;
+package org.jaram.ds.views.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,9 +12,8 @@ import android.widget.Toast;
 
 import org.jaram.ds.R;
 import org.jaram.ds.models.OrderMenu;
-import org.jaram.ds.util.SLog;
 import org.jaram.ds.util.StringUtils;
-import org.jaram.ds.views.BaseRecyclerView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
 import org.jaram.ds.views.SwipeTouchHelper;
 
 import java.util.ArrayList;

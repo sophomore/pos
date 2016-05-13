@@ -64,15 +64,16 @@ public class SimpleStatisticFragment extends BaseFragment {
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
         chart.setDescription(null);
-        chart.setNoDataTextDescription("기간을 입력하시고 검색버튼을 눌러주세요");
+        chart.setNoDataTextDescription(getString(R.string.message_guide_simple_statistic));
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 float[] values = ((BarEntry) e).getVals();
-                monthCashView.setText(StringUtils.format("%,d원", (int) values[0]));
-                monthCardView.setText(StringUtils.format("%,d원", (int) values[1]));
-                monthTotalView.setText(StringUtils.format("%,d원", (int) (values[0] + values[1] + values[2])));
+                monthCashView.setText(getString(R.string.format_money, (int) values[0]));
+                monthCardView.setText(getString(R.string.format_money, (int) values[1]));
+                monthTotalView.setText(getString(R.string.format_money,
+                        (int) (values[0] + values[1] + values[2])));
             }
 
             @Override
@@ -118,9 +119,9 @@ public class SimpleStatisticFragment extends BaseFragment {
     }
 
     protected void setTotalView(int cash, int card, int total) {
-        rangeCashView.setText(StringUtils.format("%,d원", cash));
-        rangeCardView.setText(StringUtils.format("%,d원", card));
-        rangeTotalView.setText(StringUtils.format("%,d원", total));
+        rangeCashView.setText(getString(R.string.format_money, cash));
+        rangeCardView.setText(getString(R.string.format_money, card));
+        rangeTotalView.setText(getString(R.string.format_money, total));
     }
 
     private BarData convertBarDataFromJson(SimpleStatisticResult result) {

@@ -10,17 +10,14 @@ import com.crashlytics.android.Crashlytics;
 
 import org.jaram.ds.R;
 import org.jaram.ds.activities.OrderManageActivity;
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.models.*;
 import org.jaram.ds.networks.Api;
-import org.jaram.ds.networks.ApiConstants;
 import org.jaram.ds.util.EasySharedPreferences;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
 import org.jaram.ds.util.StringUtils;
-import org.jsoup.Jsoup;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +56,8 @@ public class SplashFragment extends BaseFragment {
         String currentVersion = "";
 
         try {
-            currentVersion = getActivity().getPackageManager().getPackageInfo("org.jaram.ds", 0).versionName;
+            currentVersion = getActivity().getPackageManager()
+                    .getPackageInfo(getString(R.string.package_name), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -76,7 +74,7 @@ public class SplashFragment extends BaseFragment {
     }
 
     private Observable<Boolean> checkForUpdate(String currentVersion) {
-        noticeView.setText("최신 버전을 확인하고 있습니다.");
+        noticeView.setText(R.string.message_loading_new_version);
         return Observable.create(subscriber -> Observable.just(currentVersion)
                 .map(this::checkIsNewVersion)
                 .retryWhen(RxUtils::exponentialBackoff)
@@ -94,7 +92,7 @@ public class SplashFragment extends BaseFragment {
                                 subscriber.onCompleted();
                             }
                         }, subscriber::onError,
-                        () -> noticeView.setText("앱 실행을 위해 준비하고 있습니다.")));
+                        () -> noticeView.setText(R.string.message_loading_prepare)));
     }
 
     private Boolean checkIsNewVersion(String currentVersion) {
@@ -110,7 +108,7 @@ public class SplashFragment extends BaseFragment {
 //            return latestVersion.equals(compareVersion(currentVersion, latestVersion));
 //        } catch (IOException e) {
 //            SLog.e(e);
-//        }
+//        } TODO:
         return false;
     }
 
@@ -129,22 +127,25 @@ public class SplashFragment extends BaseFragment {
     }
 
     private AlertDialog showUpdateDialog() {
-        return new AlertDialog.Builder(getActivity()).setTitle("업데이트 알림")
-                .setMessage("업데이트가 있습니다. 업데이트를 하시겠습니까?")
-                .setPositiveButton("확인", (dialog, which) -> {})
-                .setNegativeButton("아니오", null)
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.label_alert_update)
+                .setMessage(R.string.message_confirm_app_update)
+                .setPositiveButton(R.string.label_confirm, (dialog, which) -> {
+                    //TODO:
+                })
+                .setNegativeButton(R.string.label_cancel, null)
                 .show();
     }
 
     private void init(Boolean requireUpdate) {
         checkForClosing();
 
-        noticeView.setText("메뉴 정보를 갱신 중 입니다.");
+        noticeView.setText(R.string.message_loading_menu);
         Api.with(getActivity()).getMenus()
                 .retryWhen(RxUtils::exponentialBackoff)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setMenus, SLog::e, () -> {
-                    noticeView.setText("환영합니다!");
+                    noticeView.setText(R.string.message_welcome);
                     Observable.just(null)
                             .observeOn(AndroidSchedulers.mainThread())
                             .delay(800, TimeUnit.MILLISECONDS)
@@ -153,16 +154,18 @@ public class SplashFragment extends BaseFragment {
                 });
     }
 
+    private static final String PREF_LAST_CLOSE_DATE = "pref.last_close_date";
+
     private void checkForClosing() {
         RealmQuery<org.jaram.ds.models.Order> savedOrders = Realm.getInstance(getActivity())
                 .where(org.jaram.ds.models.Order.class);
         String today = Data.onlyDateFormat.format(new Date());
         if (savedOrders.count() == 0
-                || EasySharedPreferences.with(getActivity()).getString("latestClosingDate", today).equals(today)) {
+                || EasySharedPreferences.with(getActivity()).getString(PREF_LAST_CLOSE_DATE, today).equals(today)) {
             return;
         }
 
-        noticeView.setText("서버로 저장된 주문을 전송합니다.");
+        noticeView.setText(R.string.message_loading_closing);
         for (org.jaram.ds.models.Order order : savedOrders.findAll()) {
             BlockingObservable.from(
                     Api.with(getActivity()).addOrder(order)
@@ -173,7 +176,7 @@ public class SplashFragment extends BaseFragment {
 
     private void setMenus(List<Menu> menus) {
         if (menus == null || menus.size() == 0) {
-            noticeView.setText("메뉴정보를 불러오는데 실패하여 저장된 정보를 사용합니다.");
+            noticeView.setText(R.string.message_failure_loading_menu);
             return;
         }
 

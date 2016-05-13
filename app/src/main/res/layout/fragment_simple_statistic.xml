@@ -43,7 +43,7 @@
                 android:layout_width="200dp"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="@string/cash"
+                android:text="@string/label.cash"
                 android:textColor="#fff"
                 android:textSize="24sp"/>
 
@@ -51,7 +51,7 @@
                 android:layout_width="200dp"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="@string/card"
+                android:text="@string/label.card"
                 android:textColor="#fff"
                 android:textSize="24sp"/>
 
@@ -59,7 +59,7 @@
                 android:layout_width="200dp"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="@string/total"
+                android:text="@string/label.total.money"
                 android:textColor="#fff"
                 android:textSize="24sp"/>
 
@@ -72,7 +72,7 @@
                 android:layout_width="200dp"
                 android:layout_height="48dp"
                 android:gravity="end"
-                android:text="@string/rangeTotal"
+                android:text="@string/label.total.money.range"
                 android:textColor="#fff"
                 android:textSize="24sp"/>
 
@@ -109,7 +109,7 @@
                 android:layout_width="200dp"
                 android:layout_height="48dp"
                 android:gravity="end"
-                android:text="@string/monthTotal"
+                android:text="@string/label.total.money.monthly"
                 android:textColor="#fff"
                 android:textSize="24sp"/>
 

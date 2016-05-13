@@ -1,26 +1,22 @@
 package org.jaram.ds.fragment;
 
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
 import org.jaram.ds.models.*;
 import org.jaram.ds.models.Order;
-import org.jaram.ds.util.SLog;
 import org.jaram.ds.util.StringUtils;
-import org.jaram.ds.views.BaseRecyclerView;
-import org.jaram.ds.views.MenuListView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
+import org.jaram.ds.views.widgets.MenuListView;
 import org.jaram.ds.views.SwipeTouchHelper;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
-import org.jaram.ds.views.adapter.OrderMenuAdapter;
+import org.jaram.ds.views.adapters.OrderMenuAdapter;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +24,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 /**
  * Created by jdekim43 on 2016. 1. 30..
@@ -52,7 +47,7 @@ public class OrderFragment extends BaseFragment {
 
     private OrderMenuAdapter adapter;
 
-    private int payType = Data.PAY_CREDIT;
+    private Pay payType = Pay.CREDIT;
 
     public static OrderFragment newInstance() {
         return new OrderFragment();
@@ -80,7 +75,7 @@ public class OrderFragment extends BaseFragment {
     @OnClick({R.id.pay_cash, R.id.pay_card, R.id.pay_service, R.id.pay_credit})
     void onClickPayButton(View v) {
         if (adapter.getItemCount() == 0) {
-            Toast.makeText(getActivity(), "주문을 먼저 선택해주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.message_alert_first_select_ordermenu, Toast.LENGTH_SHORT).show();
             return;
         }
         if (adapter.getSelectedOrderMenus().isEmpty()) {
@@ -94,24 +89,28 @@ public class OrderFragment extends BaseFragment {
 
         switch (v.getId()) {
             case R.id.pay_cash:
-                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay), "현금"));
-                payType = Data.PAY_CASH;
+                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay),
+                        getString(R.string.label_cash)));
+                payType = Pay.CASH;
                 break;
             case R.id.pay_card:
-                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay), "카드"));
-                payType = Data.PAY_CARD;
+                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay),
+                        getString(R.string.label_card)));
+                payType = Pay.CARD;
                 break;
             case R.id.pay_service:
-                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay), "서비스"));
-                payType = Data.PAY_SERVICE;
+                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay),
+                        getString(R.string.label_service)));
+                payType = Pay.SERVICE;
                 break;
             case R.id.pay_credit:
-                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay), "외상"));
-                payType = Data.PAY_CREDIT;
+                payConfirmView.setText(StringUtils.format(getString(R.string.message_confirm_pay),
+                        getString(R.string.label_credit)));
+                payType = Pay.CREDIT;
                 break;
         }
         payConfirmContainer.setVisibility(View.VISIBLE);
-        endButton.setText("취소");
+        endButton.setText(R.string.label_cancel);
     }
 
     @OnClick(R.id.pay_confirmBox)
@@ -121,7 +120,7 @@ public class OrderFragment extends BaseFragment {
             orderMenu.setPay(payType);
         }
         payConfirmContainer.setVisibility(View.GONE);
-        endButton.setText("주문 완료");
+        endButton.setText(R.string.label_end_order);
         adapter.resetSelectedMenu();
         adapter.notifyDataSetChanged();
     }
@@ -129,7 +128,8 @@ public class OrderFragment extends BaseFragment {
     @OnClick(R.id.end)
     void onClickEndButton(View view) {
         if (adapter.getItemCount() == 0) {
-            Toast.makeText(getActivity(), "주문을 먼저 선택해주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.message_alert_first_select_ordermenu,
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -137,17 +137,16 @@ public class OrderFragment extends BaseFragment {
             endOrder();
         } else {
             new AlertDialog.Builder(getActivity())
-                    .setTitle("확인")
-                    .setMessage("결제가 되지 않은 상품이 있습니다. 외상으로 처리하시겠습니까?")
-                    .setPositiveButton("예", (dialog, which) -> endOrder())
-                    .setNegativeButton("아니오", null)
+                    .setMessage(R.string.message_alert_not_paid)
+                    .setPositiveButton(R.string.label_yes, (dialog, which) -> endOrder())
+                    .setNegativeButton(R.string.label_no, null)
                     .show();
         }
     }
 
     private void addOrderMenu(Menu menu) {
         OrderMenu orderMenu = new OrderMenu();
-        orderMenu.setPay(Data.PAY_CREDIT);
+        orderMenu.setPay(Pay.CREDIT);
         orderMenu.setPay(false);
         orderMenu.setTakeout(false);
         orderMenu.setTwice(false);
@@ -188,12 +187,12 @@ public class OrderFragment extends BaseFragment {
 
     private void priceRefresh() {
         if (adapter.getSelectedOrderMenus().size() > 0) {
-            totalpriceLabelView.setText("선택 합계");
-            totalpriceView.setText(StringUtils.format("%d원",
+            totalpriceLabelView.setText(R.string.label_total_select);
+            totalpriceView.setText(getString(R.string.format_money,
                     getTotalPrice(adapter.getSelectedOrderMenus())));
         } else {
-            totalpriceLabelView.setText("전체 합계");
-            totalpriceView.setText(StringUtils.format("%d원",
+            totalpriceLabelView.setText(R.string.label_total_all);
+            totalpriceView.setText(getString(R.string.format_money,
                     getTotalPrice(adapter.getAll())));
         }
     }

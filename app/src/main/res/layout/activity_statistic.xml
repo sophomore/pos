@@ -22,11 +22,17 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <org.jaram.ds.views.StatisticDateSelectView
+            <org.jaram.ds.views.widgets.StatisticDateSelectView
                 android:id="@+id/dateSelect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
+
+            <fr.castorflex.android.circularprogressbar.CircularProgressBar
+                android:id="@+id/toolbarProgress"
+                style="@style/AppTheme.CircularProgressBar"
+                android:layout_gravity="end"
+                android:visibility="gone"/>
         </android.support.v7.widget.Toolbar>
 
         <FrameLayout

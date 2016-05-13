@@ -1,8 +1,7 @@
-package org.jaram.ds.views.adapter;
+package org.jaram.ds.views.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,11 @@ import android.widget.TextView;
 import com.wefika.flowlayout.FlowLayout;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.OrderMenu;
+import org.jaram.ds.models.Pay;
 import org.jaram.ds.util.StringUtils;
-import org.jaram.ds.views.BaseRecyclerView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -86,7 +85,7 @@ public class OrderAdapter extends PaginationAdapter<Order> {
             for (OrderMenu orderMenu : data.getOrderMenus()) {
                 TextView smallOrderMenuView = createSmallOrderMenuView(context);
                 smallOrderMenuView.setText(orderMenu.getMenu().getName());
-                if (orderMenu.getPay() == Data.PAY_CREDIT) {
+                if (Pay.CREDIT.equals(orderMenu.getPay())) {
                     smallOrderMenuView.setBackgroundResource(R.color.accent);
                 }
                 orderMenuContainer.addView(smallOrderMenuView);

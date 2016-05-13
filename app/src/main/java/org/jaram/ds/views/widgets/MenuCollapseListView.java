@@ -1,4 +1,4 @@
-package org.jaram.ds.views;
+package org.jaram.ds.views.widgets;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +13,8 @@ import org.jaram.ds.models.Menu;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
-import org.jaram.ds.views.adapter.CollapseMenuAdapter;
+import org.jaram.ds.views.GridSpaceItemDecoration;
+import org.jaram.ds.views.adapters.CollapseMenuAdapter;
 
 import java.util.List;
 import java.util.Set;

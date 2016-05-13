@@ -1,4 +1,4 @@
-package org.jaram.ds.views.adapter;
+package org.jaram.ds.views.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +9,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
 import org.jaram.ds.models.OrderMenu;
+import org.jaram.ds.models.Pay;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.StringUtils;
-import org.jaram.ds.views.BaseRecyclerView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
 
 import butterknife.Bind;
 import butterknife.OnItemSelected;
@@ -65,19 +65,19 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
             addTakeoutView.setVisibility(data.isTakeout() ? View.VISIBLE : View.GONE);
 
             switch (data.getPay()) {
-                case Data.PAY_CASH:
+                case CASH:
                     paySelectView.setSelection(0);
                     container.setBackgroundResource(android.R.color.white);
                     break;
-                case Data.PAY_CARD:
+                case CARD:
                     paySelectView.setSelection(1);
                     container.setBackgroundResource(android.R.color.white);
                     break;
-                case Data.PAY_SERVICE:
+                case SERVICE:
                     paySelectView.setSelection(2);
                     container.setBackgroundResource(android.R.color.white);
                     break;
-                case Data.PAY_CREDIT:
+                case CREDIT:
                     paySelectView.setSelection(3);
                     container.setBackgroundResource(R.color.accent);
                     break;
@@ -86,7 +86,7 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
 
         @OnItemSelected(R.id.paySelector)
         protected void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (data.getPay() == position + 1) {
+            if (data.getPay().getValue() == position + 1) {
                 return;
             }
             Api.with(context).modifyOrderMenu(data.getId(), position + 1)
@@ -94,7 +94,7 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {
                         if (result.isSuccess()) {
-                            data.setPay(position + 1);
+                            data.setPay(Pay.valueOf(position + 1));
                             data.setPay(position < 4);
                             notifyItemChanged(this.position);
                             publishSubject.onNext(data);

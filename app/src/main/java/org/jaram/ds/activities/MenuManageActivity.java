@@ -1,5 +1,6 @@
 package org.jaram.ds.activities;
 
+import org.jaram.ds.R;
 import org.jaram.ds.fragment.MenuManageFragment;
 
 /**
@@ -14,6 +15,6 @@ public class MenuManageActivity extends BaseActivity<MenuManageFragment> {
 
     @Override
     public String getScreenName() {
-        return "메뉴 관리";
+        return getString(R.string.screen_menu_manage);
     }
 }

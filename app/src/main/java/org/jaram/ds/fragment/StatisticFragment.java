@@ -49,7 +49,7 @@ public class StatisticFragment extends BaseFragment {
         chartView.setDoubleTapToZoomEnabled(false);
         chartView.setPinchZoom(false);
         chartView.setDescription(null);
-        chartView.setNoDataTextDescription("기간과 검색 조건을 입력하시고 검색버튼을 눌러주세요");
+        chartView.setNoDataTextDescription(getString(R.string.message_guide_statistic));
 
         manager = StatisticManager.getInstance(getActivity());
         subscription = manager.asObservable()

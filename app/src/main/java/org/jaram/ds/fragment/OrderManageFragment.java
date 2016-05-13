@@ -6,21 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.jaram.ds.R;
 import org.jaram.ds.activities.OrderActivity;
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
-import org.jaram.ds.util.StringUtils;
-import org.jaram.ds.views.PaginationView;
+import org.jaram.ds.views.widgets.PaginationView;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
-import org.jaram.ds.views.adapter.OrderAdapter;
-import org.jaram.ds.views.adapter.DetailOrderMenuAdapter;
+import org.jaram.ds.views.adapters.OrderAdapter;
+import org.jaram.ds.views.adapters.DetailOrderMenuAdapter;
 
 import java.util.List;
 
@@ -108,9 +105,8 @@ public class OrderManageFragment extends BaseFragment {
     @OnClick(R.id.delete)
     protected void deleteOrder() {
         new AlertDialog.Builder(getActivity())
-                .setTitle("주문 삭제")
-                .setMessage("정말로 주문을 삭제하시겠습니까?")
-                .setPositiveButton("예", ((dialog, which) ->
+                .setMessage(R.string.message_confirm_delete_order)
+                .setPositiveButton(R.string.label_yes, ((dialog, which) ->
                         Api.with(getActivity()).deleteOrder(selectedOrder.getId())
                                 .retryWhen(RxUtils::exponentialBackoff)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,7 +118,7 @@ public class OrderManageFragment extends BaseFragment {
                                     }
                                 }, SLog::e)
                 ))
-                .setNegativeButton("아니오", null)
+                .setNegativeButton(R.string.label_no, null)
                 .show();
     }
 
@@ -147,7 +143,8 @@ public class OrderManageFragment extends BaseFragment {
         detailOrderMenuAdapter.clear();
         detailOrderMenuAdapter.addAll(selectedOrder.getOrderMenus());
 
-        orderTotalPriceView.setText(selectedOrder == null ? "" : StringUtils.format("%d", selectedOrder.getTotalPrice()));
+        orderTotalPriceView.setText(selectedOrder == null ? "" : getString(R.string.format_money,
+                selectedOrder.getTotalPrice()));
         orderDateView.setText(selectedOrder == null ? "" : Data.dateFormat.format(selectedOrder.getDate()));
 
         detailOrderMenuAdapter.notifyDataSetChanged();

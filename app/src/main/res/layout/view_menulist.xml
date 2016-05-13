@@ -20,7 +20,7 @@
             android:textColor="@color/dark"
             android:textSize="26sp"/>
 
-        <org.jaram.ds.views.BaseRecyclerView
+        <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/cutlet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,7 +29,6 @@
             android:overScrollMode="never"
             android:paddingEnd="0dp"
             android:paddingStart="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +46,7 @@
             android:textColor="@color/dark"
             android:textSize="26sp"/>
 
-        <org.jaram.ds.views.BaseRecyclerView
+        <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/rice"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -56,7 +55,6 @@
             android:overScrollMode="never"
             android:paddingEnd="0dp"
             android:paddingStart="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -74,7 +72,7 @@
             android:textColor="@color/dark"
             android:textSize="26sp"/>
 
-        <org.jaram.ds.views.BaseRecyclerView
+        <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/noodle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -83,7 +81,6 @@
             android:overScrollMode="never"
             android:paddingEnd="0dp"
             android:paddingStart="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -101,7 +98,7 @@
             android:textColor="@color/dark"
             android:textSize="26sp"/>
 
-        <org.jaram.ds.views.BaseRecyclerView
+        <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/etc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -110,7 +107,5 @@
             android:overScrollMode="never"
             android:paddingEnd="10dp"
             android:paddingStart="10dp"/>
-
     </LinearLayout>
-
 </LinearLayout>

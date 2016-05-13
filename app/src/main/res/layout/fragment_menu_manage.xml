@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.jaram.ds.views.MenuListView
+    <org.jaram.ds.views.widgets.MenuListView
         android:id="@+id/menuList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

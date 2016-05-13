@@ -1,4 +1,4 @@
-package org.jaram.ds.adapter;
+package org.jaram.ds.views.adapters;
 
 /*
  * Copyright (C) 2014 darnmason

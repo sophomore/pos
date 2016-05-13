@@ -2,7 +2,7 @@ package org.jaram.ds.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -21,7 +21,9 @@ public class OrderMenu extends RealmObject {
     @SerializedName("menu_id") private int menuId;
     private Menu menu;
     @SerializedName("order") private Order order;
-    @SerializedName("pay") private int pay;
+    @SerializedName("pay") private int payInt;
+    @Ignore
+    private Pay pay;
     @SerializedName("curry") private boolean curry;
     @SerializedName("twice") private boolean twice;
     @SerializedName("takeout") private boolean takeout;
@@ -65,11 +67,14 @@ public class OrderMenu extends RealmObject {
         this.order = order;
     }
 
-    public int getPay() {
+    public Pay getPay() {
+        if (pay == null) {
+            pay = Pay.valueOf(payInt);
+        }
         return pay;
     }
 
-    public void setPay(int pay) {
+    public void setPay(Pay pay) {
         this.pay = pay;
     }
 

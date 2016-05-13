@@ -5,7 +5,7 @@ import android.widget.Button;
 
 import org.jaram.ds.R;
 import org.jaram.ds.managers.StatisticManager;
-import org.jaram.ds.views.MenuCollapseListView;
+import org.jaram.ds.views.widgets.MenuCollapseListView;
 
 import butterknife.Bind;
 import butterknife.OnClick;

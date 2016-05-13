@@ -1,4 +1,4 @@
-package org.jaram.ds.views;
+package org.jaram.ds.views.widgets;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,8 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.jaram.ds.adapter.HeaderViewRecyclerAdapter;
-import org.jaram.ds.util.SLog;
+import org.jaram.ds.views.adapters.HeaderViewRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;

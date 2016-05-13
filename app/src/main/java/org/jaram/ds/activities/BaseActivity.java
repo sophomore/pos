@@ -282,7 +282,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
     }
 
     protected void startSettingActivity() {
-        Toast.makeText(this, "준비중입니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.message_yet, Toast.LENGTH_SHORT).show();
 //        if (this instanceof OrderActivity) {
 //            return;
 //        }

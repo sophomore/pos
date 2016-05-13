@@ -1,4 +1,4 @@
-package org.jaram.ds.views;
+package org.jaram.ds.views.widgets;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.managers.StatisticManager;
 
 import java.util.Calendar;

@@ -1,25 +1,18 @@
-package org.jaram.ds.views;
+package org.jaram.ds.views.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
 import org.jaram.ds.models.Category;
 import org.jaram.ds.models.Menu;
-import org.jaram.ds.util.SLog;
-import org.jaram.ds.views.adapter.MenuAdapter;
-
-import java.util.List;
+import org.jaram.ds.views.VerticalSpaceItemDecoration;
+import org.jaram.ds.views.adapters.MenuAdapter;
 
 import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 import io.realm.Realm;
 
 /**

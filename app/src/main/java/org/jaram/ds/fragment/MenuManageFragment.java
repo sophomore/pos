@@ -1,21 +1,12 @@
 package org.jaram.ds.fragment;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import org.jaram.ds.R;
-import org.jaram.ds.adapter.MenuListAdapter;
-import org.jaram.ds.data.Data;
-import org.jaram.ds.dialog.InfoMenu;
 import org.jaram.ds.dialogs.MenuInfoDialog;
 import org.jaram.ds.models.Menu;
-import org.jaram.ds.util.Http;
-import org.jaram.ds.views.MenuListView;
-
-import java.io.IOException;
+import org.jaram.ds.views.widgets.MenuListView;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -25,6 +16,8 @@ import io.realm.Realm;
  * Created by jdekim43 on 2016. 5. 13..
  */
 public class MenuManageFragment extends BaseFragment {
+
+    private static final String DIALOG_MENU_INFO = "dialog.menu_info";
 
     @Bind(R.id.menuList) MenuListView menuListView;
 
@@ -48,8 +41,6 @@ public class MenuManageFragment extends BaseFragment {
         showMenuInfoDialog(null);
     }
 
-    private static final String DIALOG_MENU_INFO = "dialog.menu_info";
-
     protected void showMenuInfoDialog(Menu menu) {
         MenuInfoDialog dialog = MenuInfoDialog.newInstance(menu);
         dialog.setOnConfirmListener(menuListView::notifyAllDataSetChanged);
@@ -58,10 +49,9 @@ public class MenuManageFragment extends BaseFragment {
 
     protected void showMenuDeleteDialog(Menu menu) {
         new AlertDialog.Builder(getActivity())
-                .setTitle("확인")
-                .setMessage("'"+menu.getName()+"'을/를 삭제하시겠습니까?")
-                .setPositiveButton("예", (dialog, which) -> deleteMenu(menu))
-                .setNegativeButton("아니오", null)
+                .setMessage(getString(R.string.format_delete_menu, menu.getName()))
+                .setPositiveButton(R.string.label_yes, (dialog, which) -> deleteMenu(menu))
+                .setNegativeButton(R.string.label_no, null)
                 .show();
     }
 

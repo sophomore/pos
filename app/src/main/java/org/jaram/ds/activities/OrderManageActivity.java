@@ -5,7 +5,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.jaram.ds.R;
-import org.jaram.ds.fragment.BaseFragment;
 import org.jaram.ds.fragment.OrderManageFragment;
 
 /**
@@ -15,7 +14,7 @@ public class OrderManageActivity extends BaseActivity<OrderManageFragment> {
 
     @Override
     public String getScreenName() {
-        return getString(R.string.screen_ordermanager);
+        return getString(R.string.screen_order_manage);
     }
 
     @Override
@@ -23,6 +22,7 @@ public class OrderManageActivity extends BaseActivity<OrderManageFragment> {
         return OrderManageFragment.newInstance();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void initToolbar() {
         super.initToolbar();

@@ -88,13 +88,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cash"/>
+                android:text="@string/label.cash"/>
             <CheckBox
                 android:id="@+id/pay_cardChk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/card"/>
+                android:text="@string/label.card"/>
 
         </LinearLayout>
         <LinearLayout
@@ -107,13 +107,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/service"/>
+                android:text="@string/label.service"/>
             <CheckBox
                 android:id="@+id/pay_creditChk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/credit"/>
+                android:text="@string/label.credit"/>
 
         </LinearLayout>
 
@@ -133,7 +133,7 @@
         android:paddingBottom="12dp"
         style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/default_btn"
-        android:text="@string/confirm"
+        android:text="@string/label.confirm"
         android:textColor="@color/point"/>
     <Button
         android:id="@+id/cancelBtn"
@@ -150,7 +150,7 @@
         android:paddingBottom="12dp"
         style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/default_btn"
-        android:text="@string/cancel"
+        android:text="@string/label.cancel"
         android:textColor="@color/point"/>
 
 </RelativeLayout>

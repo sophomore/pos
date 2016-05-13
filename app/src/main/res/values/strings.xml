@@ -1,52 +1,131 @@
 <resources>
     <!--Right Drawer-->
-    <string name="order">주문화면</string>
-    <string name="manageOrder">주문관리</string>
-    <string name="statistic">통계</string>
-    <string name="manageMenu">메뉴관리</string>
-    <string name="setting">설정</string>
-    <string name="exit">종료</string>
-    <!--Order-->
+    <!--<string name="order">주문화면</string>-->
+    <!--<string name="manageOrder">주문관리</string>-->
+    <!--<string name="statistic">통계</string>-->
+    <!--<string name="manageMenu">메뉴관리</string>-->
+    <!--<string name="setting">설정</string>-->
+    <!--<string name="exit">종료</string>-->
+    <!--&lt;!&ndash;Order&ndash;&gt;-->
+    <!--<string name="totalprice">전체 합계</string>-->
+    <!--<string name="init_totalprice_value">0원</string>-->
+    <!--<string name="orderEnd">주문 완료</string>-->
+    <!--<string name="pay_confirm">으로 결제처리 하시겠습니까?</string>-->
+    <!--&lt;!&ndash;<string name="order_cancel">주문 취소</string>&ndash;&gt;-->
+    <!--&lt;!&ndash;Right Drawer&ndash;&gt;-->
+    <!--&lt;!&ndash;Default&ndash;&gt;-->
+    <!--<string name="confirm">확인</string>-->
+    <!--<string name="cancel">취소</string>-->
+    <!--<string name="cash">현금</string>-->
+    <!--<string name="card">카드</string>-->
+    <!--<string name="service">서비스</string>-->
+    <!--<string name="credit">외상</string>-->
+    <!--&lt;!&ndash;Tax&ndash;&gt;-->
+    <!--<string name="rangeTotal">기간 내 총액</string>-->
+    <!--<string name="monthTotal">월별 총액</string>-->
+    <!--<string name="total">총액</string>-->
+
+
+
+    <!--abcdefghijklmnopqrstuvwxyz-->
     <string name="app_name">Dear, Song</string>
-    <string name="totalprice">전체 합계</string>
-    <string name="init_totalprice_value">0원</string>
-    <string name="ordermenuList_empty">오른쪽에서 메뉴를 선택해주세요</string>
-    <string name="orderEnd">주문 완료</string>
-    <string name="pay_confirm">으로 결제처리 하시겠습니까?</string>
     <string name="cutlet">돈까스</string>
-    <string name="rice">덮밥</string>
-    <string name="noodle">면류</string>
     <string name="etc">음료 및 스페셜</string>
-    <!--<string name="order_cancel">주문 취소</string>-->
-    <!--Right Drawer-->
-    <!--Default-->
-    <string name="confirm">확인</string>
-    <string name="cancel">취소</string>
-    <string name="cash">현금</string>
-    <string name="card">카드</string>
-    <string name="service">서비스</string>
-    <string name="credit">외상</string>
-    <!--Tax-->
-    <string name="rangeTotal">기간 내 총액</string>
-    <string name="monthTotal">월별 총액</string>
-    <string name="total">총액</string>
+    <string name="noodle">면류</string>
+    <string name="package_name">org.jaram.ds</string>
+    <string name="rice">덮밥</string>
 
-    <string name="label.statistic_setting">통계 설정</string>
-    <string name="label.statistic">통계</string>
+    <!--default value-->
+    <string name="default.price">0원</string>
+    <!--End default value-->
 
+    <!--format-->
+    <string name="format.delete.menu">\'%s\'을/를 삭제하시겠습니까?</string>
 
+    <string name="format.money">%,d원</string>
+    <!--End format-->
 
+    <!--label-->
+    <string name="label.alert.update">업데이트 알림</string>
+    <string name="label.analysis">분석</string>
 
+    <string name="label.cancel">취소</string>
+    <string name="label.card">카드</string>
+    <string name="label.cash">현금</string>
+    <string name="label.category">카테고리</string>
+    <string name="label.count">개수</string>
+    <string name="label.credit">외상</string>
+    <string name="label.confirm">확인</string>
 
-    <!--Screen names-->
-    <string name="screen.splash">스플래시</string>
-    <string name="screen.ordermanager">주문관리</string>
-    <string name="screen.order">주문하기</string>
+    <string name="label.end_order">주문 완료</string>
 
+    <string name="label.name">이름</string>
+    <string name="label.no">아니오</string>
+
+    <string name="label.price.menu">메뉴 가격</string>
 
     <string name="label.refresh">새로고침</string>
 
+    <string name="label.sales">매출</string>
+    <string name="label.select.menu">메뉴 선택</string>
+    <string name="label.service">서비스</string>
+    <string name="label.setting.item">항목</string>
+    <string name="label.statistic_setting">통계 설정</string>
+    <string name="label.statistic">통계</string>
+
+    <string name="label.total.all">전체 합계</string>
+    <string name="label.total.money">총액</string>
+    <string name="label.total.money.range">총액</string>
+    <string name="label.total.money.monthly">총액</string>
+    <string name="label.total.select">선택 합계</string>
+
+    <string name="label.unit">단위</string>
+    <string name="label.unit.hour">시간</string>
+    <string name="label.unit.date">일</string>
+    <string name="label.unit.day">요일</string>
+    <string name="label.unit.month">달</string>
+    <string name="label.unit.quarter">분기</string>
+    <string name="label.unit.year">연</string>
+
+    <string name="label.yes">예</string>
+    <!--End label-->
+
+    <!--message-->
+    <string name="message.alert.first_select_ordermenu">주문을 먼저 선택해주세요.</string>
+    <string name="message.alert.not_paid">결제가 되지 않은 상품이 있습니다. 외상으로 처리하시겠습니까?</string>
+
+    <string name="message.confirm.app_update">업데이트가 있습니다. 업데이트를 하시겠습니까?</string>
+    <string name="message.confirm.delete_order">정말로 주문을 삭제하시겠습니까?</string>
     <string name="message.confirm.pay">%s(으)로 결제하시려면 다시 한 번 터치하세요</string>
+
+    <string name="message.empty.order">오른쪽에서 메뉴를 선택해주세요.</string>
     <string name="message.empty.retry">내용이 없습니다.\n다시 시도해보시겠어요?</string>
+
+    <string name="message.failure.loading.menu">메뉴 정보를 불러오는데 실패하여 저장된 정보를 사용합니다.</string>
+
+    <string name="message.guide.simple_statistic">기간을 입력하시고 검색 버튼을 누르세요.</string>
+    <string name="message.guide.statistic">기간과 검색 조건을 입력하시고 검색 버튼을 누르세요.</string>
+
     <string name="message.loading">정보를 받아오고 있습니다.</string>
+    <string name="message.loading.closing">서버로 저장된 주문을 전송합니다.</string>
+    <string name="message.loading.menu">메뉴 정보를 업데이트하고 있습니다.</string>
+    <string name="message.loading.new_version">최신 버전을 확인하고 있습니다.</string>
+    <string name="message.loading.prepare">앱 실행을 위해 준비하고 있습니다.</string>
+
+    <string name="message.welcome">환영합니다!</string>
+
+    <string name="message.yet">준비중입니다.</string>
+    <!--End message-->
+
+    <!--screen name-->
+    <string name="screen.menu_manage">메뉴관리</string>
+
+    <string name="screen.order_manage">주문관리</string>
+
+    <string name="screen.order">주문하기</string>
+
+    <string name="screen.setting">설정</string>
+    <string name="screen.splash">스플래시</string>
+    <string name="screen.statistic">통계</string>
+    <!--End screen name-->
 </resources>

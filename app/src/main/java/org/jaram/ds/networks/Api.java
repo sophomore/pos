@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.jaram.ds.Config;
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.result.SimpleApiResult;

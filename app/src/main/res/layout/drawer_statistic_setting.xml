@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="항목"
+            android:text="@string/label.setting.item"
             android:textColor="@color/dark"
             android:textSize="18sp"/>
 
@@ -34,7 +34,7 @@
                 android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_white"
-                android:text="매출"
+                android:text="@string/label.sales"
                 android:textColor="@color/btn_white_text"
                 android:textSize="18sp"/>
 
@@ -45,7 +45,7 @@
                 android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_white"
-                android:text="개수"
+                android:text="@string/label.count"
                 android:textColor="@color/btn_white_text"
                 android:textSize="18sp"/>
         </LinearLayout>
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="단위"
+            android:text="@string/label.unit"
             android:textColor="@color/dark"
             android:textSize="18sp"/>
 
@@ -76,7 +76,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="시간"
+                    android:text="@string/label.unit.hour"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
 
@@ -87,7 +87,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="일"
+                    android:text="@string/label.unit.date"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
 
@@ -98,7 +98,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="요일"
+                    android:text="@string/label.unit.day"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
             </LinearLayout>
@@ -115,7 +115,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="월"
+                    android:text="@string/label.unit.month"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
 
@@ -126,7 +126,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="분기"
+                    android:text="@string/label.unit.quarter"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
 
@@ -137,7 +137,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_white"
-                    android:text="년"
+                    android:text="@string/label.unit.year"
                     android:textColor="@color/btn_white_text"
                     android:textSize="18sp"/>
             </LinearLayout>
@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="메뉴 선택"
+            android:text="@string/label.select.menu"
             android:textColor="@color/dark"
             android:textSize="18sp"/>
 
@@ -163,7 +163,7 @@
         android:layout_height="48dp"
         android:layout_gravity="bottom"
         android:background="@drawable/point_btn"
-        android:text="분석"
+        android:text="@string/label.analysis"
         android:textColor="#FFFFFF"
         android:textSize="16sp"/>
 </FrameLayout>

@@ -22,7 +22,7 @@ public class StatisticActivity extends BaseActivity<SimpleStatisticFragment> {
 
     @Override
     public String getScreenName() {
-        return "통계";
+        return getString(R.string.screen_statistic);
     }
 
     @Override

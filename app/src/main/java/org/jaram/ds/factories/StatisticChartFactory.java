@@ -14,7 +14,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.jaram.ds.R;
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.managers.StatisticManager;
 import org.jaram.ds.util.SLog;
 import org.json.JSONArray;

@@ -1,4 +1,4 @@
-package org.jaram.ds.views.adapter;
+package org.jaram.ds.views.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,10 +7,8 @@ import android.widget.Button;
 
 import org.jaram.ds.R;
 import org.jaram.ds.models.Menu;
-import org.jaram.ds.util.SLog;
-import org.jaram.ds.views.BaseRecyclerView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
 
-import java.util.List;
 import java.util.Set;
 
 import butterknife.Bind;

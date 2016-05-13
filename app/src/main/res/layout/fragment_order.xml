@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!--전체 합계-->
     <RelativeLayout
         android:id="@+id/totalpriceBox"
         android:layout_width="320dp"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="@string/totalprice"
+            android:text="@string/label.total.all"
             android:textColor="#F9F2F2"
             android:textSize="16sp"/>
 
@@ -29,12 +29,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:text="@string/init_totalprice_value"
+            android:text="@string/default.price"
             android:textColor="#FFF6E5"
             android:textSize="48sp"/>
-
     </RelativeLayout>
-    <!--주문 메뉴 목록-->
+
     <TextView
         android:id="@+id/list_empty"
         android:layout_width="320dp"
@@ -43,9 +42,9 @@
         android:layout_alignParentTop="true"
         android:background="#FFFFFF"
         android:gravity="center"
-        android:text="@string/ordermenuList_empty"/>
+        android:text="@string/message.empty.order"/>
 
-    <org.jaram.ds.views.BaseRecyclerView
+    <org.jaram.ds.views.widgets.BaseRecyclerView
         android:id="@+id/orderMenuList"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
@@ -67,10 +66,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@color/accent"
-            android:text="@string/orderEnd"
+            android:text="@string/label.end_order"
             android:textColor="#FFFFFF"
             android:textSize="24sp"/>
-        <!--결제 방식 선택-->
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -88,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00000000"
-                    android:text="@string/cash"
+                    android:text="@string/label.cash"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
 
@@ -103,7 +102,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00000000"
-                    android:text="@string/card"
+                    android:text="@string/label.card"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
 
@@ -118,7 +117,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00000000"
-                    android:text="@string/service"
+                    android:text="@string/label.service"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
 
@@ -133,10 +132,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00000000"
-                    android:text="@string/credit"
+                    android:text="@string/label.credit"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"/>
-
             </LinearLayout>
 
             <RelativeLayout
@@ -153,14 +151,11 @@
                     android:layout_centerInParent="true"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"/>
-
             </RelativeLayout>
-
         </FrameLayout>
-
     </RelativeLayout>
-    <!--메뉴 목록-->
-    <org.jaram.ds.views.MenuListView
+
+    <org.jaram.ds.views.widgets.MenuListView
         android:id="@+id/menuList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -169,5 +164,4 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/orderMenuList"
         android:orientation="horizontal"/>
-
 </RelativeLayout>

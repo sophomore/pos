@@ -1,9 +1,7 @@
-package org.jaram.ds.views.adapter;
+package org.jaram.ds.views.adapters;
 
-import android.support.v7.widget.RecyclerView;
-
-import org.jaram.ds.views.BaseRecyclerView;
-import org.jaram.ds.views.PaginationView;
+import org.jaram.ds.views.widgets.BaseRecyclerView;
+import org.jaram.ds.views.widgets.PaginationView;
 
 /**
  * Created by chulwoo on 16. 3. 11..

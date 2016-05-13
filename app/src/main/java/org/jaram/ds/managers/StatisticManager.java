@@ -2,11 +2,7 @@ package org.jaram.ds.managers;
 
 import android.content.Context;
 
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.LineData;
-
-import org.jaram.ds.data.Data;
+import org.jaram.ds.Data;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.result.SimpleStatisticResult;
 import org.jaram.ds.models.result.StatisticResult;
@@ -17,12 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import rx.Observable;

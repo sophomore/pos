@@ -20,7 +20,14 @@
             android:layout_height="?actionBarSize"
             android:background="@color/dark"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <fr.castorflex.android.circularprogressbar.CircularProgressBar
+                android:id="@+id/toolbarProgress"
+                style="@style/AppTheme.CircularProgressBar"
+                android:layout_gravity="end"
+                android:visibility="gone"/>
+        </android.support.v7.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fragment"
