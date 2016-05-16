@@ -17,9 +17,8 @@ import org.jaram.ds.managers.StatisticManager;
 import org.jaram.ds.models.result.SimpleStatisticResult;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
-import org.jaram.ds.util.StringUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,14 +29,14 @@ import rx.schedulers.Schedulers;
  */
 public class SimpleStatisticFragment extends BaseFragment {
 
-    @Bind(R.id.chart) BarChart chart;
-    @Bind(R.id.infoView) View infoContainer;
-    @Bind(R.id.rangeCash) TextView rangeCashView;
-    @Bind(R.id.rangeCard) TextView rangeCardView;
-    @Bind(R.id.rangeTotal) TextView rangeTotalView;
-    @Bind(R.id.monthCash) TextView monthCashView;
-    @Bind(R.id.monthCard) TextView monthCardView;
-    @Bind(R.id.monthTotal) TextView monthTotalView;
+    @BindView(R.id.chart) BarChart chart;
+    @BindView(R.id.infoView) View infoContainer;
+    @BindView(R.id.rangeCash) TextView rangeCashView;
+    @BindView(R.id.rangeCard) TextView rangeCardView;
+    @BindView(R.id.rangeTotal) TextView rangeTotalView;
+    @BindView(R.id.monthCash) TextView monthCashView;
+    @BindView(R.id.monthCard) TextView monthCardView;
+    @BindView(R.id.monthTotal) TextView monthTotalView;
 
     private StatisticManager manager;
     private Subscription subscription;

@@ -21,8 +21,8 @@ import org.jaram.ds.views.adapters.DetailOrderMenuAdapter;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,10 +32,10 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class OrderManageFragment extends BaseFragment {
 
-    @Bind(R.id.orderList) PaginationView<Order> orderListView;
-    @Bind(R.id.totalprice) TextView orderTotalPriceView;
-    @Bind(R.id.date) TextView orderDateView;
-    @Bind(R.id.orderMenuList) RecyclerView orderMenuListView;
+    @BindView(R.id.orderList) PaginationView<Order> orderListView;
+    @BindView(R.id.totalprice) TextView orderTotalPriceView;
+    @BindView(R.id.date) TextView orderDateView;
+    @BindView(R.id.orderMenuList) RecyclerView orderMenuListView;
 
     @BindDimen(R.dimen.button_line_stroke) int itemSpacing;
 

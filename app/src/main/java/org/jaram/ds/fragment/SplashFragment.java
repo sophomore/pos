@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
@@ -36,7 +36,7 @@ import rx.schedulers.Schedulers;
  */
 public class SplashFragment extends BaseFragment {
 
-    @Bind(R.id.notice) TextView noticeView;
+    @BindView(R.id.notice) TextView noticeView;
 
     private static final int MINIMUM_DISPLAY_TIME = 2000;
 

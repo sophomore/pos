@@ -12,7 +12,7 @@ import org.jaram.ds.models.result.StatisticResult;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public class StatisticFragment extends BaseFragment {
 
-    @Bind(R.id.chart) LineChart chartView;
+    @BindView(R.id.chart) LineChart chartView;
 
     private StatisticManager manager;
     private Subscription subscription;

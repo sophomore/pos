@@ -14,7 +14,7 @@ import org.jaram.ds.managers.StatisticManager;
 
 import java.util.Calendar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,8 +24,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class StatisticDateSelectView extends LinearLayout {
 
-    @Bind(R.id.startDate) Button startDateButton;
-    @Bind(R.id.endDate) Button endDateButton;
+    @BindView(R.id.startDate) Button startDateButton;
+    @BindView(R.id.endDate) Button endDateButton;
 
     private StatisticManager manager;
 

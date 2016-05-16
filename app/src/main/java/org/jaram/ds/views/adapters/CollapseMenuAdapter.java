@@ -11,7 +11,7 @@ import org.jaram.ds.views.widgets.BaseRecyclerView;
 
 import java.util.Set;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * Created by jdekim43 on 2016. 5. 13..
@@ -42,7 +42,7 @@ public class CollapseMenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> 
 
     protected class CollapseMenuViewHolder extends BaseRecyclerView.BaseViewHolder<Menu> {
 
-        @Bind(R.id.item) Button itemButton;
+        @BindView(R.id.item) Button itemButton;
 
         public CollapseMenuViewHolder(View itemView) {
             super(itemView);

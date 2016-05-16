@@ -21,8 +21,8 @@ import org.jaram.ds.views.adapters.OrderMenuAdapter;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -30,18 +30,18 @@ import butterknife.OnClick;
  */
 public class OrderFragment extends BaseFragment {
 
-    @Bind(R.id.totalpriceLabel) TextView totalpriceLabelView;
-    @Bind(R.id.totalprice) TextView totalpriceView;
-    @Bind(R.id.list_empty) View emptyView;
-    @Bind(R.id.orderMenuList) BaseRecyclerView orderMenuListView;
-    @Bind(R.id.end) Button endButton;
-    @Bind(R.id.pay_cash) Button payCashButton;
-    @Bind(R.id.pay_card) Button payCardButton;
-    @Bind(R.id.pay_service) Button payServiceButton;
-    @Bind(R.id.pay_credit) Button payCreditButton;
-    @Bind(R.id.pay_confirmBox) View payConfirmContainer;
-    @Bind(R.id.pay_confirm) TextView payConfirmView;
-    @Bind(R.id.menuList) MenuListView menuList;
+    @BindView(R.id.totalpriceLabel) TextView totalpriceLabelView;
+    @BindView(R.id.totalprice) TextView totalpriceView;
+    @BindView(R.id.list_empty) View emptyView;
+    @BindView(R.id.orderMenuList) BaseRecyclerView orderMenuListView;
+    @BindView(R.id.end) Button endButton;
+    @BindView(R.id.pay_cash) Button payCashButton;
+    @BindView(R.id.pay_card) Button payCardButton;
+    @BindView(R.id.pay_service) Button payServiceButton;
+    @BindView(R.id.pay_credit) Button payCreditButton;
+    @BindView(R.id.pay_confirmBox) View payConfirmContainer;
+    @BindView(R.id.pay_confirm) TextView payConfirmView;
+    @BindView(R.id.menuList) MenuListView menuList;
 
     @BindDimen(R.dimen.button_line_stroke) int itemSpacing;
 

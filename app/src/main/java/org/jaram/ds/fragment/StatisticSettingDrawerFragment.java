@@ -7,7 +7,7 @@ import org.jaram.ds.R;
 import org.jaram.ds.managers.StatisticManager;
 import org.jaram.ds.views.widgets.MenuCollapseListView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -16,15 +16,15 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class StatisticSettingDrawerFragment extends BaseFragment {
 
-    @Bind(R.id.typeSale) Button typeSaleButton;
-    @Bind(R.id.typeCount) Button typeCountButton;
-    @Bind(R.id.unitHour) Button unitHourButton;
-    @Bind(R.id.unitDate) Button unitDateButton;
-    @Bind(R.id.unitDay) Button unitDayButton;
-    @Bind(R.id.unitMonth) Button unitMonthButton;
-    @Bind(R.id.unitQuarter) Button unitQuarterButton;
-    @Bind(R.id.unitYear) Button unitYearButton;
-    @Bind(R.id.menuList) MenuCollapseListView menuListView;
+    @BindView(R.id.typeSale) Button typeSaleButton;
+    @BindView(R.id.typeCount) Button typeCountButton;
+    @BindView(R.id.unitHour) Button unitHourButton;
+    @BindView(R.id.unitDate) Button unitDateButton;
+    @BindView(R.id.unitDay) Button unitDayButton;
+    @BindView(R.id.unitMonth) Button unitMonthButton;
+    @BindView(R.id.unitQuarter) Button unitQuarterButton;
+    @BindView(R.id.unitYear) Button unitYearButton;
+    @BindView(R.id.menuList) MenuCollapseListView menuListView;
 
     private StatisticManager manager;
 

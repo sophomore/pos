@@ -19,8 +19,8 @@ import org.jaram.ds.views.adapters.CollapseMenuAdapter;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.Bind;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,14 +30,14 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class MenuCollapseListView extends LinearLayout implements CollapseMenuAdapter.OnClickMenuListener {
 
-    @Bind(R.id.cutlet) Button cutletButton;
-    @Bind(R.id.rice) Button riceButton;
-    @Bind(R.id.noodle) Button noodleButton;
-    @Bind(R.id.etc) Button etcButton;
-    @Bind(R.id.cutletList) BaseRecyclerView cutletView;
-    @Bind(R.id.riceList) BaseRecyclerView riceView;
-    @Bind(R.id.noodleList) BaseRecyclerView noodleView;
-    @Bind(R.id.etcList) BaseRecyclerView etcView;
+    @BindView(R.id.cutlet) Button cutletButton;
+    @BindView(R.id.rice) Button riceButton;
+    @BindView(R.id.noodle) Button noodleButton;
+    @BindView(R.id.etc) Button etcButton;
+    @BindView(R.id.cutletList) BaseRecyclerView cutletView;
+    @BindView(R.id.riceList) BaseRecyclerView riceView;
+    @BindView(R.id.noodleList) BaseRecyclerView noodleView;
+    @BindView(R.id.etcList) BaseRecyclerView etcView;
 
     @BindDimen(R.dimen.collapse_menu_item_spacing) int itemSpacing;
 

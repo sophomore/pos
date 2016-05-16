@@ -16,7 +16,7 @@ import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.StringUtils;
 import org.jaram.ds.views.widgets.BaseRecyclerView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnItemSelected;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,13 +41,13 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
 
     protected class DetailOrderMenuItemViewHolder extends BaseRecyclerView.BaseViewHolder<OrderMenu> {
 
-        @Bind(R.id.container) View container;
-        @Bind(R.id.name) TextView nameView;
-        @Bind(R.id.price) TextView priceView;
-        @Bind(R.id.addCurry) TextView addCurryView;
-        @Bind(R.id.addTwice) TextView addTwiceView;
-        @Bind(R.id.addTakeout) TextView addTakeoutView;
-        @Bind(R.id.paySelector) Spinner paySelectView;
+        @BindView(R.id.container) View container;
+        @BindView(R.id.name) TextView nameView;
+        @BindView(R.id.price) TextView priceView;
+        @BindView(R.id.addCurry) TextView addCurryView;
+        @BindView(R.id.addTwice) TextView addTwiceView;
+        @BindView(R.id.addTakeout) TextView addTakeoutView;
+        @BindView(R.id.paySelector) Spinner paySelectView;
 
         public DetailOrderMenuItemViewHolder(View itemView) {
             super(itemView);

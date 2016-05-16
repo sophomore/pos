@@ -8,7 +8,7 @@ import org.jaram.ds.dialogs.MenuInfoDialog;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.views.widgets.MenuListView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
 
@@ -19,7 +19,7 @@ public class MenuManageFragment extends BaseFragment {
 
     private static final String DIALOG_MENU_INFO = "dialog.menu_info";
 
-    @Bind(R.id.menuList) MenuListView menuListView;
+    @BindView(R.id.menuList) MenuListView menuListView;
 
     public static MenuManageFragment newInstance() {
         return new MenuManageFragment();

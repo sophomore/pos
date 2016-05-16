@@ -21,6 +21,7 @@ public class SplashActivity extends BaseActivity<SplashFragment> {
         return SplashFragment.newInstance();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

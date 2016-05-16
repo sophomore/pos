@@ -19,7 +19,7 @@ import org.jaram.ds.views.SwipeTouchHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -74,11 +74,11 @@ public class OrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<OrderMenu
 
     protected class OrderMenuItemViewHolder extends BaseRecyclerView.BaseViewHolder<OrderMenu> {
 
-        @Bind(R.id.menu_name) public TextView nameView;
-        @Bind(R.id.menu_price) public TextView priceView;
-        @Bind(R.id.curryBtn) public Button curryButton;
-        @Bind(R.id.twiceBtn) public Button twiceButton;
-        @Bind(R.id.takeoutBtn) public Button takeoutButton;
+        @BindView(R.id.menu_name) public TextView nameView;
+        @BindView(R.id.menu_price) public TextView priceView;
+        @BindView(R.id.curryBtn) public Button curryButton;
+        @BindView(R.id.twiceBtn) public Button twiceButton;
+        @BindView(R.id.takeoutBtn) public Button takeoutButton;
 
         public OrderMenuItemViewHolder(View itemView) {
             super(itemView);

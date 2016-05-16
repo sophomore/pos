@@ -10,8 +10,8 @@ import org.jaram.ds.models.Menu;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
 import org.jaram.ds.views.adapters.MenuAdapter;
 
-import butterknife.Bind;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
@@ -20,10 +20,10 @@ import io.realm.Realm;
  */
 public class MenuListView extends LinearLayout implements MenuAdapter.OnItemClickListener, MenuAdapter.OnItemLongClickListener {
 
-    @Bind(R.id.cutlet) BaseRecyclerView cutletListView;
-    @Bind(R.id.rice) BaseRecyclerView riceListView;
-    @Bind(R.id.noodle) BaseRecyclerView noodleListView;
-    @Bind(R.id.etc) BaseRecyclerView etcListView;
+    @BindView(R.id.cutlet) BaseRecyclerView cutletListView;
+    @BindView(R.id.rice) BaseRecyclerView riceListView;
+    @BindView(R.id.noodle) BaseRecyclerView noodleListView;
+    @BindView(R.id.etc) BaseRecyclerView etcListView;
 
     @BindDimen(R.dimen.spacing_micro) int itemSpacing;
 

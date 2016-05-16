@@ -2,7 +2,6 @@ package org.jaram.ds.activities;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -12,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,7 @@ import android.widget.Toast;
 import org.jaram.ds.R;
 import org.jaram.ds.fragment.BaseFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -44,10 +42,10 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
      */
     public abstract String getScreenName();
 
-    @Nullable @Bind(R.id.drawerContainer) DrawerLayout drawerContainer;
-    @Nullable @Bind(R.id.navigator) ViewGroup navigatorContainer;
+    @Nullable @BindView(R.id.drawerContainer) DrawerLayout drawerContainer;
+    @Nullable @BindView(R.id.navigator) ViewGroup navigatorContainer;
 
-    @Nullable @Bind(R.id.toolbar) Toolbar toolbar;
+    @Nullable @BindView(R.id.toolbar) Toolbar toolbar;
     private View toolbarProgressView;
 
     @SuppressWarnings("unchecked")

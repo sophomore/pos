@@ -19,7 +19,7 @@ import org.jaram.ds.util.StringUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -30,9 +30,9 @@ import rx.functions.Action0;
  */
 public class MenuInfoDialog extends AppCompatDialogFragment {
 
-    @Bind(R.id.name) EditText nameView;
-    @Bind(R.id.price) EditText priceView;
-    @Bind(R.id.category) Spinner categoryView;
+    @BindView(R.id.name) EditText nameView;
+    @BindView(R.id.price) EditText priceView;
+    @BindView(R.id.category) Spinner categoryView;
 
     private Action0 confirmListener;
 

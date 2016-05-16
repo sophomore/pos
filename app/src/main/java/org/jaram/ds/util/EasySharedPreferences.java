@@ -117,4 +117,8 @@ public class EasySharedPreferences {
     public void remove(String key) {
         pref.edit().remove(key).apply();
     }
+
+    public void clear() {
+        pref.edit().clear().apply();
+    }
 }

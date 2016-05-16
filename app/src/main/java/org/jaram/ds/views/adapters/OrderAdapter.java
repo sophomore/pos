@@ -20,7 +20,7 @@ import org.jaram.ds.views.widgets.BaseRecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -67,10 +67,10 @@ public class OrderAdapter extends PaginationAdapter<Order> {
 
     protected class OrderItemViewHolder extends BaseRecyclerView.BaseViewHolder<Order> {
 
-        @Bind(R.id.container) View container;
-        @Bind(R.id.orderMenuList) FlowLayout orderMenuContainer;
-        @Bind(R.id.price) TextView priceView;
-        @Bind(R.id.date) TextView dateView;
+        @BindView(R.id.container) View container;
+        @BindView(R.id.orderMenuList) FlowLayout orderMenuContainer;
+        @BindView(R.id.price) TextView priceView;
+        @BindView(R.id.date) TextView dateView;
 
         public OrderItemViewHolder(View itemView) {
             super(itemView);

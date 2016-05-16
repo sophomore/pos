@@ -13,7 +13,7 @@ import org.jaram.ds.views.widgets.BaseRecyclerView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnTouch;
 
 /**
@@ -57,8 +57,8 @@ public class MenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> {
 
     protected class MenuItemViewHolder extends BaseRecyclerView.BaseViewHolder<Menu> {
 
-        @Bind(R.id.name) TextView nameView;
-        @Bind(R.id.price) TextView priceView;
+        @BindView(R.id.name) TextView nameView;
+        @BindView(R.id.price) TextView priceView;
 
         public MenuItemViewHolder(View itemView) {
             super(itemView);
