@@ -32,15 +32,6 @@ public class MenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> {
     private OnItemClickListener itemClickListener;
     private OnItemLongClickListener itemLongClickListener;
 
-    private MenuAdapter() {
-        super();
-    }
-
-    public MenuAdapter(List<Menu> menus) {
-        super();
-        addAll(menus);
-    }
-
     @Override
     public BaseRecyclerView.BaseViewHolder<Menu> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MenuItemViewHolder(LayoutInflater.from(parent.getContext())

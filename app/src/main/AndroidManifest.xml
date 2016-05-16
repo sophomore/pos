@@ -39,5 +39,4 @@
             android:name="io.fabric.ApiKey"
             android:value="c4620543791742d34db26f2876e1e95f50064b5d"/>
     </application>
-
 </manifest>

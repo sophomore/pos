@@ -2,59 +2,53 @@ package org.jaram.ds.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by jdekim43 on 2016. 1. 28..
  */
-public class Category extends RealmObject {
+public enum Category {
+    @SerializedName("1") CUTLET(1, "돈까스"),
+    @SerializedName("2") RICE(2, "덮밥"),
+    @SerializedName("3") NOODLE(3, "면류"),
+    @SerializedName("4") ETC(4, "음료 및 스페셜");
 
-    public static final int CUTLET = 1;
-    public static final int RICE = 2;
-    public static final int NOODLE = 3;
-    public static final int ETC = 4;
+    private int categoryId;
+    private String categoryName;
 
-    @PrimaryKey
-    @SerializedName("id") private int id;
-    @SerializedName("name") private String name;
-    @SerializedName("menus") private RealmList<Menu> menus;
-
-    public static Category create(Realm db, int id, String name) {
-        Category category = db.createObject(Category.class);
-        category.setId(id);
-        category.setName(name);
-        return category;
+    Category(int id, String name) {
+        this.categoryId = id;
+        this.categoryName = name;
     }
 
-    public int getId() {
-        return id;
+    public static Category getById(int id) {
+        for (Category category : values()) {
+            if (category.categoryId == id) {
+                return category;
+            }
+        }
+
+        return null;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public static Category getByName(String name) {
+        for (Category category : values()) {
+            if (category.categoryName.equals(name)) {
+                return category;
+            }
+        }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public RealmList<Menu> getMenus() {
-        return menus;
-    }
-
-    public void setMenus(RealmList<Menu> menus) {
-        this.menus = menus;
+        return null;
     }
 
     @Override
     public String toString() {
-        return getName();
+        return categoryName;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
     }
 }

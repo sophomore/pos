@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.jaram.ds.R;
+import org.jaram.ds.managers.MenuManager;
 import org.jaram.ds.models.Category;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.networks.Api;
@@ -48,6 +49,8 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
 
     private CollapseMenuAdapter.OnClickMenuListener listener;
 
+    private MenuManager manager;
+
     public MenuCollapseListView(Context context) {
         this(context, null);
     }
@@ -64,6 +67,7 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
         super(context, attrs, defStyleAttr, defStyleRes);
         inflate(context, R.layout.view_menu_collapse_list, this);
         ButterKnife.bind(this);
+        manager = MenuManager.getInstance(context);
         init();
     }
 
@@ -122,30 +126,15 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
         this.listener = listener;
     }
 
-    public void refresh() {
-        Api.with(getContext()).getAllMenus()
-                .retryWhen(RxUtils::exponentialBackoff)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setMenus, SLog::e);
-    }
-
-    public void setMenus(List<Menu> menus) {
-        for (Menu menu : menus) {
-            switch(menu.getCategoryId()) {
-                case Category.CUTLET:
-                    cutletAdapter.add(menu);
-                    break;
-                case Category.RICE:
-                    riceAdapter.add(menu);
-                    break;
-                case Category.NOODLE:
-                    noodleAdapter.add(menu);
-                    break;
-                case Category.ETC:
-                    etcAdapter.add(menu);
-                    break;
-            }
-        }
+    public void refreshMenuList() {
+        cutletAdapter.clear();
+        cutletAdapter.addAll(manager.getMenusByCategory(Category.CUTLET));
+        riceAdapter.clear();
+        riceAdapter.addAll(manager.getMenusByCategory(Category.RICE));
+        noodleAdapter.clear();
+        noodleAdapter.addAll(manager.getMenusByCategory(Category.NOODLE));
+        etcAdapter.clear();
+        etcAdapter.addAll(manager.getMenusByCategory(Category.ETC));
 
         notifyAllDataSetChanged();
     }
@@ -202,6 +191,10 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
         noodleView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
         etcView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
 
-        refresh();
+        manager.asObservable()
+        .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(menus -> refreshMenuList());
+
+        refreshMenuList();
     }
 }

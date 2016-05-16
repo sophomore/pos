@@ -9,14 +9,10 @@ import java.util.List;
  */
 public class PaginationData<Data> {
 
-    @SerializedName("count")
-    private int mCount;
-    @SerializedName("next")
-    private String mNext;
-    @SerializedName("prev")
-    private String mPrev;
-    @SerializedName("results")
-    private List<Data> mResults;
+    @SerializedName("count") private int mCount;
+    @SerializedName("next") private String mNext;
+    @SerializedName("prev") private String mPrev;
+    @SerializedName("results") private List<Data> mResults;
 
     public PaginationData(List<Data> results) {
         mResults = results;

@@ -33,6 +33,10 @@ public class RxUtils {
         return new RetryWithExponentialDelay(retry).call(attempts);
     }
 
+    public static void doNothing(Object object) {
+        //do nothing
+    }
+
     static class RetryWithExponentialDelay
             implements Func1<Observable<? extends Throwable>, Observable<?>> {
 
@@ -66,5 +70,4 @@ public class RxUtils {
             });
         }
     }
-
 }

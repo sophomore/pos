@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import org.jaram.ds.R;
+import org.jaram.ds.managers.MenuManager;
 import org.jaram.ds.models.Category;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
@@ -14,6 +15,7 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdekim43 on 2016. 1. 30..
@@ -35,6 +37,8 @@ public class MenuListView extends LinearLayout implements MenuAdapter.OnItemClic
     private MenuAdapter.OnItemClickListener onItemClickListener;
     private MenuAdapter.OnItemLongClickListener onItemLongClickListener;
 
+    private MenuManager manager;
+
     public MenuListView(Context context) {
         this(context, null);
     }
@@ -51,6 +55,7 @@ public class MenuListView extends LinearLayout implements MenuAdapter.OnItemClic
         super(context, attrs, defStyleAttr, defStyleRes);
         inflate(context, R.layout.view_menulist, this);
         ButterKnife.bind(this);
+        manager = MenuManager.getInstance(context);
         init();
     }
 
@@ -83,12 +88,24 @@ public class MenuListView extends LinearLayout implements MenuAdapter.OnItemClic
         etcAdapter.notifyDataSetChanged();
     }
 
+    protected void refreshMenuList() {
+        cutletAdapter.clear();
+        cutletAdapter.addAll(manager.getAvailableMenusByCategory(Category.CUTLET));
+        riceAdapter.clear();
+        riceAdapter.addAll(manager.getAvailableMenusByCategory(Category.RICE));
+        noodleAdapter.clear();
+        noodleAdapter.addAll(manager.getAvailableMenusByCategory(Category.NOODLE));
+        etcAdapter.clear();
+        etcAdapter.addAll(manager.getAvailableMenusByCategory(Category.ETC));
+
+        notifyAllDataSetChanged();
+    }
+
     private void init() {
-        Realm db = Realm.getInstance(getContext());
-        cutletAdapter = new MenuAdapter(db.where(Category.class).equalTo("id", 1).findFirst().getMenus());
-        riceAdapter = new MenuAdapter(db.where(Category.class).equalTo("id", 2).findFirst().getMenus());
-        noodleAdapter = new MenuAdapter(db.where(Category.class).equalTo("id", 3).findFirst().getMenus());
-        etcAdapter = new MenuAdapter(db.where(Category.class).equalTo("id", 4).findFirst().getMenus());
+        cutletAdapter = new MenuAdapter();
+        riceAdapter = new MenuAdapter();
+        noodleAdapter = new MenuAdapter();
+        etcAdapter = new MenuAdapter();
 
         cutletAdapter.setOnItemClickListener(this);
         riceAdapter.setOnItemClickListener(this);
@@ -108,5 +125,11 @@ public class MenuListView extends LinearLayout implements MenuAdapter.OnItemClic
         riceListView.addItemDecoration(new VerticalSpaceItemDecoration(itemSpacing));
         noodleListView.addItemDecoration(new VerticalSpaceItemDecoration(itemSpacing));
         etcListView.addItemDecoration(new VerticalSpaceItemDecoration(itemSpacing));
+
+        manager.asObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(menus -> refreshMenuList());
+
+        refreshMenuList();
     }
 }

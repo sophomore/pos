@@ -56,11 +56,12 @@ public class MenuManageFragment extends BaseFragment {
     }
 
     private void deleteMenu(Menu menu) {
-        Realm db = Realm.getInstance(getActivity());
+        Realm db = Realm.getDefaultInstance();
         Menu savedMenu = db.where(Menu.class).equalTo("id", menu.getId()).findFirst();
         db.beginTransaction();
-        savedMenu.removeFromRealm();
+        savedMenu.deleteFromRealm();
         db.commitTransaction();
+        db.close();
         //TODO: delete server
 //        try {
 //            Http.delete(Data.SERVER_URL + "menu/" + id, null);

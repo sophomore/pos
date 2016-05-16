@@ -4,26 +4,22 @@ import com.google.gson.annotations.SerializedName;
 
 import org.jaram.ds.Data;
 
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by jdekim43 on 2016. 1. 28..
- * TODO: id 대신 object 로 다룰지 확인
  */
 public class OrderMenu extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id") private int id;
-    @Ignore
-    @SerializedName("menu_id") private int menuId;
-    private Menu menu;
+    @SerializedName("menu_id") private Menu menu;
     @SerializedName("order") private Order order;
-    @SerializedName("pay") private int payInt;
+    private int payInt;
     @Ignore
-    private Pay pay;
+    @SerializedName("pay") private Pay pay;
     @SerializedName("curry") private boolean curry;
     @SerializedName("twice") private boolean twice;
     @SerializedName("takeout") private boolean takeout;
@@ -38,20 +34,7 @@ public class OrderMenu extends RealmObject {
         this.id = id;
     }
 
-    public int getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(int menuId) {
-        this.menuId = menuId;
-    }
-
     public Menu getMenu() {
-        if (menu == null) {
-            menu = Realm.getDefaultInstance().where(Menu.class)
-                    .equalTo("id", menuId)
-                    .findFirst();
-        }
         return menu;
     }
 
@@ -67,15 +50,22 @@ public class OrderMenu extends RealmObject {
         this.order = order;
     }
 
+    public int getPayInt() {
+        return pay == null ? payInt : pay.getValue();
+    }
+
+    public void setPayInt(int payInt) {
+        this.payInt = payInt;
+        this.pay = Pay.valueOf(payInt);
+    }
+
     public Pay getPay() {
-        if (pay == null) {
-            pay = Pay.valueOf(payInt);
-        }
-        return pay;
+        return pay == null ? Pay.valueOf(getPayInt()) : pay;
     }
 
     public void setPay(Pay pay) {
         this.pay = pay;
+        setPayInt(pay.getValue());
     }
 
     public boolean isCurry() {

@@ -16,9 +16,31 @@ public class Menu extends RealmObject {
     @SerializedName("id") private int id;
     @SerializedName("name") private String name;
     @SerializedName("price") private int price;
+    private int categoryId;
     @Ignore
-    @SerializedName("category_id") private int categoryId;
-    private Category category;
+    @SerializedName("category_id") private Category category;
+    @SerializedName("available") private boolean available;
+
+    public static void saveWithCopy(Menu menu) {
+        Realm db = Realm.getDefaultInstance();
+        db.beginTransaction();
+        saveWithCopy(db, menu);
+        db.commitTransaction();
+        db.close();
+    }
+
+    public static Menu saveWithCopy(Realm db, Menu menu) {
+        Menu savedMenu = db.where(Menu.class).equalTo("id", menu.getId()).findFirst();
+        if (savedMenu == null) {
+            savedMenu = db.createObject(Menu.class);
+        }
+        savedMenu.setId(menu.getId());
+        savedMenu.setName(menu.getName());
+        savedMenu.setPrice(menu.getPrice());
+        savedMenu.setAvailable(menu.isAvailable());
+        savedMenu.setCategory(menu.getCategory());
+        return savedMenu;
+    }
 
     public int getId() {
         return id;
@@ -45,23 +67,28 @@ public class Menu extends RealmObject {
     }
 
     public int getCategoryId() {
-        return categoryId;
+        return category == null ? categoryId : category.getCategoryId();
     }
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+        this.category = Category.getById(categoryId);
     }
 
     public Category getCategory() {
-        if (category == null) {
-            category = Realm.getDefaultInstance().where(Category.class)
-                    .equalTo("id", categoryId)
-                    .findFirst();
-        }
-        return category;
+        return category == null ? Category.getById(getCategoryId()) : category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
+        setCategoryId(category.getCategoryId());
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

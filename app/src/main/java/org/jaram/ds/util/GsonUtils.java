@@ -8,6 +8,17 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import org.jaram.ds.models.Category;
+import org.jaram.ds.models.Menu;
+import org.jaram.ds.models.Pay;
+import org.jaram.ds.networks.serializers.CategorySerializer;
+import org.jaram.ds.networks.serializers.DateSerializer;
+import org.jaram.ds.networks.serializers.MenuSerializer;
+import org.jaram.ds.networks.serializers.PaySerializer;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
@@ -16,13 +27,17 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 public class GsonUtils {
 
     public static Gson getGsonObject() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Date.class, new DateDeserializer());
+        builder.registerTypeAdapter(Date.class, new DateSerializer());
+        builder.registerTypeAdapter(Pay.class, new PaySerializer());
+        builder.registerTypeAdapter(Menu.class, new MenuSerializer());
+        builder.registerTypeAdapter(Category.class, new CategorySerializer());
         builder.setExclusionStrategies(new ExclusionStrategy() {
 
             @Override
@@ -36,24 +51,5 @@ public class GsonUtils {
             }
         });
         return builder.create();
-    }
-
-    static class DateDeserializer implements JsonDeserializer<Date> {
-
-        @Override
-        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-            String src = json.getAsJsonPrimitive().getAsString();
-            int position = src.lastIndexOf(".");
-            if (position != -1) {
-                src = src.substring(0, position);
-            }
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
-            try {
-                return format.parse(src);
-            } catch (Exception e) {
-                //do nothing
-            }
-            return null;
-        }
     }
 }

@@ -30,7 +30,7 @@ public class OrderManager {
         if (instance == null) {
             synchronized (OrderManager.class) {
                 if (instance == null) {
-                    instance = new OrderManager(context);
+                    instance = new OrderManager();
                 }
             }
         }
@@ -38,8 +38,8 @@ public class OrderManager {
         return instance;
     }
 
-    public OrderManager(Context context) {
-        this.context = context;
+    private OrderManager() {
+
     }
 
     public void addOrder(Order order) {
@@ -59,7 +59,6 @@ public class OrderManager {
         return Observable.create(subscriber -> Api.with(context).getOrder()
                 .retryWhen(RxUtils::exponentialBackoff)
                 .subscribe(result -> {
-                    linkOrderMenuAndMenuObject(result);
                     subscriber.onNext(result);
                     subscriber.onCompleted();
                 }, Crashlytics::logException));
@@ -69,25 +68,16 @@ public class OrderManager {
         return Observable.create(subscriber -> Api.with(context).getMoreOrders(date)
                 .retryWhen(RxUtils::exponentialBackoff)
                 .subscribe(result -> {
-                    linkOrderMenuAndMenuObject(result);
                     subscriber.onNext(result);
                     subscriber.onCompleted();
                 }, Crashlytics::logException));
     }
 
     private void errorOnAddOrder(Order order) {
-        Realm db = Realm.getInstance(context);
+        Realm db = Realm.getDefaultInstance();
         db.beginTransaction();
         db.copyToRealmOrUpdate(order);
         db.commitTransaction();
-    }
-
-    private void linkOrderMenuAndMenuObject(List<Order> orders) {
-        Realm db = Realm.getInstance(context);
-        for (Order order : orders) {
-            for (OrderMenu orderMenu : order.getOrderMenus()) {
-                orderMenu.setMenu(db.where(Menu.class).equalTo("id", orderMenu.getMenuId()).findFirst());
-            }
-        }
+        db.close();
     }
 }

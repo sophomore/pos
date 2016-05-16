@@ -151,7 +151,7 @@
             android:textColor="@color/dark"
             android:textSize="18sp"/>
 
-        <org.jaram.ds.views.MenuCollapseListView
+        <org.jaram.ds.views.widgets.MenuCollapseListView
             android:id="@+id/menuList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
