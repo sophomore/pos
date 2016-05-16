@@ -130,6 +130,10 @@ public class StatisticManager {
         selectedMenu.remove(menu);
     }
 
+    public boolean isSelectedMenu(Menu menu) {
+        return selectedMenu.contains(menu);
+    }
+
     public Unit getUnit() {
         return unit;
     }

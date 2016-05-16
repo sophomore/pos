@@ -41,7 +41,13 @@ public class StatisticSettingDrawerFragment extends BaseFragment {
     protected void setupLayout(View view) {
         manager = StatisticManager.getInstance(getActivity());
         menuListView.setAccentMenuList(manager.getSelectedMenu());
-        menuListView.setOnClickMenuListener(manager::addSelectedMenu);
+        menuListView.setOnClickMenuListener(menu -> {
+            if (manager.isSelectedMenu(menu)) {
+                manager.removeSelectedMenu(menu);
+            } else {
+                manager.addSelectedMenu(menu);
+            }
+        });
 
         manager.asObservable()
                 .observeOn(AndroidSchedulers.mainThread())

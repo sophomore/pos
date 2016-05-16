@@ -75,8 +75,8 @@
 
     <string name="label.total.all">전체 합계</string>
     <string name="label.total.money">총액</string>
-    <string name="label.total.money.range">총액</string>
-    <string name="label.total.money.monthly">총액</string>
+    <string name="label.total.money.range">기간 내 총액</string>
+    <string name="label.total.money.monthly">월별 총액</string>
     <string name="label.total.select">선택 합계</string>
 
     <string name="label.unit">단위</string>

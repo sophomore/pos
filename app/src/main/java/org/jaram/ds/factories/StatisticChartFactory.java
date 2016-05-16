@@ -25,16 +25,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by jdekim43 on 2016. 5. 13..
  */
 public class StatisticChartFactory {
-
-    public interface CalculateResultListener {
-        void onCalculated(int cash, int card, int total);
-    }
 
     private static final int[] colors = {Color.parseColor("#f44336"),
             Color.parseColor("#e91e63"),
@@ -75,10 +72,6 @@ public class StatisticChartFactory {
     }
 
     public static BarData convertBarData(Context context, JSONArray data, Calendar startDate) {
-        return convertBarData(context, data, startDate, null);
-    }
-
-    public static BarData convertBarData(Context context, JSONArray data, Calendar startDate, CalculateResultListener listener) {
         int rangeCash = 0;
         int rangeCard = 0;
         int rangeTotal = 0;
@@ -111,10 +104,12 @@ public class StatisticChartFactory {
             dataSet.setStackLabels(new String[]{"현금", "카드", "기타"});
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(dataSet);
-            if (listener != null) {
-                listener.onCalculated(rangeCash, rangeCard, rangeTotal);
-            }
-            return new BarData(xVals, dataSets);
+
+            SimpleStatisticBarData barData = new SimpleStatisticBarData(xVals, dataSets);
+            barData.setRangeCash(rangeCash);
+            barData.setRangeCard(rangeCard);
+            barData.setRangeTotal(rangeTotal);
+            return barData;
         } catch (JSONException e) {
             SLog.e(e);
         }
@@ -360,5 +355,63 @@ public class StatisticChartFactory {
             countData.add(dataSet);
         }
         return new LineData(xVals, countData);
+    }
+
+    public static class SimpleStatisticBarData extends BarData {
+
+        private int rangeCash;
+        private int rangeCard;
+        private int rangeTotal;
+
+        public SimpleStatisticBarData() {
+        }
+
+        public SimpleStatisticBarData(List<String> xVals) {
+            super(xVals);
+        }
+
+        public SimpleStatisticBarData(String[] xVals) {
+            super(xVals);
+        }
+
+        public SimpleStatisticBarData(List<String> xVals, List<IBarDataSet> dataSets) {
+            super(xVals, dataSets);
+        }
+
+        public SimpleStatisticBarData(String[] xVals, List<IBarDataSet> dataSets) {
+            super(xVals, dataSets);
+        }
+
+        public SimpleStatisticBarData(List<String> xVals, IBarDataSet dataSet) {
+            super(xVals, dataSet);
+        }
+
+        public SimpleStatisticBarData(String[] xVals, IBarDataSet dataSet) {
+            super(xVals, dataSet);
+        }
+
+        public int getRangeCash() {
+            return rangeCash;
+        }
+
+        public void setRangeCash(int rangeCash) {
+            this.rangeCash = rangeCash;
+        }
+
+        public int getRangeCard() {
+            return rangeCard;
+        }
+
+        public void setRangeCard(int rangeCard) {
+            this.rangeCard = rangeCard;
+        }
+
+        public int getRangeTotal() {
+            return rangeTotal;
+        }
+
+        public void setRangeTotal(int rangeTotal) {
+            this.rangeTotal = rangeTotal;
+        }
     }
 }

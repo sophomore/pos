@@ -104,6 +104,14 @@ public class SimpleStatisticFragment extends BaseFragment {
             return;
         }
 
+        if (data instanceof StatisticChartFactory.SimpleStatisticBarData) {
+            StatisticChartFactory.SimpleStatisticBarData statisticBarData
+                    = (StatisticChartFactory.SimpleStatisticBarData) data;
+            setTotalView(statisticBarData.getRangeCash(),
+                    statisticBarData.getRangeCard(),
+                    statisticBarData.getRangeTotal());
+        }
+
         chart.setData(data);
         chart.invalidate();
     }
@@ -125,6 +133,6 @@ public class SimpleStatisticFragment extends BaseFragment {
 
     private BarData convertBarDataFromJson(SimpleStatisticResult result) {
         return StatisticChartFactory.convertBarData(getActivity(), result.getResult(),
-                manager.getStart(), this::setTotalView);
+                manager.getStart());
     }
 }
