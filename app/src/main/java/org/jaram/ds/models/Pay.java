@@ -29,4 +29,19 @@ public enum Pay {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case CASH:
+                return "현금";
+            case CARD:
+                return "카드";
+            case SERVICE:
+                return "서비스";
+            case CREDIT:
+                return "외상";
+        }
+        return "";
+    }
 }

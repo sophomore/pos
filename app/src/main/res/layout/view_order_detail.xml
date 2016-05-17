@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/payPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/font_larger"/>
+
+            <TextView
+                android:id="@+id/orderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_smaller"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/font_larger"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/printReceipt"
+            style="@style/Button.OrderDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawableTop="@drawable/ic_receipt_black_36dp"
+            android:text="@string/label.print_receipt"/>
+
+        <Button
+            android:id="@+id/printStatement"
+            style="@style/Button.OrderDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/printReceipt"
+            android:drawableTop="@drawable/ic_restaurant_menu_black_36dp"
+            android:text="@string/label.print_statement"/>
+
+        <Button
+            android:id="@+id/delete"
+            style="@style/Button.OrderDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/printStatement"
+            android:drawableTop="@drawable/ic_delete_forever_black_36dp"
+            android:text="@string/label.delete.order"/>
+    </RelativeLayout>
+
+    <org.jaram.ds.views.widgets.BaseRecyclerView
+        android:id="@+id/orderMenuList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/spacing_large"/>
+</LinearLayout>

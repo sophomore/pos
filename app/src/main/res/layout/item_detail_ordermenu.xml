@@ -1,81 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/container"
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:clipToPadding="false"
+    app:cardCornerRadius="3dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="3dp">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_normal">
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="24dp"
+            android:gravity="center"
+            android:padding="@dimen/spacing_large"
             android:textColor="@color/dark"
-            android:textSize="24sp"/>
+            android:textSize="@dimen/font_huge"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/price"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="24dp"
-            android:layout_toEndOf="@id/name"
-            android:textColor="@color/dark"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/addCurry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="24dp"
-            android:layout_toEndOf="@id/price"
-            android:text="카레추가"
-            android:textColor="@color/point"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/addTwice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/addCurry"
-            android:text="곱배기"
-            android:textColor="@color/point"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/addTakeout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/addTwice"
-            android:text="포장"
-            android:textColor="@color/point"
-            android:textSize="16sp"
-            android:visibility="gone"/>
+            android:gravity="end"/>
 
         <Spinner
-            android:id="@+id/paySelector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
-    </RelativeLayout>
+            android:id="@+id/pay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/gray_d"/>
-</LinearLayout>
+        <com.wefika.flowlayout.FlowLayout
+            android:id="@+id/attributeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

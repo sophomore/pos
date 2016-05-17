@@ -1,9 +1,12 @@
 package org.jaram.ds.models;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.jaram.ds.Data;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -23,7 +26,8 @@ public class OrderMenu extends RealmObject {
     @SerializedName("curry") private boolean curry;
     @SerializedName("twice") private boolean twice;
     @SerializedName("takeout") private boolean takeout;
-    @SerializedName("totalprice") private int totalPrice;
+    @Nullable
+    @SerializedName("attributes") private RealmList<MenuAttribute> attributes;
     @Ignore private boolean isPay;
 
     public int getId() {
@@ -92,12 +96,22 @@ public class OrderMenu extends RealmObject {
         this.takeout = takeout;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    @Nullable
+    public RealmList<MenuAttribute> getAttributes() {
+        return attributes;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
+    public int getTotalPrice() {
+        int totalPrice = getMenu().getPrice();
+        totalPrice += isCurry() ? Data.CURRY : 0;
+        totalPrice += isTwice() ? Data.TWICE : 0;
+        totalPrice += isTakeout() ? Data.TAKEOUT : 0;
+        if (attributes != null) {
+            for (MenuAttribute attr : attributes) {
+                totalPrice += attr.getPrice();
+            }
+        }
+        return totalPrice;
     }
 
     public boolean isPay() {

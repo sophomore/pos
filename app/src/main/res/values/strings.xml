@@ -43,6 +43,10 @@
     <string name="format.delete.menu">\'%s\'을/를 삭제하시겠습니까?</string>
 
     <string name="format.money">%,d원</string>
+
+    <string name="format.order.date">주문 시간 : %s</string>
+
+    <string name="format.price.pay">결제 금액 : %,d원</string>
     <!--End format-->
 
     <!--label-->
@@ -58,6 +62,7 @@
     <string name="label.confirm">확인</string>
 
     <string name="label.delete">삭제</string>
+    <string name="label.delete.order">주문 삭제</string>
 
     <string name="label.end_order">주문 완료</string>
 
@@ -69,6 +74,7 @@
     <string name="label.order_detail.title">주문서</string>
 
     <string name="label.price.menu">메뉴 가격</string>
+    <string name="label.price.pay">결제 가격</string>
     <string name="label.print_receipt">영수증 출력</string>
     <string name="label.print_statement">전표 출력</string>
 

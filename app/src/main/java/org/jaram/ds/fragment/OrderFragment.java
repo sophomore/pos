@@ -152,7 +152,6 @@ public class OrderFragment extends BaseFragment {
         orderMenu.setTwice(false);
         orderMenu.setCurry(false);
         orderMenu.setMenu(menu);
-        orderMenu.setTotalPrice(OrderMenu.calculateTotalPrice(orderMenu));
         adapter.add(orderMenu);
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
     }

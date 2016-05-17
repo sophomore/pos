@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="point">#FF2185C5</color>
-    <color name="dark">#FF3E454C</color>
-    <color name="accent">#FFFF7F66</color>
+    <color name="point">#2185C5</color>
+    <color name="dark">#3E454C</color>
+    <color name="accent">#FF7F66</color>
 
     <color name="transparent_pressed">#0A000000</color>
 
@@ -18,4 +18,6 @@
     <color name="gray_d">#dddddd</color>
     <color name="gray_e">#eeeeee</color>
     <color name="gray_12">#1F000000</color>
+
+    <color name="background">#F6F6F6</color>
 </resources>

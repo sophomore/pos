@@ -11,12 +11,14 @@ import org.jaram.ds.R;
 import org.jaram.ds.activities.OrderActivity;
 import org.jaram.ds.Data;
 import org.jaram.ds.models.Order;
+import org.jaram.ds.models.OrderMenu;
 import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.DateUtil;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
 import org.jaram.ds.views.adapters.PaginationAdapter;
+import org.jaram.ds.views.widgets.OrderDetailView;
 import org.jaram.ds.views.widgets.PaginationView;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
 import org.jaram.ds.views.adapters.OrderAdapter;
@@ -38,18 +40,12 @@ import rx.android.schedulers.AndroidSchedulers;
 public class OrderManageFragment extends BaseFragment {
 
     @BindView(R.id.orderList) PaginationView<Order> orderListView;
-    @BindView(R.id.orderDetail) View orderDetailView;
-    @BindView(R.id.totalprice) TextView orderTotalPriceView;
-    @BindView(R.id.date) TextView orderDateView;
-    @BindView(R.id.orderMenuList) RecyclerView orderMenuListView;
+    @BindView(R.id.orderDetail) OrderDetailView orderDetailView;
     @BindView(R.id.order2) View largeOrderButton;
 
     @BindDimen(R.dimen.order_list_item_spacing) int itemSpacing;
 
     private OrderAdapter orderAdapter;
-    private DetailOrderMenuAdapter detailOrderMenuAdapter;
-
-    private Order selectedOrder;
 
     public static OrderManageFragment newInstance() {
         return new OrderManageFragment();
@@ -69,21 +65,37 @@ public class OrderManageFragment extends BaseFragment {
     @Override
     protected void setupLayout(View view) {
         orderAdapter = new OrderAdapter();
-        detailOrderMenuAdapter = new DetailOrderMenuAdapter();
 
         orderListView.setAdapter(orderAdapter);
         orderListView.setLoader(this::loadOrder);
         orderListView.addItemDecoration(new VerticalSpaceItemDecoration(itemSpacing));
-        orderMenuListView.setAdapter(detailOrderMenuAdapter);
 
         orderAdapter.asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::selectOrder);
-        detailOrderMenuAdapter.asObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(orderMenu -> orderAdapter.notifySelectedItemChanged());
+                .filter(order -> {
+                    if (order == null) {
+                        largeOrderButton.setVisibility(View.VISIBLE);
+                        orderDetailView.setVisibility(View.GONE);
+                    } else {
+                        largeOrderButton.setVisibility(View.GONE);
+                        orderDetailView.setVisibility(View.VISIBLE);
+                    }
+                    return true;
+                })
+                .subscribe(orderDetailView::setOrder);
 
-        refreshOrderDetailView();
+        orderDetailView.setOnDeleteListener(order -> {
+            int position = getItemPosition(order);
+            if (position != -1) {
+                orderAdapter.notifyItemRemoved(position);
+            }
+        });
+        orderDetailView.setOnModifyListener(order -> {
+            int position = getItemPosition(order);
+            if (position != -1) {
+                orderAdapter.notifyItemChanged(position);
+            }
+        });
 
         //TODO: 주문 검색 custom view
     }
@@ -93,85 +105,49 @@ public class OrderManageFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), OrderActivity.class));
     }
 
-    @OnClick(R.id.printReceipt)
-    protected void printReceipt() {
-        Api.with(getActivity()).printReceipt(selectedOrder.getId())
-                .retryWhen(RxUtils::exponentialBackoff)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> {
-                }, SLog::e);
-    }
-
-    @OnClick(R.id.printStatement)
-    protected void printStatement() {
-        Api.with(getActivity()).printStatement(selectedOrder.getId())
-                .retryWhen(RxUtils::exponentialBackoff)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> {
-                }, SLog::e);
-    }
-
-    @OnClick(R.id.delete)
-    protected void deleteOrder() {
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.message_confirm_delete_order)
-                .setPositiveButton(R.string.label_yes, ((dialog, which) ->
-                        Api.with(getActivity()).deleteOrder(selectedOrder.getId())
-                                .retryWhen(RxUtils::exponentialBackoff)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(result -> {
-                                    if (result.isSuccess()) {
-                                        orderAdapter.remove(selectedOrder);
-                                        selectedOrder = null;
-                                        refreshOrderDetailView();
-                                        orderAdapter.notifyDataSetChanged();
-                                    }
-                                }, SLog::e)
-                ))
-                .setNegativeButton(R.string.label_no, null)
-                .show();
-    }
-
     protected Observable<PaginationData<Order>> loadOrder(int page) {
         Observable<List<Order>> observable = orderAdapter.getItemCount() == 0
                 ? Api.with(getActivity()).getOrder()
                 : Api.with(getActivity()).getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
 
         return observable
-                .map(result -> {
-                    PaginationData<Order> paginationData = new PaginationData<>(result);
-                    paginationData.setmNext(result.size() > 0 ? "hasNext" : "");
-                    return paginationData;
-                })
-                .map(data -> {
-                    PaginationAdapter<Order> adapter = orderAdapter;
-                    Calendar lastDate = Calendar.getInstance();
-                    if (adapter.getListSize() > 0) {
-                        lastDate.setTime(adapter.getItem(adapter.getListSize() - 1).getDate());
-                    } else {
-                        lastDate.add(Calendar.YEAR, 1);
-                    }
-                    DateUtil.dropTime(lastDate);
-                    for (int i = 0; i < data.getResults().size(); i++) {
-                        Calendar date = Calendar.getInstance();
-                        Date receiveDate = data.getResults().get(i).getDate();
-                        if (receiveDate == null) {
-                            continue;
-                        }
-                        date.setTime(receiveDate);
-                        DateUtil.dropTime(date);
-                        if (lastDate.after(date)) {
-                            data.getResults().add(i, createHeaderItem(date));
-                        }
-                        lastDate = date;
-                    }
-                    return data;
-                });
+                .map(this::setupOrderMenu)
+                .map(this::addDateHeaderItem)
+                .map(this::convertPaginationData);
     }
 
-    protected void selectOrder(Order order) {
-        selectedOrder = order;
-        refreshOrderDetailView();
+    protected List<Order> setupOrderMenu(List<Order> data) {
+        for (Order order : data) {
+            for (OrderMenu orderMenu : order.getOrderMenus()) {
+                orderMenu.setOrder(order);
+            }
+        }
+        return data;
+    }
+
+    protected List<Order> addDateHeaderItem(List<Order> data) {
+        PaginationAdapter<Order> adapter = orderAdapter;
+        Calendar lastDate = Calendar.getInstance();
+        if (adapter.getListSize() > 0) {
+            lastDate.setTime(adapter.getItem(adapter.getListSize() - 1).getDate());
+        } else {
+            lastDate.add(Calendar.YEAR, 1);
+        }
+        DateUtil.dropTime(lastDate);
+        for (int i = 0; i < data.size(); i++) {
+            Calendar date = Calendar.getInstance();
+            Date receiveDate = data.get(i).getDate();
+            if (receiveDate == null) {
+                continue;
+            }
+            date.setTime(receiveDate);
+            DateUtil.dropTime(date);
+            if (lastDate.after(date)) {
+                data.add(i, createHeaderItem(date));
+            }
+            lastDate = date;
+        }
+        return data;
     }
 
     protected Order createHeaderItem(Calendar date) {
@@ -181,19 +157,10 @@ public class OrderManageFragment extends BaseFragment {
         return order;
     }
 
-    private void refreshOrderDetailView() {
-        invalidateOrderDetailView();
-
-        detailOrderMenuAdapter.clear();
-        if (selectedOrder != null) {
-            detailOrderMenuAdapter.addAll(selectedOrder.getOrderMenus());
-        }
-
-        orderTotalPriceView.setText(selectedOrder == null ? "" : getString(R.string.format_money,
-                selectedOrder.getTotalPrice()));
-        orderDateView.setText(selectedOrder == null ? "" : Data.dateFormat.format(selectedOrder.getDate()));
-
-        detailOrderMenuAdapter.notifyDataSetChanged();
+    protected PaginationData<Order> convertPaginationData(List<Order> data) {
+        PaginationData<Order> paginationData = new PaginationData<>(data);
+        paginationData.setmNext(data.size() > 0 ? "hasNext" : "");
+        return paginationData;
     }
 
     private void refresh() {
@@ -201,13 +168,13 @@ public class OrderManageFragment extends BaseFragment {
         orderListView.refresh(true);
     }
 
-    private void invalidateOrderDetailView() {
-        if (selectedOrder == null) {
-            largeOrderButton.setVisibility(View.VISIBLE);
-            orderDetailView.setVisibility(View.GONE);
-        } else {
-            largeOrderButton.setVisibility(View.GONE);
-            orderDetailView.setVisibility(View.VISIBLE);
+    private int getItemPosition(Order order) {
+        for (int i = 0; i<orderAdapter.getListSize(); i++) {
+            Order each = orderAdapter.getItem(i);
+            if (each.equals(order)) {
+                return i;
+            }
         }
+        return -1;
     }
 }
