@@ -87,7 +87,7 @@ public class OrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<OrderMenu
         @Override
         protected void bind() {
             nameView.setText(data.getMenu().getName());
-            priceView.setText(StringUtils.format("%d원", data.getTotalPrice()));
+            priceView.setText(context.getString(R.string.format_money, data.getTotalPrice()));
 
             if (data.isPay()) {
                 itemView.setAlpha(0.6f);

@@ -1,7 +1,9 @@
 package org.jaram.ds.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -19,8 +21,11 @@ import android.widget.Toast;
 import org.jaram.ds.R;
 import org.jaram.ds.fragment.BaseFragment;
 
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 
 /**
  * Created by jdekim43 on 2016. 1. 28..
@@ -46,7 +51,10 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
     @Nullable @BindView(R.id.navigator) ViewGroup navigatorContainer;
 
     @Nullable @BindView(R.id.toolbar) Toolbar toolbar;
-    private View toolbarProgressView;
+    private ProgressDialog progressDialog;
+
+    @BindColor(R.color.accent) int progressColor;
+    @BindString(R.string.message_wait) String defaultProgressDialogMessage;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,6 +64,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         setContentView(getLayoutResourceId());
         ButterKnife.bind(this);
         initToolbar();
+        initProgressDialog();
         setupNavigator();
 
         if (savedInstanceState == null) {
@@ -85,9 +94,6 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                if (this instanceof MainActivity || this instanceof TempUserActivity) {
-//                    return false;
-//                }
                 onBackPressed();
                 return true;
             case R.id.navigator:
@@ -101,35 +107,10 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-//        sendScreenName();
-//    }
-
-//    protected void sendScreenName() {
-//        sendScreenName(getScreenName());
-//    }
-
-//    protected void sendScreenName(String screenName) {
-//        ZummaApp app = (ZummaApp) getApplication();
-//        Tracker tracker = app.getTracker();
-//        tracker.setScreenName(screenName);
-//        tracker.send(new HitBuilders.ScreenViewBuilder().build());
-//    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-//    }
-
     protected void initToolbar() {
         if (toolbar == null) {
             return;
         }
-        toolbarProgressView = ButterKnife.findById(toolbar, R.id.toolbarProgress);
 //        toolbar.setTitle(getScreenName());
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
@@ -139,6 +120,21 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
             supportActionBar.setDisplayShowTitleEnabled(true);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    protected void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setIndeterminateDrawable(createProgressDrawable());
+        progressDialog.setMessage(defaultProgressDialogMessage);
+    }
+
+    protected Drawable createProgressDrawable() {
+        return new CircularProgressDrawable.Builder(this)
+                .color(progressColor)
+                .style(CircularProgressDrawable.STYLE_ROUNDED)
+                .build();
     }
 
     public void setToolbarTitle(CharSequence title) {
@@ -178,20 +174,16 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
     }
 
-    public void showTitleProgress() {
-        if (toolbar != null && toolbarProgressView != null) {
-            toolbarProgressView.setVisibility(View.VISIBLE);
-        } else {
-            throw new IllegalStateException("showTitleProgress need to toolbar and toolbarProgressView");
-        }
+    public void showProgress() {
+        progressDialog.show();
     }
 
-    public void hideTitleProgress() {
-        if (toolbar != null && toolbarProgressView != null) {
-            toolbarProgressView.setVisibility(View.GONE);
-        } else {
-            throw new IllegalStateException("showTitleProgress need to toolbar and toolbarProgressView");
-        }
+    public void hideProgress() {
+        progressDialog.dismiss();
+    }
+
+    public void setProgressMessage(CharSequence message) {
+        progressDialog.setMessage(message);
     }
 
     public void enableDrawer(int gravity) {

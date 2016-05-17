@@ -8,14 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jaram.ds.activities.BaseActivity;
+
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public abstract class BaseFragment extends Fragment {
 
     protected abstract @LayoutRes int getLayoutResource();
 
     protected abstract void setupLayout(View view);
+
+    @Nullable private BaseActivity activity;
 
     @Nullable
     @Override
@@ -24,6 +27,28 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, view);
         setupLayout(view);
         view.setClickable(true);
+
+        if (getActivity() instanceof BaseActivity) {
+            activity = (BaseActivity) getActivity();
+        }
         return view;
+    }
+
+    protected void showProgress() {
+        if (activity != null) {
+            activity.showProgress();
+        }
+    }
+
+    protected void hideProgress() {
+        if (activity != null) {
+            activity.hideProgress();
+        }
+    }
+
+    protected void setProgressMessage(CharSequence message) {
+        if (activity != null) {
+            activity.setProgressMessage(message);
+        }
     }
 }

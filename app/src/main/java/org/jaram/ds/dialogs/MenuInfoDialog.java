@@ -11,8 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.jaram.ds.R;
+import org.jaram.ds.activities.BaseActivity;
 import org.jaram.ds.managers.MenuManager;
 import org.jaram.ds.models.Category;
 import org.jaram.ds.models.Menu;
@@ -20,9 +22,6 @@ import org.jaram.ds.models.result.SimpleApiResult;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
-import org.jaram.ds.util.StringUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,16 +100,40 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
 
     @OnClick(R.id.confirm)
     protected void save() {
-        saveMenu();
+        showProgress();
+        getApplyObservable()
+                .retryWhen(RxUtils::exponentialBackoff)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess()) {
+                        onSuccessApplyMenu();
+                    } else {
+                        onFailureApplyMenu();
+                    }
+                }, e -> {
+                    SLog.e(e);
+                    onFailureApplyMenu();
+                });
+
         if (confirmListener != null) {
             confirmListener.call();
         }
-        dismiss();
     }
 
     protected void setViewByMenu(Menu menu) {
         nameView.setText(menu.getName());
-        priceView.setText(StringUtils.format("%d", menu.getPrice()));
+        priceView.setText(menu.getPrice() + "");
+    }
+
+    protected void onSuccessApplyMenu() {
+        MenuManager.getInstance(getActivity()).refresh();
+        hideProgress();
+        dismiss();
+    }
+
+    protected void onFailureApplyMenu() {
+        Toast.makeText(getActivity(), R.string.message_failure_apply_menu, Toast.LENGTH_SHORT).show();
+        hideProgress();
     }
 
     private Observable<SimpleApiResult> getApplyObservable() {
@@ -119,11 +142,15 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
                 : Api.with(getActivity()).addMenu(menu);
     }
 
-    private void saveMenu() {
-        getApplyObservable()
-                .retryWhen(RxUtils::exponentialBackoff)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxUtils::doNothing, SLog::e,
-                        () -> MenuManager.getInstance(getActivity()).refresh());
+    private void showProgress() {
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).showProgress();
+        }
+    }
+
+    private void hideProgress() {
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).hideProgress();
+        }
     }
 }

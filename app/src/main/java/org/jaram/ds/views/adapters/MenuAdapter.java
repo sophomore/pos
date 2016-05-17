@@ -10,6 +10,7 @@ import org.jaram.ds.R;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.util.StringUtils;
 import org.jaram.ds.views.widgets.BaseRecyclerView;
+import org.jaram.ds.views.widgets.PriceView;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class MenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> {
     protected class MenuItemViewHolder extends BaseRecyclerView.BaseViewHolder<Menu> {
 
         @BindView(R.id.name) TextView nameView;
-        @BindView(R.id.price) TextView priceView;
+        @BindView(R.id.price) PriceView priceView;
 
         public MenuItemViewHolder(View itemView) {
             super(itemView);
@@ -59,7 +60,7 @@ public class MenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> {
         @Override
         protected void bind() {
             nameView.setText(data.getName());
-            priceView.setText(StringUtils.format("%d", data.getPrice()));
+            priceView.setNumber(data.getPrice());
         }
 
         @Override

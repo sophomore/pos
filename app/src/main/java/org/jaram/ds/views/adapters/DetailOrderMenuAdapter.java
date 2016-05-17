@@ -59,7 +59,7 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
         @Override
         protected void bind() {
             nameView.setText(data.getMenu().getName());
-            priceView.setText(StringUtils.format("%d", data.getTotalPrice()));
+            priceView.setText(context.getString(R.string.format_money, data.getTotalPrice()));
             addCurryView.setVisibility(data.isCurry() ? View.VISIBLE : View.GONE);
             addTwiceView.setVisibility(data.isTwice() ? View.VISIBLE : View.GONE);
             addTakeoutView.setVisibility(data.isTakeout() ? View.VISIBLE : View.GONE);

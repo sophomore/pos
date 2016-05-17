@@ -14,6 +14,7 @@ import org.jaram.ds.R;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.OrderMenu;
 import org.jaram.ds.models.Pay;
+import org.jaram.ds.util.DateUtil;
 import org.jaram.ds.util.StringUtils;
 import org.jaram.ds.views.widgets.BaseRecyclerView;
 
@@ -78,8 +79,10 @@ public class OrderAdapter extends PaginationAdapter<Order> {
 
         @Override
         protected void bind() {
-            dateView.setText(new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA).format(data.getDate()));
-            priceView.setText(StringUtils.format("%d원", data.getTotalPrice()));
+            dateView.setText(DateUtil.timestamp(data.getDate(),
+                    new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA),
+                    DateUtil.TimestampUnit.MINUTE));
+            priceView.setText(context.getString(R.string.format_money, data.getTotalPrice()));
             orderMenuContainer.removeAllViews();
 
             for (OrderMenu orderMenu : data.getOrderMenus()) {

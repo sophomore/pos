@@ -108,8 +108,7 @@ public class Api {
                 .setErrorHandler(new ApiErrorHandler())
                 .setClient(getHttpClient())
                 .setConverter(new GsonConverter(GsonUtils.getGsonObject()))
-                .setLogLevel((Config.DEBUG) ?
-                        RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+                .setLogLevel((Config.DEBUG) ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .build();
     }
 

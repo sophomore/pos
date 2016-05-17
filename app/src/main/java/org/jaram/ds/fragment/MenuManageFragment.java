@@ -14,7 +14,6 @@ import org.jaram.ds.views.widgets.MenuListView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -61,9 +60,13 @@ public class MenuManageFragment extends BaseFragment {
     }
 
     private void deleteMenu(Menu menu) {
+        showProgress();
         Api.with(getActivity()).deleteMenu(menu)
                 .retryWhen(RxUtils::exponentialBackoff)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxUtils::doNothing, SLog::e, () -> MenuManager.getInstance(getActivity()).refresh());
+                .subscribe(RxUtils::doNothing, SLog::e, () -> {
+                    MenuManager.getInstance(getActivity()).refresh();
+                    hideProgress();
+                });
     }
 }

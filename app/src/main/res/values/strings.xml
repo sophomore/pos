@@ -40,6 +40,7 @@
     <!--End default value-->
 
     <!--format-->
+    <string name="format.day_of_week">%s요일</string>
     <string name="format.delete.menu">\'%s\'을/를 삭제하시겠습니까?</string>
 
     <string name="format.money">%,d원</string>
@@ -98,9 +99,12 @@
     <string name="message.confirm.delete_order">정말로 주문을 삭제하시겠습니까?</string>
     <string name="message.confirm.pay">%s(으)로 결제하시려면 다시 한 번 터치하세요</string>
 
+    <string name="message.wait">잠시만 기다려주세요.</string>
+
     <string name="message.empty.order">오른쪽에서 메뉴를 선택해주세요.</string>
     <string name="message.empty.retry">내용이 없습니다.\n다시 시도해보시겠어요?</string>
 
+    <string name="message.failure.apply.menu">메뉴 정보를 서버에 전송하는데 실패했습니다.</string>
     <string name="message.failure.loading.menu">메뉴 정보를 불러오는데 실패하여 저장된 정보를 사용합니다.</string>
 
     <string name="message.guide.simple_statistic">기간을 입력하시고 검색 버튼을 누르세요.</string>
