@@ -83,6 +83,8 @@ public class OrderManageFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(orderMenu -> orderAdapter.notifySelectedItemChanged());
 
+        refreshOrderDetailView();
+
         //TODO: 주문 검색 custom view
     }
 
