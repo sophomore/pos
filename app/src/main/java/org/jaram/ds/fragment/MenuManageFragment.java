@@ -5,12 +5,17 @@ import android.view.View;
 
 import org.jaram.ds.R;
 import org.jaram.ds.dialogs.MenuInfoDialog;
+import org.jaram.ds.managers.MenuManager;
 import org.jaram.ds.models.Menu;
+import org.jaram.ds.networks.Api;
+import org.jaram.ds.util.RxUtils;
+import org.jaram.ds.util.SLog;
 import org.jaram.ds.views.widgets.MenuListView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdekim43 on 2016. 5. 13..
@@ -56,17 +61,9 @@ public class MenuManageFragment extends BaseFragment {
     }
 
     private void deleteMenu(Menu menu) {
-        Realm db = Realm.getDefaultInstance();
-        Menu savedMenu = db.where(Menu.class).equalTo("id", menu.getId()).findFirst();
-        db.beginTransaction();
-        savedMenu.deleteFromRealm();
-        db.commitTransaction();
-        db.close();
-        //TODO: delete server
-//        try {
-//            Http.delete(Data.SERVER_URL + "menu/" + id, null);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Api.with(getActivity()).deleteMenu(menu)
+                .retryWhen(RxUtils::exponentialBackoff)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(RxUtils::doNothing, SLog::e, () -> MenuManager.getInstance(getActivity()).refresh());
     }
 }

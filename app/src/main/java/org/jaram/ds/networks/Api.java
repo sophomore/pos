@@ -62,6 +62,18 @@ public class Api {
         return menuService.getAllMenus();
     }
 
+    public Observable<SimpleApiResult> deleteMenu(Menu menu) {
+        return menuService.deleteMenu(menu.getId());
+    }
+
+    public Observable<SimpleApiResult> modifyMenu(Menu menu) {
+        return menuService.modifyMenu(menu.getId(), menu.getName(), menu.getPrice(), menu.getCategoryId());
+    }
+
+    public Observable<SimpleApiResult> addMenu(Menu menu) {
+        return menuService.addMenu(menu.getName(), menu.getPrice(), menu.getCategoryId());
+    }
+
     public Observable<List<Order>> getOrder() {
         return orderService.getOrder();
     }

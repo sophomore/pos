@@ -13,8 +13,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import org.jaram.ds.R;
+import org.jaram.ds.managers.MenuManager;
 import org.jaram.ds.models.Category;
 import org.jaram.ds.models.Menu;
+import org.jaram.ds.models.result.SimpleApiResult;
+import org.jaram.ds.networks.Api;
+import org.jaram.ds.util.RxUtils;
+import org.jaram.ds.util.SLog;
 import org.jaram.ds.util.StringUtils;
 
 import java.util.List;
@@ -23,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
@@ -49,6 +56,11 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
         ButterKnife.bind(this, view);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
+        if (menu == null) {
+            menu = new Menu();
+            menu.setId(-1);
+        }
+
         categoryView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, Category.values()));
         categoryView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -67,9 +79,7 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
             }
         });
 
-        if (menu != null) {
-            setViewByMenu(menu);
-        }
+        setViewByMenu(menu);
 
         return view;
     }
@@ -91,7 +101,7 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
 
     @OnClick(R.id.confirm)
     protected void save() {
-        saveMenu(menu);
+        saveMenu();
         if (confirmListener != null) {
             confirmListener.call();
         }
@@ -103,12 +113,17 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
         priceView.setText(StringUtils.format("%d", menu.getPrice()));
     }
 
-    private void saveMenu(Menu menu) {
-        Realm db = Realm.getDefaultInstance();
-        db.beginTransaction();
-        db.copyToRealmOrUpdate(menu);
-        db.commitTransaction();
-        db.close();
-        //TODO: update server
+    private Observable<SimpleApiResult> getApplyObservable() {
+        return this.menu.getId() == -1
+                ? Api.with(getActivity()).modifyMenu(menu)
+                : Api.with(getActivity()).addMenu(menu);
+    }
+
+    private void saveMenu() {
+        getApplyObservable()
+                .retryWhen(RxUtils::exponentialBackoff)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(RxUtils::doNothing, SLog::e,
+                        () -> MenuManager.getInstance(getActivity()).refresh());
     }
 }

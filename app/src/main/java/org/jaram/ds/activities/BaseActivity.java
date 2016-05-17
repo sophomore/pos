@@ -253,6 +253,9 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         startActivity(new Intent(this, OrderActivity.class));
+        if (drawerContainer != null) {
+            drawerContainer.closeDrawer(GravityCompat.END);
+        }
     }
 
     protected void startOrderManageActivity() {
@@ -261,6 +264,9 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         startActivity(new Intent(this, OrderManageActivity.class));
+        if (drawerContainer != null) {
+            drawerContainer.closeDrawer(GravityCompat.END);
+        }
     }
 
     protected void startStatisticActivity() {
@@ -269,6 +275,9 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         startActivity(new Intent(this, StatisticActivity.class));
+        if (drawerContainer != null) {
+            drawerContainer.closeDrawer(GravityCompat.END);
+        }
     }
 
     protected void startMenuManageActivity() {
@@ -277,6 +286,9 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         startActivity(new Intent(this, MenuManageActivity.class));
+        if (drawerContainer != null) {
+            drawerContainer.closeDrawer(GravityCompat.END);
+        }
     }
 
     protected void startSettingActivity() {
@@ -286,5 +298,8 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
 //        }
 //
 //        startActivity(new Intent(this, OrderActivity.class));
+//        if (drawerContainer != null) {
+//            drawerContainer.closeDrawer(GravityCompat.END);
+//        }
     }
 }
