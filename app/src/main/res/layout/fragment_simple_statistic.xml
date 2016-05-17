@@ -21,7 +21,7 @@
             android:id="@+id/toggleInfo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/default_btn"
+            android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_expand_less_white_48dp"/>
 
         <GridLayout

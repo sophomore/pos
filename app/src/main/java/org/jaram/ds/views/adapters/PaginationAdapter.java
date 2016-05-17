@@ -18,7 +18,6 @@ public abstract class PaginationAdapter<Data> extends BaseRecyclerView.BaseListA
     }
 
     protected Loader loader;
-    protected int threshold;
     protected int loadingOffset;
 
     public PaginationAdapter() {
@@ -26,25 +25,16 @@ public abstract class PaginationAdapter<Data> extends BaseRecyclerView.BaseListA
     }
 
     public PaginationAdapter(Loader loader) {
-        this(loader, 10);
+        this(loader, 1);
     }
 
-    public PaginationAdapter(Loader loader, int threshold) {
-        this(loader, 10, 1);
-    }
-
-    public PaginationAdapter(Loader loader, int threshold, int loadingOffset) {
+    public PaginationAdapter(Loader loader, int loadingOffset) {
         this.loader = loader;
-        this.threshold = threshold;
         this.loadingOffset = loadingOffset;
     }
 
     public void setLoader(Loader loader) {
         this.loader = loader;
-    }
-
-    public void setThreshold(int threshold) {
-        this.threshold = threshold;
     }
 
     public void setLoadingOffset(int loadingOffset) {
@@ -53,10 +43,7 @@ public abstract class PaginationAdapter<Data> extends BaseRecyclerView.BaseListA
 
     @Override
     final public void onBindViewHolder(BaseRecyclerView.BaseViewHolder<Data> holder, int position) {
-        int itemCount = getItemCount();
-        if (loader.hasNext() &&
-                (itemCount % threshold) == 0 &&
-                (position >= getItemCount() - loadingOffset)) {
+        if (loader.hasNext() && (position >= getItemCount() - loadingOffset)) {
             loader.loadMore();
         }
 

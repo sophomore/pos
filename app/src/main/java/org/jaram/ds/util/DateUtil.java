@@ -149,4 +149,11 @@ public class DateUtil {
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         return simpleDateFormat.format(date);
     }
+
+    public static void dropTime(Calendar calendar) {
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+    }
 }

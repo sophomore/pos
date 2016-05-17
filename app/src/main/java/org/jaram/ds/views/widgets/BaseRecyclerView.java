@@ -102,6 +102,10 @@ public class BaseRecyclerView extends RecyclerView {
             return mItems.size();
         }
 
+        public int getListSize() {
+            return mItems.size();
+        }
+
         public void clear() {
             mItems.clear();
         }

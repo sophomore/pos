@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Begin font sizes -->
+    <dimen name="font_micro">13sp</dimen>
+    <dimen name="font_small">14sp</dimen>
+    <dimen name="font_normal">15sp</dimen>
+    <dimen name="font_large">17sp</dimen>
+    <dimen name="font_larger">18sp</dimen>
+    <dimen name="font_huge">21sp</dimen>
+    <dimen name="font_huger">24sp</dimen>
+    <!-- End font sizes -->
+
+    <!-- Begin fixed font sizes -->
+    <dimen name="font_fixed_micro">13dp</dimen>
+    <dimen name="font_fixed_small">14dp</dimen>
+    <dimen name="font_fixed_normal">15dp</dimen>
+    <dimen name="font_fixed_large">17dp</dimen>
+    <dimen name="font_fixed_huge">21dp</dimen>
+    <!-- End fixed font sizes -->
+
     <!-- Begin spacing constants -->
     <dimen name="spacing_huge">24dp</dimen>
     <dimen name="spacing_larger">20dp</dimen>
@@ -16,6 +34,8 @@
     <dimen name="progress_size_normal">25dp</dimen>
 
     <dimen name="button_line_stroke">1dp</dimen>
+
+    <dimen name="order_list_item_spacing">2dp</dimen>
 
     <dimen name="collapse_menu_item_spacing">2dp</dimen>
 </resources>

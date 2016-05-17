@@ -50,4 +50,9 @@ public class Order extends RealmObject {
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Order) && id == ((Order) o).getId();
+    }
 }

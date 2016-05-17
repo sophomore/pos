@@ -9,7 +9,7 @@
         android:id="@+id/startDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/default_btn"
+        android:background="?attr/selectableItemBackground"
         android:text="0000-00-00"
         android:textColor="#fff"
         android:textSize="20sp"/>
@@ -27,7 +27,7 @@
         android:id="@+id/endDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/default_btn"
+        android:background="?attr/selectableItemBackground"
         android:text="0000-00-00"
         android:textColor="#fff"
         android:textSize="20sp"/>
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/default_btn"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="12dp"
         android:src="@drawable/ic_search_white_24dp"/>
 </LinearLayout>

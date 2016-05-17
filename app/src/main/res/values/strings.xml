@@ -26,7 +26,6 @@
     <!--<string name="total">총액</string>-->
 
 
-
     <!--abcdefghijklmnopqrstuvwxyz-->
     <string name="app_name">Dear, Song</string>
     <string name="cutlet">돈까스</string>
@@ -58,12 +57,20 @@
     <string name="label.credit">외상</string>
     <string name="label.confirm">확인</string>
 
+    <string name="label.delete">삭제</string>
+
     <string name="label.end_order">주문 완료</string>
 
     <string name="label.name">이름</string>
     <string name="label.no">아니오</string>
 
+    <string name="label.order">주문 추가</string>
+    <string name="label.order.large_button">여기를 누르셔서 주문을 추가하실 수 있습니다.</string>
+    <string name="label.order_detail.title">주문서</string>
+
     <string name="label.price.menu">메뉴 가격</string>
+    <string name="label.print_receipt">영수증 출력</string>
+    <string name="label.print_statement">전표 출력</string>
 
     <string name="label.refresh">새로고침</string>
 

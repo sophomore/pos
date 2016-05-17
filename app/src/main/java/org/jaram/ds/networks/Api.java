@@ -7,6 +7,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.jaram.ds.Config;
 import org.jaram.ds.Data;
+import org.jaram.ds.models.DailyTotalSales;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.result.SimpleApiResult;
@@ -52,6 +53,10 @@ public class Api {
         }
         Api.context = context;
         return instance;
+    }
+
+    public Observable<DailyTotalSales> getDailyTotalSales(Date date) {
+        return generalService.getDailyTotalSales(date);
     }
 
     public Observable<List<Menu>> getMenus() {
