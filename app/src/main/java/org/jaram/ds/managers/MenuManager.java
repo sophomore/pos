@@ -28,8 +28,6 @@ public class MenuManager {
     private Context context;
     private PublishSubject<List<Menu>> publishSubject = PublishSubject.create();
 
-    private List<Menu> menus;
-
     public static MenuManager getInstance(Context context) {
         if (instance == null) {
             synchronized (MenuManager.class) {
@@ -43,16 +41,15 @@ public class MenuManager {
     }
 
     private MenuManager() {
-        menus = new ArrayList<>();
     }
 
     public List<Menu> getMenus() {
+        Realm db = Realm.getDefaultInstance();
         List<Menu> result = new ArrayList<>();
-        for (Menu menu : menus) {
-            if (menu.isAvailable()) {
-                result.add(menu);
-            }
+        for (Menu menu : getMenus(db)) {
+            result.add(menu.copyNewInstance());
         }
+        db.close();
         return result;
     }
 
@@ -61,35 +58,35 @@ public class MenuManager {
     }
 
     public List<Menu> getMenusByCategory(int categoryId) {
+        Realm db = Realm.getDefaultInstance();
         List<Menu> result = new ArrayList<>();
-        for (Menu menu : menus) {
-            if (menu.getCategory().getCategoryId() == categoryId) {
-                result.add(menu);
-            }
+        for (Menu menu : getMenusByCategory(db, categoryId)) {
+            result.add(menu.copyNewInstance());
         }
+        db.close();
         return result;
     }
 
     public List<Menu> getAvailableMenusByCategory(int categoryId) {
+        Realm db = Realm.getDefaultInstance();
         List<Menu> result = new ArrayList<>();
-        for (Menu menu : menus) {
-            if (menu.isAvailable() && menu.getCategory().getCategoryId() == categoryId) {
-                result.add(menu);
-            }
+        for (Menu menu : getAvailableMenusByCategory(db, categoryId)) {
+            result.add(menu.copyNewInstance());
         }
+        db.close();
         return result;
     }
 
     public List<Menu> getMenusByCategory(Realm db, int categoryId) {
         return db.where(Menu.class)
-                .equalTo("category_id", categoryId)
+                .equalTo("categoryId", categoryId)
                 .findAll();
     }
 
     public List<Menu> getAvailableMenusByCategory(Realm db, int categoryId) {
         return db.where(Menu.class)
                 .equalTo("available", true)
-                .equalTo("category_id", categoryId)
+                .equalTo("categoryId", categoryId)
                 .findAll();
     }
 
@@ -110,7 +107,13 @@ public class MenuManager {
     }
 
     public List<Menu> getAllMenus() {
-        return menus;
+        Realm db = Realm.getDefaultInstance();
+        List<Menu> result = new ArrayList<>();
+        for (Menu menu : db.where(Menu.class).findAll()) {
+            result.add(menu.copyNewInstance());
+        }
+        db.close();
+        return result;
     }
 
     public List<Menu> getAllMenus(Realm db) {
@@ -120,6 +123,7 @@ public class MenuManager {
     public void refresh() {
         Api.with(context).getAllMenus()
                 .retryWhen(RxUtils::exponentialBackoff)
+                .onErrorReturn(e -> getAllMenus())
                 .map(this::updateDB)
                 .subscribe(publishSubject::onNext, SLog::e);
     }
@@ -129,8 +133,6 @@ public class MenuManager {
     }
 
     private List<Menu> updateDB(List<Menu> menus) {
-        this.menus.clear();
-        this.menus.addAll(menus);
         Realm db = Realm.getDefaultInstance();
         db.beginTransaction();
         for (Menu menu : menus) {
