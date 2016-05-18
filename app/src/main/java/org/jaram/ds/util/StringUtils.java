@@ -7,12 +7,16 @@ import java.util.Locale;
  */
 public class StringUtils {
 
-    public static String plainVersion(String string) {
-        String result = "";
-        for (char i : string.toCharArray()) {
-            if (NumberUtils.isNumber(i) || i == '.') {
-                result += i;
+    public static int[] plainVersion(String string) {
+        string = string.replaceAll("v|V", "");
+        String[] plainNumber = string.split(".");
+        int[] result = new int[plainNumber.length];
+        for (int i=0; i<plainNumber.length; i++) {
+            String number = plainNumber[i];
+            if (!NumberUtil.isPositiveNumber(number)) {
+                throw new RuntimeException("버전 이름은 숫자, v, . 으로만 이루어 질 수 있습니다.");
             }
+            result[i] = Integer.parseInt(number);
         }
         return result;
     }

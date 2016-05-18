@@ -21,7 +21,9 @@ import org.jaram.ds.util.PackageUtil;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
 import org.jaram.ds.util.StringUtils;
+import org.jsoup.Jsoup;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,18 +62,9 @@ public class SplashFragment extends BaseFragment {
     protected void setupLayout(View view) {
 //        ApiConstants.setBaseUrl(EasySharedPreferences.with(getActivity()).getString("url", "192.168.0.101:80")); TODO:
 
-        String currentVersion = "";
-
-        try {
-            currentVersion = getActivity().getPackageManager()
-                    .getPackageInfo(getString(R.string.package_name), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
         Realm.setDefaultConfiguration(createRealmConfiguration());
 
-        Observable.zip(splashTimer(), checkForUpdate(currentVersion), ((aLong, aBoolean) -> aBoolean))
+        Observable.zip(splashTimer(), checkForUpdate(), ((aLong, aBoolean) -> aBoolean))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::init, SLog::e);
     }
@@ -88,53 +81,41 @@ public class SplashFragment extends BaseFragment {
         return Observable.timer(MINIMUM_DISPLAY_TIME, TimeUnit.MILLISECONDS);
     }
 
-    private Observable<Boolean> checkForUpdate(String currentVersion) {
+    private Observable<Boolean> checkForUpdate() {
         noticeView.setText(R.string.message_loading_new_version);
-        return Observable.create(subscriber -> Observable.just(currentVersion)
-                .map(this::checkIsNewVersion)
-                .retryWhen(RxUtils::exponentialBackoff)
+
+        return Observable.just(PackageUtil.getVersionName(getActivity()))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(requireUpdate -> {
-                            if (requireUpdate) {
-                                showUpdateDialog()
-                                        .setOnDismissListener(dialog -> {
-                                            subscriber.onNext(true);
-                                            subscriber.onCompleted();
-                                        });
-                            } else {
-                                subscriber.onNext(false);
-                                subscriber.onCompleted();
-                            }
-                        }, subscriber::onError,
-                        () -> noticeView.setText(R.string.message_loading_prepare)));
+                .map(this::checkIsNewVersion)
+                .doAfterTerminate(() -> noticeView.setText(R.string.message_loading_prepare))
+                .retryWhen(RxUtils::exponentialBackoff);
     }
 
     private Boolean checkIsNewVersion(String currentVersion) {
-//        try {
-//            String latestVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=org.jaram.ds&hl=en")
-//                    .timeout(6000)
-//                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-//                    .referrer("http://www.google.com")
-//                    .get()
-//                    .select("div[itemprop=softwareVersion]")
-//                    .first()
-//                    .ownText();
-//            return latestVersion.equals(compareVersion(currentVersion, latestVersion));
-//        } catch (IOException e) {
-//            SLog.e(e);
-//        } TODO:
+        try {
+            String latestVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=org.jaram.ds&hl=en")
+                    .timeout(6000)
+                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                    .referrer("http://www.google.com")
+                    .get()
+                    .select("div[itemprop=softwareVersion]")
+                    .first()
+                    .ownText();
+            return latestVersion.equals(compareVersion(currentVersion, latestVersion));
+        } catch (IOException e) {
+            SLog.e(e);
+        }
         return false;
     }
 
     private String compareVersion(String version1, String version2) {
-        char[] plainVersion1Array = StringUtils.plainVersion(version1).toCharArray();
-        char[] plainVersion2Array = StringUtils.plainVersion(version2).toCharArray();
-        int length = plainVersion1Array.length <= plainVersion2Array.length
-                ? plainVersion1Array.length
-                : plainVersion2Array.length;
+        int[] version1Array = StringUtils.plainVersion(version1);
+        int[] version2Array = StringUtils.plainVersion(version2);
+        int length = version1Array.length <= version2Array.length
+                ? version1Array.length
+                : version2Array.length;
         for (int i = 0; i < length; i++) {
-            if (plainVersion1Array[i] < plainVersion2Array[i]) {
+            if (version1Array[i] < version2Array[i]) {
                 return version2;
             }
         }

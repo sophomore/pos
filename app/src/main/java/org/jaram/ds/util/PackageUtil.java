@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
+import org.jaram.ds.R;
+
 public class PackageUtil {
 
     private static final String PREFERENCES_NAME = "PackageUtils";
@@ -37,7 +39,7 @@ public class PackageUtil {
     public static String getVersionName(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo("com.apartslide", 0);
+                    .getPackageInfo(context.getString(R.string.package_name), 0);
             return packageInfo.versionName;
         } catch (NameNotFoundException e) {
             // should never happen
@@ -48,7 +50,7 @@ public class PackageUtil {
     public static int getVersionCode(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo("com.apartslide", 0);
+                    .getPackageInfo(context.getString(R.string.package_name), 0);
             return packageInfo.versionCode;
         } catch (NameNotFoundException e) {
             // should never happen
