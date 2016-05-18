@@ -17,7 +17,18 @@ public class Order extends RealmObject {
     @SerializedName("id") private int id;
     @SerializedName("time") private Date date;
     @SerializedName("ordermenus") private RealmList<OrderMenu> orderMenus;
-    @SerializedName("totalprice") private int totalPrice;
+
+    public Order copyNewInstance() {
+        Order newOrder = new Order();
+        newOrder.setId(getId());
+        newOrder.setDate(getDate());
+        RealmList<OrderMenu> orderMenus = new RealmList<>();
+        for (OrderMenu orderMenu : getOrderMenus()) {
+            orderMenus.add(orderMenu.copyNewInstance());
+        }
+        newOrder.setOrderMenus(orderMenus);
+        return newOrder;
+    }
 
     public int getId() {
         return id;
@@ -44,11 +55,11 @@ public class Order extends RealmObject {
     }
 
     public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderMenu orderMenu : orderMenus) {
+            totalPrice += orderMenu.getTotalPrice();
+        }
         return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     @Override

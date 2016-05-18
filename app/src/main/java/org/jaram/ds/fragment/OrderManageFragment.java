@@ -10,6 +10,7 @@ import android.widget.TextView;
 import org.jaram.ds.R;
 import org.jaram.ds.activities.OrderActivity;
 import org.jaram.ds.Data;
+import org.jaram.ds.managers.OrderManager;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.OrderMenu;
 import org.jaram.ds.models.PaginationData;
@@ -45,6 +46,7 @@ public class OrderManageFragment extends BaseFragment {
 
     @BindDimen(R.dimen.order_list_item_spacing) int itemSpacing;
 
+    private OrderManager manager;
     private OrderAdapter orderAdapter;
 
     public static OrderManageFragment newInstance() {
@@ -64,6 +66,7 @@ public class OrderManageFragment extends BaseFragment {
 
     @Override
     protected void setupLayout(View view) {
+        manager = OrderManager.getInstance(getActivity());
         orderAdapter = new OrderAdapter();
 
         orderListView.setAdapter(orderAdapter);
@@ -106,26 +109,15 @@ public class OrderManageFragment extends BaseFragment {
     }
 
     protected Observable<PaginationData<Order>> loadOrder(int page) {
-        Observable<List<Order>> observable = orderAdapter.getItemCount() == 0
-                ? Api.with(getActivity()).getOrder()
-                : Api.with(getActivity()).getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
+        Observable<PaginationData<Order>> observable = orderAdapter.getItemCount() == 0
+                ? manager.getOrders()
+                : manager.getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
 
         return observable
-                .map(this::setupOrderMenu)
-                .map(this::addDateHeaderItem)
-                .map(this::convertPaginationData);
+                .map(this::addDateHeaderItem);
     }
 
-    protected List<Order> setupOrderMenu(List<Order> data) {
-        for (Order order : data) {
-            for (OrderMenu orderMenu : order.getOrderMenus()) {
-                orderMenu.setOrder(order);
-            }
-        }
-        return data;
-    }
-
-    protected List<Order> addDateHeaderItem(List<Order> data) {
+    protected PaginationData<Order> addDateHeaderItem(PaginationData<Order> data) {
         PaginationAdapter<Order> adapter = orderAdapter;
         Calendar lastDate = Calendar.getInstance();
         if (adapter.getListSize() > 0) {
@@ -134,16 +126,16 @@ public class OrderManageFragment extends BaseFragment {
             lastDate.add(Calendar.YEAR, 1);
         }
         DateUtil.dropTime(lastDate);
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.getResults().size(); i++) {
             Calendar date = Calendar.getInstance();
-            Date receiveDate = data.get(i).getDate();
+            Date receiveDate = data.getResults().get(i).getDate();
             if (receiveDate == null) {
                 continue;
             }
             date.setTime(receiveDate);
             DateUtil.dropTime(date);
             if (lastDate.after(date)) {
-                data.add(i, createHeaderItem(date));
+                data.getResults().add(i, createHeaderItem(date));
             }
             lastDate = date;
         }
@@ -155,12 +147,6 @@ public class OrderManageFragment extends BaseFragment {
         order.setId(OrderAdapter.VIEW_TYPE_HEADER);
         order.setDate(date.getTime());
         return order;
-    }
-
-    protected PaginationData<Order> convertPaginationData(List<Order> data) {
-        PaginationData<Order> paginationData = new PaginationData<>(data);
-        paginationData.setmNext(data.size() > 0 ? "hasNext" : "");
-        return paginationData;
     }
 
     private void refresh() {

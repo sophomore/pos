@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jaram.ds.R;
+import org.jaram.ds.managers.OrderManager;
 import org.jaram.ds.models.*;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.util.StringUtils;
@@ -24,6 +25,7 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.realm.RealmList;
 
 /**
  * Created by jdekim43 on 2016. 1. 30..
@@ -53,6 +55,12 @@ public class OrderFragment extends BaseFragment {
         return new OrderFragment();
     }
 
+    public void clear() {
+        payType = Pay.CREDIT;
+        adapter.clear();
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_order;
@@ -73,7 +81,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     @OnClick({R.id.pay_cash, R.id.pay_card, R.id.pay_service, R.id.pay_credit})
-    void onClickPayButton(View v) {
+    protected void onClickPayButton(View v) {
         if (adapter.getItemCount() == 0) {
             Toast.makeText(getActivity(), R.string.message_alert_first_select_ordermenu, Toast.LENGTH_SHORT).show();
             return;
@@ -114,7 +122,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     @OnClick(R.id.pay_confirmBox)
-    void onClickConfirmView() {
+    protected void onClickConfirmView() {
         for (OrderMenu orderMenu : adapter.getSelectedOrderMenus()) {
             orderMenu.setPay(true);
             orderMenu.setPay(payType);
@@ -126,7 +134,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     @OnClick(R.id.end)
-    void onClickEndButton(View view) {
+    protected void onClickEndButton(View view) {
         if (adapter.getItemCount() == 0) {
             Toast.makeText(getActivity(), R.string.message_alert_first_select_ordermenu,
                     Toast.LENGTH_SHORT).show();
@@ -151,6 +159,7 @@ public class OrderFragment extends BaseFragment {
         orderMenu.setTakeout(false);
         orderMenu.setTwice(false);
         orderMenu.setCurry(false);
+        orderMenu.setAttributes(new RealmList<>());
         orderMenu.setMenu(menu);
         adapter.add(orderMenu);
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
@@ -174,13 +183,13 @@ public class OrderFragment extends BaseFragment {
     }
 
     private void endOrder() {
-        org.jaram.ds.models.Order order = new Order();
+        Order order = new Order();
         order.setDate(new Date());
         order.getOrderMenus().clear();
         order.getOrderMenus().addAll(adapter.getAll());
-        order.setTotalPrice(getTotalPrice(order.getOrderMenus()));
-        org.jaram.ds.managers.OrderManager.getInstance(getActivity()).addOrder(order);
-        getActivity().finish();
+        OrderManager.getInstance(getActivity()).addOrder(order);
+        Toast.makeText(getActivity(), R.string.message_end_order, Toast.LENGTH_SHORT).show();
+        clear();
     }
 
     private void priceRefresh() {

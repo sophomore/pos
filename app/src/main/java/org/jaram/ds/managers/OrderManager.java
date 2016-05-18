@@ -7,14 +7,17 @@ import com.crashlytics.android.Crashlytics;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
 import org.jaram.ds.models.OrderMenu;
+import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
+import org.jaram.ds.util.SLog;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.Sort;
 import rx.Observable;
 
 /**
@@ -51,32 +54,60 @@ public class OrderManager {
                     }
                 }, e -> {
                     errorOnAddOrder(order);
-                    Crashlytics.logException(e);
+                    SLog.e(e);
                 });
     }
 
-    public Observable<List<Order>> getOrders() {
-        return Observable.create(subscriber -> Api.with(context).getOrder()
+    public Observable<PaginationData<Order>> getOrders() {
+        return Api.with(context).getOrder()
                 .retryWhen(RxUtils::exponentialBackoff)
-                .subscribe(result -> {
-                    subscriber.onNext(result);
-                    subscriber.onCompleted();
-                }, Crashlytics::logException));
+                .map(orders -> {
+                    orders.addAll(0, getSavedOrders());
+                    return orders;
+                })
+                .onErrorReturn(e -> getSavedOrders())
+                .map(this::setupOrderMenu)
+                .map(this::convertPaginationData);
     }
 
-    public Observable<List<Order>> getMoreOrders(Date date) {
-        return Observable.create(subscriber -> Api.with(context).getMoreOrders(date)
+    public Observable<PaginationData<Order>> getMoreOrders(Date date) {
+        return Api.with(context).getMoreOrders(date)
                 .retryWhen(RxUtils::exponentialBackoff)
-                .subscribe(result -> {
-                    subscriber.onNext(result);
-                    subscriber.onCompleted();
-                }, Crashlytics::logException));
+                .onErrorReturn(e -> new ArrayList<>())
+                .map(this::setupOrderMenu)
+                .map(this::convertPaginationData);
+    }
+
+    protected List<Order> setupOrderMenu(List<Order> data) {
+        for (Order order : data) {
+            for (OrderMenu orderMenu : order.getOrderMenus()) {
+                orderMenu.setOrder(order);
+            }
+        }
+        return data;
+    }
+
+    protected PaginationData<Order> convertPaginationData(List<Order> data) {
+        PaginationData<Order> paginationData = new PaginationData<>(data);
+        paginationData.setmNext(data.size() > 0 ? "hasNext" : "");
+        return paginationData;
+    }
+
+    private List<Order> getSavedOrders() {
+        Realm db = Realm.getDefaultInstance();
+        List<Order> result = new ArrayList<>();
+        for (Order order : db.where(Order.class).findAllSorted("date", Sort.DESCENDING)) {
+            result.add(order.copyNewInstance());
+        }
+        return result;
     }
 
     private void errorOnAddOrder(Order order) {
         Realm db = Realm.getDefaultInstance();
+        order.setId((int) db.where(Order.class).count());
+        order.setDate(new Date());
         db.beginTransaction();
-        db.copyToRealmOrUpdate(order);
+        db.copyToRealm(order);
         db.commitTransaction();
         db.close();
     }

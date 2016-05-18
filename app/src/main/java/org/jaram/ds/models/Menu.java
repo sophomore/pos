@@ -42,6 +42,16 @@ public class Menu extends RealmObject {
         return savedMenu;
     }
 
+    public Menu copyNewInstance() {
+        Menu newMenu = new Menu();
+        newMenu.setId(getId());
+        newMenu.setName(getName());
+        newMenu.setPrice(getPrice());
+        newMenu.setCategoryId(getCategoryId());
+        newMenu.setAvailable(isAvailable());
+        return newMenu;
+    }
+
     public int getId() {
         return id;
     }

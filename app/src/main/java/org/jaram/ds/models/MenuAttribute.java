@@ -16,6 +16,15 @@ public class MenuAttribute extends RealmObject {
     @SerializedName("available") private boolean available;
     private RealmList<OrderMenu> orderMenus;
 
+    public MenuAttribute copyNewInstance() {
+        MenuAttribute attribute = new MenuAttribute();
+        attribute.setId(getId());
+        attribute.setName(getName());
+        attribute.setPrice(getPrice());
+        attribute.setAvailable(isAvailable());
+        return attribute;
+    }
+
     public int getId() {
         return id;
     }

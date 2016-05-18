@@ -19,7 +19,7 @@ public class OrderMenu extends RealmObject {
     @PrimaryKey
     @SerializedName("id") private int id;
     @SerializedName("menu_id") private Menu menu;
-    @SerializedName("order") private Order order;
+    private Order order;
     private int payInt;
     @Ignore
     @SerializedName("pay") private Pay pay;
@@ -28,7 +28,27 @@ public class OrderMenu extends RealmObject {
     @SerializedName("takeout") private boolean takeout;
     @Nullable
     @SerializedName("attributes") private RealmList<MenuAttribute> attributes;
-    @Ignore private boolean isPay;
+    @Ignore private boolean isPay = false;
+
+    public OrderMenu copyNewInstance() {
+        OrderMenu orderMenu = new OrderMenu();
+        orderMenu.setId(getId());
+        orderMenu.setMenu(getMenu().copyNewInstance());
+        orderMenu.setOrder(getOrder());
+        orderMenu.setPayInt(getPayInt());
+        orderMenu.setCurry(isCurry());
+        orderMenu.setTwice(isTwice());
+        orderMenu.setTakeout(isTakeout());
+        if (getAttributes() != null) {
+            RealmList<MenuAttribute> attributes = new RealmList<>();
+            for (MenuAttribute attr : getAttributes()) {
+                attributes.add(attr.copyNewInstance());
+            }
+            orderMenu.setAttributes(attributes);
+        }
+        orderMenu.setPay(isPay());
+        return orderMenu;
+    }
 
     public int getId() {
         return id;
@@ -101,6 +121,10 @@ public class OrderMenu extends RealmObject {
         return attributes;
     }
 
+    public void setAttributes(@Nullable RealmList<MenuAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
     public int getTotalPrice() {
         int totalPrice = getMenu().getPrice();
         totalPrice += isCurry() ? Data.CURRY : 0;
@@ -120,16 +144,5 @@ public class OrderMenu extends RealmObject {
 
     public void setPay(boolean pay) {
         isPay = pay;
-    }
-
-    public static int calculateTotalPrice(OrderMenu orderMenu) {
-        if (orderMenu.menu == null) {
-            return 0;
-        }
-        int totalPrice = orderMenu.menu.getPrice();
-        totalPrice += orderMenu.isCurry() ? Data.CURRY : 0;
-        totalPrice += orderMenu.isTwice() ? Data.TWICE : 0;
-        totalPrice += orderMenu.isTakeout() ? Data.TAKEOUT : 0;
-        return totalPrice;
     }
 }
