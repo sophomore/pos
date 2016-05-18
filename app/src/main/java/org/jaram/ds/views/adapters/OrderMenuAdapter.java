@@ -204,9 +204,8 @@ public class OrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<OrderMenu
                 }
             }
 
-            if (selectedAttributeContainer.getChildCount() == 0) {
-                selectedAttributeContainer.setVisibility(View.GONE);
-            }
+            selectedAttributeContainer.setVisibility(selectedAttributeContainer.getChildCount() > 0
+                    ? View.VISIBLE : View.GONE);
         }
 
         protected void visibleAttributeList() {
