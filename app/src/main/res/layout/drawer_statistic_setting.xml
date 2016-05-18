@@ -33,9 +33,9 @@
                 android:layout_height="48dp"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_white"
+                android:background="@drawable/bg_white_selectable_point"
                 android:text="@string/label.sales"
-                android:textColor="@color/btn_white_text"
+                android:textColor="@color/color_dark_select_white"
                 android:textSize="18sp"/>
 
             <Button
@@ -44,9 +44,9 @@
                 android:layout_height="48dp"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_white"
+                android:background="@drawable/bg_white_selectable_point"
                 android:text="@string/label.count"
-                android:textColor="@color/btn_white_text"
+                android:textColor="@color/color_dark_select_white"
                 android:textSize="18sp"/>
         </LinearLayout>
 
@@ -75,9 +75,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.hour"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
 
                 <Button
@@ -86,9 +86,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.date"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
 
                 <Button
@@ -97,9 +97,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.day"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
             </LinearLayout>
 
@@ -114,9 +114,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.month"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
 
                 <Button
@@ -125,9 +125,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.quarter"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
 
                 <Button
@@ -136,9 +136,9 @@
                     android:layout_height="48dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_white"
+                    android:background="@drawable/bg_white_selectable_point"
                     android:text="@string/label.unit.year"
-                    android:textColor="@color/btn_white_text"
+                    android:textColor="@color/color_dark_select_white"
                     android:textSize="18sp"/>
             </LinearLayout>
         </LinearLayout>

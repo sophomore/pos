@@ -14,12 +14,12 @@
             android:id="@+id/cutlet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_white"
+            android:background="@drawable/bg_white_selectable_point"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:padding="8dp"
             android:text="@string/cutlet"
-            android:textColor="@color/btn_white_text"/>
+            android:textColor="@color/color_dark_select_white"/>
 
         <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/cutletList"
@@ -39,12 +39,12 @@
             android:id="@+id/rice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_white"
+            android:background="@drawable/bg_white_selectable_point"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:padding="8dp"
             android:text="@string/rice"
-            android:textColor="@color/btn_white_text"/>
+            android:textColor="@color/color_dark_select_white"/>
 
         <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/riceList"
@@ -64,12 +64,12 @@
             android:id="@+id/noodle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_white"
+            android:background="@drawable/bg_white_selectable_point"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:padding="8dp"
             android:text="@string/noodle"
-            android:textColor="@color/btn_white_text"/>
+            android:textColor="@color/color_dark_select_white"/>
 
         <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/noodleList"
@@ -89,12 +89,12 @@
             android:id="@+id/etc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_white"
+            android:background="@drawable/bg_white_selectable_point"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:padding="8dp"
             android:text="@string/etc"
-            android:textColor="@color/btn_white_text"/>
+            android:textColor="@color/color_dark_select_white"/>
 
         <org.jaram.ds.views.widgets.BaseRecyclerView
             android:id="@+id/etcList"

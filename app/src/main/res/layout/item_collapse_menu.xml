@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/btn_white"
+    android:background="@drawable/bg_white_selectable_point"
     android:padding="@dimen/spacing_normal"
-    android:textColor="@color/btn_white_text"
+    android:textColor="@color/color_dark_select_white"
     android:textSize="12sp"/>

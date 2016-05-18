@@ -85,13 +85,13 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
             attributeContainer.removeAllViews();
 
             if (data.isCurry()) {
-                addAttributeView(createTempAttribute(-1, "카레 추가"));
-            }
-            if (data.isTakeout()) {
-                addAttributeView(createTempAttribute(-2, "포장"));
+                addAttributeView(MenuAttribute.CURRY);
             }
             if (data.isTwice()) {
-                addAttributeView(createTempAttribute(-3, "곱배기"));
+                addAttributeView(MenuAttribute.TWICE);
+            }
+            if (data.isTakeout()) {
+                addAttributeView(MenuAttribute.TAKEOUT);
             }
 
             if (data.getAttributes() != null) {
@@ -136,14 +136,6 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
                     attributeItemMargin, attributeItemMargin);
 
             attributeContainer.addView(view, params);
-        }
-
-        private MenuAttribute createTempAttribute(int id, String name) {
-            MenuAttribute attribute = new MenuAttribute();
-            attribute.setId(id);
-            attribute.setName(name);
-            attribute.setAvailable(true);
-            return attribute;
         }
     }
 }

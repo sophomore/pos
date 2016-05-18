@@ -10,6 +10,25 @@ import io.realm.RealmObject;
  */
 public class MenuAttribute extends RealmObject {
 
+    public static final MenuAttribute CURRY = new MenuAttribute();
+    public static final MenuAttribute TWICE = new MenuAttribute();
+    public static final MenuAttribute TAKEOUT = new MenuAttribute();
+
+    static {
+        CURRY.setId(-1);
+        CURRY.setName("카레추가");
+        CURRY.setPrice(2500);
+        CURRY.setAvailable(false);
+        TWICE.setId(-2);
+        TWICE.setName("곱배기");
+        TWICE.setPrice(2500);
+        TWICE.setAvailable(false);
+        TAKEOUT.setId(-3);
+        TAKEOUT.setName("포장");
+        TAKEOUT.setPrice(500);
+        TAKEOUT.setAvailable(false);
+    }
+
     @SerializedName("id") private int id;
     @SerializedName("name") private String name;
     @SerializedName("price") private int price;

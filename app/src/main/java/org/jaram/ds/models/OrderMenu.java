@@ -127,9 +127,9 @@ public class OrderMenu extends RealmObject {
 
     public int getTotalPrice() {
         int totalPrice = getMenu().getPrice();
-        totalPrice += isCurry() ? Data.CURRY : 0;
-        totalPrice += isTwice() ? Data.TWICE : 0;
-        totalPrice += isTakeout() ? Data.TAKEOUT : 0;
+        totalPrice += isCurry() ? MenuAttribute.CURRY.getPrice() : 0;
+        totalPrice += isTwice() ? MenuAttribute.TWICE.getPrice() : 0;
+        totalPrice += isTakeout() ? MenuAttribute.TAKEOUT.getPrice() : 0;
         if (attributes != null) {
             for (MenuAttribute attr : attributes) {
                 totalPrice += attr.getPrice();
