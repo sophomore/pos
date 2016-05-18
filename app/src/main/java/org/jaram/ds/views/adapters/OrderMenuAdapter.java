@@ -203,6 +203,10 @@ public class OrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<OrderMenu
                     addAttributeView(attr);
                 }
             }
+
+            if (selectedAttributeContainer.getChildCount() == 0) {
+                selectedAttributeContainer.setVisibility(View.GONE);
+            }
         }
 
         protected void visibleAttributeList() {
@@ -219,6 +223,7 @@ public class OrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<OrderMenu
             TextView view = createAttributeView(attribute);
             view.setSelected(true);
             selectedAttributeContainer.addView(view);
+            selectedAttributeContainer.setVisibility(View.VISIBLE);
         }
 
         private void addAttributeView(MenuAttribute attribute) {
