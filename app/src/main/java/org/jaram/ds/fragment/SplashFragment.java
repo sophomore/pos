@@ -34,6 +34,7 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.observables.BlockingObservable;
 import rx.schedulers.Schedulers;
 
@@ -133,11 +134,17 @@ public class SplashFragment extends BaseFragment {
                     }
                     getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + "org.jaram.ds")));
                 })
-                .setNegativeButton(R.string.label_cancel, null)
+                .setNegativeButton(R.string.label_cancel, (dialog1, which1) -> init(false))
+                .setCancelable(false)
                 .show();
     }
 
     private void init(Boolean requireUpdate) {
+        if (requireUpdate) {
+            showUpdateDialog();
+            return;
+        }
+
         checkForClosing();
 
         noticeView.setText(R.string.message_loading_menu);
