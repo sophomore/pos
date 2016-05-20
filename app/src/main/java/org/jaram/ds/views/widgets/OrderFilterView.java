@@ -30,6 +30,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
+import rx.functions.Action0;
 
 /**
  * Created by jdekim43 on 2016. 5. 19..
@@ -43,6 +44,9 @@ public class OrderFilterView extends LinearLayout {
     @BindView(R.id.menuList) MenuCollapseListView menuListView;
 
     private OrderManager manager;
+
+    private Action0 applyListener;
+    private Action0 resetListener;
 
     public OrderFilterView(Context context) {
         this(context, null);
@@ -65,13 +69,45 @@ public class OrderFilterView extends LinearLayout {
         init();
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && priceView.isFocused()) {
+            Rect outRect = new Rect();
+            priceView.getGlobalVisibleRect(outRect);
+            if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                priceView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @OnClick(R.id.apply)
+    public void apply() {
+        if (applyListener != null) {
+            applyListener.call();
+        }
+    }
+
     @OnClick(R.id.reset)
     public void reset() {
         manager.resetFilter();
         priceView.setNumber(0);
+        priceCriteriaView.setSelection(0);
         ButterKnife.apply(payMethodViews, ((view, index) -> view.setChecked(false)));
         setDateAtToday();
         menuListView.notifyAllDataSetChanged();
+
+        if (resetListener != null) {
+            resetListener.call();
+        }
+    }
+
+    public void setOnApplyListener(Action0 listener) {
+        this.applyListener = listener;
+    }
+
+    public void setOnResetListener(Action0 listener) {
+        this.resetListener = listener;
     }
 
     @OnTextChanged(R.id.price)
@@ -97,7 +133,7 @@ public class OrderFilterView extends LinearLayout {
             case R.id.service:
                 pay = Pay.SERVICE;
                 break;
-            case R.id.etc:
+            case R.id.credit:
                 pay = Pay.CREDIT;
                 break;
         }
@@ -117,29 +153,19 @@ public class OrderFilterView extends LinearLayout {
         dateView.setSelectedDate(new Date());
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN && priceView.isFocused()) {
-            Rect outRect = new Rect();
-            priceView.getGlobalVisibleRect(outRect);
-            if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                priceView.clearFocus();
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
     protected void init() {
         priceCriteriaView.setAdapter(new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 OrderManager.PriceFilterCriteria.values()));
         dateView.setOnDateChangedListener((widget, date, selected) ->
                 manager.setDate(date.getDate()));
-        menuListView.setOnClickMenuListener(new CollapseMenuAdapter.OnClickMenuListener() {
-            @Override
-            public void onClick(Menu menu) {
-
+        menuListView.setOnClickMenuListener(menu -> {
+            if (manager.containsMenu(menu)) {
+                manager.removeMenu(menu);
+            } else {
+                manager.addMenu(menu);
             }
         });
+        menuListView.setAccentMenuList(manager.getMenus());
     }
 }

@@ -80,9 +80,9 @@ public class OrderManager {
 
     public void resetFilter() {
         price = NOT_FILTER_PRICE;
-        priceCriteria = PriceFilterCriteria.LESS;
+        priceCriteria = PriceFilterCriteria.MORE;
         payMethods.clear();
-        date = null;
+        date = new Date();
         menus.clear();
     }
 
@@ -134,8 +134,20 @@ public class OrderManager {
         return menus;
     }
 
-    public void setMenus(Set<Menu> menus) {
-        this.menus = menus;
+    public void addMenu(Menu menu) {
+        menus.add(menu);
+    }
+
+    public void removeMenu(Menu menu) {
+        menus.remove(menu);
+    }
+
+    public void clearMenu() {
+        menus.clear();;
+    }
+
+    public boolean containsMenu(Menu menu) {
+        return menus.contains(menu);
     }
 
     public void addOrder(Order order) {
@@ -169,6 +181,18 @@ public class OrderManager {
                 .onErrorReturn(e -> new ArrayList<>())
                 .map(this::setupOrderMenu)
                 .map(this::convertPaginationData);
+    }
+
+    public Observable<PaginationData<Order>> getFilteredOrders() {
+        return Api.with(context).getFilteredOrder(date, menus, payMethods)
+                .retryWhen(RxUtils::exponentialBackoff)
+                .onErrorReturn(e -> new ArrayList<>())
+                .map(this::setupOrderMenu)
+                .map(this::convertPaginationData)
+                .map(orderPaginationData -> {
+                    orderPaginationData.setmNext("");
+                    return orderPaginationData;
+                });
     }
 
     protected List<Order> setupOrderMenu(List<Order> data) {

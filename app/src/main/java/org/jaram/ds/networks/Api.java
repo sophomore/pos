@@ -10,11 +10,13 @@ import org.jaram.ds.Data;
 import org.jaram.ds.models.DailyTotalSales;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
+import org.jaram.ds.models.Pay;
 import org.jaram.ds.models.result.SimpleApiResult;
 import org.jaram.ds.util.GsonUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
@@ -84,11 +86,18 @@ public class Api {
     }
 
     public Observable<List<Order>> getMoreOrders(Date date) {
-        return orderService.getMoreOrder(Data.dateFormat.format(date));
+        return orderService.getMoreOrder(date);
+    }
+
+    public Observable<List<Order>> getFilteredOrder(Date date, Set<Menu> menus, Set<Pay> pays) {
+        return orderService.getFilteredOrder(Data.onlyDateFormat.format(date),
+                Data.onlyDateFormat.format(date),
+                GsonUtils.getGsonObject().toJson(menus),
+                GsonUtils.getGsonObject().toJson(pays));
     }
 
     public Observable<SimpleApiResult> addOrder(Order order) {
-        return orderService.addOrder(Data.dateFormat.format(order.getDate()), order.getTotalPrice(), new Gson().toJson(order.getOrderMenus()));
+        return orderService.addOrder(order.getDate(), order.getTotalPrice(), order.getOrderMenus());
     }
 
     public Observable<SimpleApiResult> modifyOrderMenu(int id, int pay) {

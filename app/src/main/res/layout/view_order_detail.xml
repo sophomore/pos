@@ -82,7 +82,7 @@
 
                     <Button
                         android:id="@+id/delete"
-                        style="@style/Button.Order"
+                        style="@style/Button.OrderManage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_delete_forever_black_36dp"
@@ -90,7 +90,7 @@
 
                     <Button
                         android:id="@+id/printStatement"
-                        style="@style/Button.Order"
+                        style="@style/Button.OrderManage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_restaurant_menu_black_36dp"
@@ -98,7 +98,7 @@
 
                     <Button
                         android:id="@+id/printReceipt"
-                        style="@style/Button.Order"
+                        style="@style/Button.OrderManage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_receipt_black_36dp"

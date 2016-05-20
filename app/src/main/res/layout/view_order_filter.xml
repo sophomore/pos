@@ -159,7 +159,7 @@
 
                     <Button
                         android:id="@+id/reset"
-                        style="@style/Button.Order"
+                        style="@style/Button.OrderManage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_clear_black_36dp"
@@ -167,7 +167,7 @@
 
                     <Button
                         android:id="@+id/apply"
-                        style="@style/Button.Order"
+                        style="@style/Button.OrderManage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_done_black_36dp"

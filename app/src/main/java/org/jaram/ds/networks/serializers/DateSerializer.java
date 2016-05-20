@@ -3,6 +3,11 @@ package org.jaram.ds.networks.serializers;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import org.jaram.ds.Data;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -12,7 +17,12 @@ import java.util.Locale;
 /**
  * Created by jdekim43 on 2016. 5. 16..
  */
-public class DateSerializer implements JsonDeserializer<Date> {
+public class DateSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
+
+    @Override
+    public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(Data.dateFormat.format(src));
+    }
 
     @Override
     public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
@@ -21,9 +31,8 @@ public class DateSerializer implements JsonDeserializer<Date> {
         if (position != -1) {
             src = src.substring(0, position);
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
         try {
-            return format.parse(src);
+            return Data.dateFormat.parse(src);
         } catch (Exception e) {
             //do nothing
         }

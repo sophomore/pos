@@ -1,8 +1,12 @@
 package org.jaram.ds.networks;
 
+import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
+import org.jaram.ds.models.OrderMenu;
+import org.jaram.ds.models.Pay;
 import org.jaram.ds.models.result.SimpleApiResult;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit.http.DELETE;
@@ -24,11 +28,18 @@ public interface OrderService {
 
     @FormUrlEncoded
     @PUT("/order")
-    Observable<List<Order>> getMoreOrder(@Field("lastDate") String date);
+    Observable<List<Order>> getMoreOrder(@Field("lastDate") Date date);
+
+    @FormUrlEncoded
+    @POST("/order/search") //TODO: 현재 앱에 맞게 변경
+    Observable<List<Order>> getFilteredOrder(@Field("startDate") String startDate,
+                                             @Field("endDate") String endDate,
+                                             @Field("menus") String menus,
+                                             @Field("pay") String pays);
 
     @FormUrlEncoded
     @POST("/order")
-    Observable<SimpleApiResult> addOrder(String time, int totalPrice, String orderMenus);
+    Observable<SimpleApiResult> addOrder(Date time, int totalPrice, List<OrderMenu> orderMenus);
 
     @FormUrlEncoded
     @POST("/order/menu/{id}")

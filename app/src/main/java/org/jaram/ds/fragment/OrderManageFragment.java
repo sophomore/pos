@@ -50,6 +50,8 @@ public class OrderManageFragment extends BaseFragment {
     private OrderManager manager;
     private OrderAdapter orderAdapter;
 
+    private boolean isFilteredList = false;
+
     public static OrderManageFragment newInstance() {
         return new OrderManageFragment();
     }
@@ -101,7 +103,19 @@ public class OrderManageFragment extends BaseFragment {
             }
         });
 
-        //TODO: 주문 검색 custom view
+        orderFilterView.setOnApplyListener(() -> {
+            isFilteredList = true;
+            orderAdapter.clear();
+            orderAdapter.notifyDataSetChanged();
+            orderListView.refresh(true);
+        });
+
+        orderFilterView.setOnResetListener(() -> {
+            isFilteredList = false;
+            orderAdapter.clear();
+            orderAdapter.notifyDataSetChanged();
+            orderListView.refresh(true);
+        });
     }
 
     @OnClick(R.id.order)
@@ -110,9 +124,14 @@ public class OrderManageFragment extends BaseFragment {
     }
 
     protected Observable<PaginationData<Order>> loadOrder(int page) {
-        Observable<PaginationData<Order>> observable = orderAdapter.getItemCount() == 0
-                ? manager.getOrders()
-                : manager.getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
+        Observable<PaginationData<Order>> observable;
+        if (isFilteredList) {
+            observable = manager.getFilteredOrders();
+        } else {
+            observable = orderAdapter.getItemCount() == 0
+                    ? manager.getOrders()
+                    : manager.getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
+        }
 
         return observable
                 .map(this::addDateHeaderItem);
@@ -156,7 +175,7 @@ public class OrderManageFragment extends BaseFragment {
     }
 
     private int getItemPosition(Order order) {
-        for (int i = 0; i<orderAdapter.getListSize(); i++) {
+        for (int i = 0; i < orderAdapter.getListSize(); i++) {
             Order each = orderAdapter.getItem(i);
             if (each.equals(order)) {
                 return i;
