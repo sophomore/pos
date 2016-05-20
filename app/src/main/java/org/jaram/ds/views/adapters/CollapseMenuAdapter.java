@@ -46,6 +46,7 @@ public class CollapseMenuAdapter extends BaseRecyclerView.BaseListAdapter<Menu> 
 
         public CollapseMenuViewHolder(View itemView) {
             super(itemView);
+            itemView.setElevation(0);
         }
 
         @Override

@@ -35,7 +35,7 @@
 
     <dimen name="button_line_stroke">1dp</dimen>
 
-    <dimen name="order_list_item_spacing">2dp</dimen>
+    <dimen name="order_list_item_spacing">0.5dp</dimen>
 
     <dimen name="order_detail_ordermenu_item_spacing">12dp</dimen>
 

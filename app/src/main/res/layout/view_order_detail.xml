@@ -5,66 +5,112 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            style="@style/CardView.Order"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_larger">
+
+                <TextView
+                    style="@style/CardViewLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label.info.order"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/payPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/dark"
+                            android:textSize="@dimen/font_larger"/>
+
+                        <TextView
+                            android:id="@+id/orderDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_smaller"
+                            android:textColor="@color/dark"
+                            android:textSize="@dimen/font_larger"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/CardView.Order"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/payPrice"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/dark"
-                android:textSize="@dimen/font_larger"/>
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_larger">
 
-            <TextView
-                android:id="@+id/orderDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_smaller"
-                android:textColor="@color/dark"
-                android:textSize="@dimen/font_larger"/>
-        </LinearLayout>
+                <TextView
+                    style="@style/CardViewLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label.job"/>
 
-        <Button
-            android:id="@+id/printReceipt"
-            style="@style/Button.OrderDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:drawableTop="@drawable/ic_receipt_black_36dp"
-            android:text="@string/label.print_receipt"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/printStatement"
-            style="@style/Button.OrderDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/printReceipt"
-            android:drawableTop="@drawable/ic_restaurant_menu_black_36dp"
-            android:text="@string/label.print_statement"/>
+                    <Button
+                        android:id="@+id/delete"
+                        style="@style/Button.Order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_delete_forever_black_36dp"
+                        android:text="@string/label.delete.order"/>
 
-        <Button
-            android:id="@+id/delete"
-            style="@style/Button.OrderDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/printStatement"
-            android:drawableTop="@drawable/ic_delete_forever_black_36dp"
-            android:text="@string/label.delete.order"/>
-    </RelativeLayout>
+                    <Button
+                        android:id="@+id/printStatement"
+                        style="@style/Button.Order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_restaurant_menu_black_36dp"
+                        android:text="@string/label.print_statement"/>
+
+                    <Button
+                        android:id="@+id/printReceipt"
+                        style="@style/Button.Order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_receipt_black_36dp"
+                        android:text="@string/label.print_receipt"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
     <org.jaram.ds.views.widgets.BaseRecyclerView
         android:id="@+id/orderMenuList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/spacing_large"/>
+        android:layout_marginTop="@dimen/spacing_normal"/>
 </LinearLayout>

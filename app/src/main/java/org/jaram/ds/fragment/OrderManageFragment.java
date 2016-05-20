@@ -20,6 +20,7 @@ import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
 import org.jaram.ds.views.adapters.PaginationAdapter;
 import org.jaram.ds.views.widgets.OrderDetailView;
+import org.jaram.ds.views.widgets.OrderFilterView;
 import org.jaram.ds.views.widgets.PaginationView;
 import org.jaram.ds.views.VerticalSpaceItemDecoration;
 import org.jaram.ds.views.adapters.OrderAdapter;
@@ -42,7 +43,7 @@ public class OrderManageFragment extends BaseFragment {
 
     @BindView(R.id.orderList) PaginationView<Order> orderListView;
     @BindView(R.id.orderDetail) OrderDetailView orderDetailView;
-    @BindView(R.id.order2) View largeOrderButton;
+    @BindView(R.id.filter) OrderFilterView orderFilterView;
 
     @BindDimen(R.dimen.order_list_item_spacing) int itemSpacing;
 
@@ -77,11 +78,11 @@ public class OrderManageFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(order -> {
                     if (order == null) {
-                        largeOrderButton.setVisibility(View.VISIBLE);
+                        orderFilterView.setVisibility(View.VISIBLE);
                         orderDetailView.setVisibility(View.GONE);
                     } else {
-                        largeOrderButton.setVisibility(View.GONE);
                         orderDetailView.setVisibility(View.VISIBLE);
+                        orderFilterView.setVisibility(View.GONE);
                     }
                     return true;
                 })
@@ -103,7 +104,7 @@ public class OrderManageFragment extends BaseFragment {
         //TODO: 주문 검색 custom view
     }
 
-    @OnClick({R.id.order, R.id.order2})
+    @OnClick(R.id.order)
     protected void onClickOrderButton() {
         startActivity(new Intent(getActivity(), OrderActivity.class));
     }

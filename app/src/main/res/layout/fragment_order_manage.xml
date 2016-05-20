@@ -1,58 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_huge">
 
     <LinearLayout
-        android:layout_width="480dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <org.jaram.ds.views.widgets.PaginationView
-            android:id="@+id/orderList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <Button
-            android:id="@+id/order"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="@drawable/bg_accent_ripple"
-            android:text="@string/label.order"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/font_large"/>
-    </LinearLayout>
-
-    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="36dp">
+        android:orientation="horizontal">
 
-        <org.jaram.ds.views.widgets.OrderDetailView
-            android:id="@+id/orderDetail"
-            android:layout_width="match_parent"
+        <android.support.v7.widget.CardView
+            android:layout_width="480dp"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            app:cardCornerRadius="4dp"
+            app:cardUseCompatPadding="true">
+
+            <org.jaram.ds.views.widgets.PaginationView
+                android:id="@+id/orderList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gray_d"/>
+        </android.support.v7.widget.CardView>
 
         <FrameLayout
-            android:id="@+id/order2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_dot_outline"
-            android:foreground="?attr/selectableItemBackground">
+            android:layout_marginStart="36dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="@dimen/spacing_larger"
-                android:drawableTop="@drawable/ic_add_black_48dp"
-                android:text="@string/label.order.large_button"
-                android:textColor="@color/dark"
-                android:textSize="@dimen/font_huge"/>
+            <org.jaram.ds.views.widgets.OrderDetailView
+                android:id="@+id/orderDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <org.jaram.ds.views.widgets.OrderFilterView
+                android:id="@+id/filter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </FrameLayout>
-    </FrameLayout>
-</LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/order"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_larger"
+        android:src="@drawable/ic_add_white_36dp"/>
+</FrameLayout>
