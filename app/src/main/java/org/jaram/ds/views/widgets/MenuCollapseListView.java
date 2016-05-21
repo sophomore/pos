@@ -186,10 +186,10 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
         noodleView.setAdapter(noodleAdapter);
         etcView.setAdapter(etcAdapter);
 
-        cutletView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
-        riceView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
-        noodleView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
-        etcView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, false));
+        cutletView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, true));
+        riceView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, true));
+        noodleView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, true));
+        etcView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, true));
 
         manager.asObservable()
         .observeOn(AndroidSchedulers.mainThread())

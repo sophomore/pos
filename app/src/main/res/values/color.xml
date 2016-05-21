@@ -20,4 +20,6 @@
     <color name="gray_12">#1F000000</color>
 
     <color name="background">#F6F6F6</color>
+
+    <color name="blue_background">#ebf4f9</color>
 </resources>

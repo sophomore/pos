@@ -39,5 +39,5 @@
 
     <dimen name="order_detail_ordermenu_item_spacing">12dp</dimen>
 
-    <dimen name="collapse_menu_item_spacing">2dp</dimen>
+    <dimen name="collapse_menu_item_spacing">8dp</dimen>
 </resources>

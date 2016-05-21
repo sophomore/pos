@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.Sort;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -54,7 +55,7 @@ public class MenuManager {
     }
 
     public List<Menu> getMenus(Realm db) {
-        return db.where(Menu.class).equalTo("available", true).findAll();
+        return db.where(Menu.class).equalTo("available", true).findAllSorted("id", Sort.DESCENDING);
     }
 
     public List<Menu> getMenusByCategory(int categoryId) {
@@ -80,14 +81,14 @@ public class MenuManager {
     public List<Menu> getMenusByCategory(Realm db, int categoryId) {
         return db.where(Menu.class)
                 .equalTo("categoryId", categoryId)
-                .findAll();
+                .findAllSorted("id", Sort.DESCENDING);
     }
 
     public List<Menu> getAvailableMenusByCategory(Realm db, int categoryId) {
         return db.where(Menu.class)
                 .equalTo("available", true)
                 .equalTo("categoryId", categoryId)
-                .findAll();
+                .findAllSorted("id", Sort.DESCENDING);
     }
 
     public List<Menu> getMenusByCategory(Category category) {
@@ -109,7 +110,7 @@ public class MenuManager {
     public List<Menu> getAllMenus() {
         Realm db = Realm.getDefaultInstance();
         List<Menu> result = new ArrayList<>();
-        for (Menu menu : db.where(Menu.class).findAll()) {
+        for (Menu menu : db.where(Menu.class).findAllSorted("id", Sort.DESCENDING)) {
             result.add(menu.copyNewInstance());
         }
         db.close();
@@ -117,7 +118,7 @@ public class MenuManager {
     }
 
     public List<Menu> getAllMenus(Realm db) {
-        return db.where(Menu.class).findAll();
+        return db.where(Menu.class).findAllSorted("id", Sort.DESCENDING);
     }
 
     public void refresh() {

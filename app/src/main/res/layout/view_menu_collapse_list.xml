@@ -25,7 +25,8 @@
             android:id="@+id/cutletList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/spacing_micro"
+            android:background="@color/blue_background"
+            android:overScrollMode="never"
             android:visibility="gone"/>
     </LinearLayout>
 
@@ -50,7 +51,8 @@
             android:id="@+id/riceList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/spacing_micro"
+            android:background="@color/blue_background"
+            android:overScrollMode="never"
             android:visibility="gone"/>
     </LinearLayout>
 
@@ -75,7 +77,8 @@
             android:id="@+id/noodleList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/spacing_micro"
+            android:background="@color/blue_background"
+            android:overScrollMode="never"
             android:visibility="gone"/>
     </LinearLayout>
 
@@ -100,7 +103,8 @@
             android:id="@+id/etcList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/spacing_micro"
+            android:background="@color/blue_background"
+            android:overScrollMode="never"
             android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
