@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.jaram.ds.R;
+import org.jaram.ds.dialogs.SettingDialog;
 import org.jaram.ds.fragment.BaseFragment;
 
 import butterknife.BindColor;
@@ -33,6 +34,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 public abstract class BaseActivity<FragmentType extends BaseFragment> extends AppCompatActivity {
 
     protected static final String FRAGMENT_TAG = "single_fragment";
+    protected static final String DIALOG_SETTING = "dialog.setting";
 
     protected FragmentType fragment;
 
@@ -235,7 +237,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
 //        if (this instanceof OrderActivity) {
 //            settingButton.setSelected(true);
 //        } else {
-            settingButton.setOnClickListener(v -> startSettingActivity());
+            settingButton.setOnClickListener(v -> showSettingDialog());
 //        }
     }
 
@@ -283,15 +285,11 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
     }
 
-    protected void startSettingActivity() {
-        Toast.makeText(this, R.string.message_yet, Toast.LENGTH_SHORT).show();
-//        if (this instanceof OrderActivity) {
-//            return;
-//        }
-//
-//        startActivity(new Intent(this, OrderActivity.class));
-//        if (drawerContainer != null) {
-//            drawerContainer.closeDrawer(GravityCompat.END);
-//        }
+    protected void showSettingDialog() {
+        SettingDialog dialog = SettingDialog.newInstance();
+        dialog.show(getSupportFragmentManager(), DIALOG_SETTING);
+        if (drawerContainer != null) {
+            drawerContainer.closeDrawer(GravityCompat.END);
+        }
     }
 }

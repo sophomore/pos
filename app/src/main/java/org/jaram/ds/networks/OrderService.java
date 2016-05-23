@@ -28,7 +28,7 @@ public interface OrderService {
 
     @FormUrlEncoded
     @PUT("/order")
-    Observable<List<Order>> getMoreOrder(@Field("lastDate") Date date);
+    Observable<List<Order>> getMoreOrder(@Field("lastDate") String date);
 
     @FormUrlEncoded
     @POST("/order/search") //TODO: 현재 앱에 맞게 변경

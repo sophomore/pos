@@ -24,6 +24,10 @@
     <string name="format.price.pay">결제 금액 : %,d원</string>
     <!--End format-->
 
+    <!--hint-->
+    <string name="hint.setting.server_url">192.168.0.101</string>
+    <!--End hint-->
+
     <!--label-->
     <string name="label.alert.update">업데이트 알림</string>
     <string name="label.analysis">분석</string>
@@ -69,6 +73,7 @@
     <string name="label.select.menu">메뉴 선택</string>
     <string name="label.service">서비스</string>
     <string name="label.setting.item">항목</string>
+    <string name="label.setting.server_url">서버 주소</string>
     <string name="label.statistic_setting">통계 설정</string>
     <string name="label.statistic">통계</string>
 

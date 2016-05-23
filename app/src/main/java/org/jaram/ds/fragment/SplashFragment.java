@@ -48,8 +48,6 @@ public class SplashFragment extends BaseFragment {
     private static final int MINIMUM_DISPLAY_TIME = 2000;
     private static final String PREF_LAST_CLOSE_DATE = "pref.last_close_date";
 
-    private Realm db;
-
     public static SplashFragment newInstance() {
         return new SplashFragment();
     }
@@ -61,8 +59,6 @@ public class SplashFragment extends BaseFragment {
 
     @Override
     protected void setupLayout(View view) {
-//        ApiConstants.setBaseUrl(EasySharedPreferences.with(getActivity()).getString("url", "192.168.0.101:80")); TODO:
-
         Realm.setDefaultConfiguration(createRealmConfiguration());
 
         Observable.zip(splashTimer(), checkForUpdate(), ((aLong, aBoolean) -> aBoolean))

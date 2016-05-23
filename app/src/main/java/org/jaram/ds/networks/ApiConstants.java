@@ -5,6 +5,8 @@ package org.jaram.ds.networks;
  */
 public class ApiConstants {
 
+    public static final String PREF_URL = "pref.server.url";
+
 //    public static String BASE_URL = "http://192.168.0.101/";
     public static String BASE_URL = "http://dearsong.jadekim.kr/";
 
@@ -19,6 +21,10 @@ public class ApiConstants {
     public static final int HTTP_READ_TIMEOUT = 10000;
 
     public static void setBaseUrl(String url) {
+        url = url.replaceAll("http://|https://", "");
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
         BASE_URL = "http://"+url;
     }
 }
