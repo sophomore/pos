@@ -225,7 +225,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         View menuManageButton = ButterKnife.findById(navigatorContainer, R.id.menuManage);
-        if (this instanceof OrderActivity) {
+        if (this instanceof MenuManageActivity) {
             menuManageButton.setSelected(true);
         } else {
             menuManageButton.setOnClickListener(v -> startMenuManageActivity());
