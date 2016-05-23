@@ -1,7 +1,9 @@
 package org.jaram.ds.dialogs;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -34,10 +36,16 @@ public class SettingDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_setting, container);
         ButterKnife.bind(this, view);
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-
         return view;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setTitle(R.string.label_setting_server_url);
+        return dialog;
     }
 
     @OnClick(R.id.cancel)
