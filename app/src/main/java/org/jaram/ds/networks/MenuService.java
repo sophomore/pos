@@ -19,24 +19,21 @@ import rx.Observable;
  */
 public interface MenuService {
 
-    @GET("/menu")
-    Observable<List<Menu>> getMenus();
-
-    @GET("/menu/all")
+    @GET("/menu/")
     Observable<List<Menu>> getAllMenus();
 
-    @DELETE("/menu/{id}")
+    @DELETE("/menu/{id}/")
     Observable<SimpleApiResult> deleteMenu(@Path("id") int menuId);
 
     @FormUrlEncoded
-    @PUT("/menu/{id}")
+    @PUT("/menu/{id}/")
     Observable<SimpleApiResult> modifyMenu(@Path("id") int menuId,
                                            @Field("name") String name,
                                            @Field("price") int price,
                                            @Field("category") int categoryId);
 
     @FormUrlEncoded
-    @POST("/menu")
+    @POST("/menu/")
     Observable<SimpleApiResult> addMenu(@Field("name") String name,
                                         @Field("price") int price,
                                         @Field("category") int categoryId);

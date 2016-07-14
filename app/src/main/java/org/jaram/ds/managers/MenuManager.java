@@ -136,6 +136,7 @@ public class MenuManager {
     private List<Menu> updateDB(List<Menu> menus) {
         Realm db = Realm.getDefaultInstance();
         db.beginTransaction();
+        db.delete(Menu.class);
         for (Menu menu : menus) {
             Menu.saveWithCopy(db, menu);
         }

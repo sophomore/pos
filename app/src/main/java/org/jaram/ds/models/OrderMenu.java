@@ -18,14 +18,11 @@ public class OrderMenu extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id") private int id;
-    @SerializedName("menu_id") private Menu menu;
+    @SerializedName("menu") private Menu menu;
     private Order order;
     private int payInt;
     @Ignore
     @SerializedName("pay") private Pay pay;
-    @SerializedName("curry") private boolean curry;
-    @SerializedName("twice") private boolean twice;
-    @SerializedName("takeout") private boolean takeout;
     @Nullable
     @SerializedName("attributes") private RealmList<MenuAttribute> attributes;
     @Ignore private boolean isPay = false;
@@ -36,9 +33,6 @@ public class OrderMenu extends RealmObject {
         orderMenu.setMenu(getMenu().copyNewInstance());
         orderMenu.setOrder(getOrder());
         orderMenu.setPayInt(getPayInt());
-        orderMenu.setCurry(isCurry());
-        orderMenu.setTwice(isTwice());
-        orderMenu.setTakeout(isTakeout());
         if (getAttributes() != null) {
             RealmList<MenuAttribute> attributes = new RealmList<>();
             for (MenuAttribute attr : getAttributes()) {
@@ -92,30 +86,6 @@ public class OrderMenu extends RealmObject {
         setPayInt(pay.getValue());
     }
 
-    public boolean isCurry() {
-        return curry;
-    }
-
-    public void setCurry(boolean curry) {
-        this.curry = curry;
-    }
-
-    public boolean isTwice() {
-        return twice;
-    }
-
-    public void setTwice(boolean twice) {
-        this.twice = twice;
-    }
-
-    public boolean isTakeout() {
-        return takeout;
-    }
-
-    public void setTakeout(boolean takeout) {
-        this.takeout = takeout;
-    }
-
     @Nullable
     public RealmList<MenuAttribute> getAttributes() {
         return attributes;
@@ -127,9 +97,6 @@ public class OrderMenu extends RealmObject {
 
     public int getTotalPrice() {
         int totalPrice = getMenu().getPrice();
-        totalPrice += isCurry() ? MenuAttribute.CURRY.getPrice() : 0;
-        totalPrice += isTwice() ? MenuAttribute.TWICE.getPrice() : 0;
-        totalPrice += isTakeout() ? MenuAttribute.TAKEOUT.getPrice() : 0;
         if (attributes != null) {
             for (MenuAttribute attr : attributes) {
                 totalPrice += attr.getPrice();

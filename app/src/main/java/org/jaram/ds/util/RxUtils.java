@@ -4,10 +4,13 @@ import android.util.Log;
 
 import org.jaram.ds.Config;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RetrofitError;
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Func1;
 
 /**

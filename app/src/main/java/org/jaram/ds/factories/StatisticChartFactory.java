@@ -1,8 +1,6 @@
 package org.jaram.ds.factories;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -10,30 +8,22 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import org.jaram.ds.R;
-import org.jaram.ds.Data;
-import org.jaram.ds.managers.StatisticManager;
-import org.jaram.ds.util.SLog;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jaram.ds.models.result.SimpleStatisticResult;
+import org.jaram.ds.models.result.StatisticResult;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 /**
  * Created by jdekim43 on 2016. 5. 13..
  */
 public class StatisticChartFactory {
 
-    private static final int[] colors = {Color.parseColor("#f44336"),
+    private static final int[] colors = {
+            Color.parseColor("#f44336"),
             Color.parseColor("#e91e63"),
             Color.parseColor("#9c27b0"),
             Color.parseColor("#673ab7"),
@@ -51,367 +41,105 @@ public class StatisticChartFactory {
             Color.parseColor("#ff5722"),
             Color.parseColor("#795548"),
             Color.parseColor("#9e9e9e"),
-            Color.parseColor("#607d8b")};
+            Color.parseColor("#607d8b")
+    };
 
-    public static LineData convertLineData(JSONObject data, Calendar startDate, StatisticManager.Unit unit, StatisticManager.Type type) {
-        switch(unit) {
-            case HOUR:
-                return convertCountHourLineData(data, StatisticManager.Type.SALE.equals(type));
-            case DATE:
-                return convertCountDateLineData(data, StatisticManager.Type.SALE.equals(type), startDate);
-            case DAY:
-                return convertCountDayLineData(data, StatisticManager.Type.SALE.equals(type));
-            case MONTH:
-                return convertCountMonthLineData(data, StatisticManager.Type.SALE.equals(type), startDate);
-            case QUARTER:
-                return convertCountQuarterLineData(data, StatisticManager.Type.SALE.equals(type), startDate);
-            case YEAR:
-                return convertCountYearLineData(data, StatisticManager.Type.SALE.equals(type), startDate);
+    public static BarData convertSimpleStatisticData(SimpleStatisticResult result) {
+        BarData chartData = new BarData();
+
+        List<BarEntry> cashValues = new ArrayList<>();
+        List<BarEntry> cardValues = new ArrayList<>();
+        List<BarEntry> serviceValues = new ArrayList<>();
+        List<BarEntry> creditValues = new ArrayList<>();
+        List<BarEntry> totalValues = new ArrayList<>();
+
+        List<SimpleStatisticResult.Item> values = result.getValues();
+        for (int i = 0; i < values.size(); i++) {
+            SimpleStatisticResult.Item data = values.get(i);
+            chartData.addXValue(data.getKey());
+            cashValues.add(new BarEntry(data.getCashTotal(), i));
+            cardValues.add(new BarEntry(data.getCardTotal(), i));
+            serviceValues.add(new BarEntry(data.getServiceTotal(), i));
+            creditValues.add(new BarEntry(data.getCreditTotal(), i));
+            totalValues.add(new BarEntry(data.getTotal(), i));
         }
-        return null;
+
+        chartData.addXValue("전체");
+        cashValues.add(new BarEntry(result.getCashTotal(), values.size()));
+        cardValues.add(new BarEntry(result.getCardTotal(), values.size()));
+        serviceValues.add(new BarEntry(result.getServiceTotal(), values.size()));
+        creditValues.add(new BarEntry(result.getCreditTotal(), values.size()));
+        totalValues.add(new BarEntry(result.getTotal(), values.size()));
+
+        BarDataSet cashDataSet = new BarDataSet(cashValues, "현금");
+        cashDataSet.setColor(Color.parseColor("#1abc9c"));
+        cashDataSet.setValueTextSize(14);
+        cashDataSet.setHighLightAlpha(0);
+
+        BarDataSet cardDataSet = new BarDataSet(cardValues, "카드");
+        cardDataSet.setColor(Color.parseColor("#2ecc71"));
+        cardDataSet.setValueTextSize(14);
+        cardDataSet.setHighLightAlpha(0);
+
+        BarDataSet serviceDataSet = new BarDataSet(serviceValues, "서비스");
+        serviceDataSet.setColor(Color.parseColor("#9b59b6"));
+        serviceDataSet.setValueTextSize(14);
+        serviceDataSet.setHighLightAlpha(0);
+
+        BarDataSet creditDataSet = new BarDataSet(creditValues, "외상");
+        creditDataSet.setColor(Color.parseColor("#e67e22"));
+        creditDataSet.setValueTextSize(14);
+        creditDataSet.setHighLightAlpha(0);
+
+        BarDataSet totalDataSet = new BarDataSet(totalValues, "총액");
+        totalDataSet.setColor(Color.parseColor("#95a5a6"));
+        totalDataSet.setValueTextSize(14);
+        totalDataSet.setHighLightAlpha(0);
+
+        chartData.addDataSet(cashDataSet);
+        chartData.addDataSet(cardDataSet);
+        chartData.addDataSet(serviceDataSet);
+        chartData.addDataSet(creditDataSet);
+        chartData.addDataSet(totalDataSet);
+
+        return chartData;
     }
 
-    public static BarData convertBarData(Context context, JSONArray data, Calendar startDate) {
-        int rangeCash = 0;
-        int rangeCard = 0;
-        int rangeTotal = 0;
+    public static LineData convertStatisticData(StatisticResult result) {
+        LineData chartData = new LineData();
 
-        ArrayList<String> xVals = new ArrayList<>();
-        ArrayList<BarEntry> yVals = new ArrayList<>();
+        Map<Integer, LineDataSet> chartDataSetStore = new HashMap<>();
+        List<StatisticResult.Item> values = result.getResult();
+        for (int i = 0; i < values.size(); i++) {
+            StatisticResult.Item data = values.get(i);
 
-        Calendar current = Calendar.getInstance();
-        current.setTime(startDate.getTime());
+            chartData.addXValue(data.getKey());
 
-        try {
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject dataJsn = data.getJSONObject(i);
-                float[] vals = {(float) dataJsn.getInt("cashtotal"),
-                        (float) dataJsn.getInt("cardtotal"),
-                        (float) (dataJsn.getInt("totalprice") - dataJsn.getInt("cardtotal") - dataJsn.getInt("cashtotal"))};
-                yVals.add(new BarEntry(vals, i));
-                xVals.add(current.get(Calendar.YEAR) + "년 " + (current.get(Calendar.MONTH) + 1) + "월");
-                current.add(Calendar.MONTH, 1);
-                rangeCash += dataJsn.getInt("cashtotal");
-                rangeCard += dataJsn.getInt("cardtotal");
-                rangeTotal += dataJsn.getInt("totalprice");
+            if (data.getValue() == null) {
+                continue;
             }
 
-            BarDataSet dataSet = new BarDataSet(yVals, "판매금액");
-            dataSet.setColors(new int[]{Color.parseColor("#FFB14A"), Color.parseColor("#FE7E39"), Color.parseColor("#E5404C")});
-            dataSet.setValueTextColor(ContextCompat.getColor(context, R.color.dark));
-            dataSet.setHighLightAlpha(0);
-            dataSet.setValueTextSize(16.0f);
-            dataSet.setStackLabels(new String[]{"현금", "카드", "기타"});
-            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(dataSet);
-
-            SimpleStatisticBarData barData = new SimpleStatisticBarData(xVals, dataSets);
-            barData.setRangeCash(rangeCash);
-            barData.setRangeCard(rangeCard);
-            barData.setRangeTotal(rangeTotal);
-            return barData;
-        } catch (JSONException e) {
-            SLog.e(e);
-        }
-        return null;
-    }
-
-    protected static LineData convertCountHourLineData(JSONObject receiveJson, boolean isSale) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<>();
-        try {
-            Iterator<String> keyIterator = receiveJson.keys();
-            boolean isAddedLabel = false;
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = receiveJson.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                    if (!isAddedLabel) xVals.add(j + "시");
+            for (StatisticResult.Value value : data.getValue()) {
+                if (value.getMenu() == null) {
+                    continue;
                 }
-                isAddedLabel = true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    protected static LineData convertCountDateLineData(JSONObject receiveJson, boolean isSale, Calendar startDate) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<>();
-        try {
-            Iterator<String> keyIterator = receiveJson.keys();
-            boolean isAddedLabel = false;
-            Calendar date = Calendar.getInstance();
-            date.setTime(startDate.getTime());
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = receiveJson.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                    if (!isAddedLabel) {
-                        xVals.add(Data.onlyDateFormat.format(date.getTime()));
-                        date.add(Calendar.DAY_OF_MONTH, 1);
-                    }
+                int storeKey = value.getMenu().getId();
+                if (!chartDataSetStore.containsKey(storeKey)) {
+                    LineDataSet dataSet = new LineDataSet(new ArrayList<>(), value.getMenu().getName());
+                    dataSet.setColor(colors[storeKey % colors.length]);
+                    chartDataSetStore.put(storeKey, dataSet);
                 }
-                isAddedLabel = true;
+
+                LineDataSet dataSet = chartDataSetStore.get(storeKey);
+                dataSet.addEntry(new Entry(value.getValue(), i));
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    protected static LineData convertCountDayLineData(JSONObject receiveJson, boolean isSale) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<>();
-        xVals.add("월요일");
-        xVals.add("화요일");
-        xVals.add("수요일");
-        xVals.add("목요일");
-        xVals.add("금요일");
-        xVals.add("토요일");
-        xVals.add("일요일");
-
-        try {
-            Iterator<String> keyIterator = receiveJson.keys();
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = receiveJson.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (LineDataSet dataSet : chartDataSetStore.values()) {
+            chartData.addDataSet(dataSet);
         }
 
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    protected static LineData convertCountMonthLineData(JSONObject recieveDataJsn, boolean isSale, Calendar startDate) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<String>();
-        try {
-            Iterator<String> keyIterator = recieveDataJsn.keys();
-            boolean isAddedLabel = false;
-            Calendar date = Calendar.getInstance();
-            date.setTime(startDate.getTime());
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                    if (!isAddedLabel) {
-                        xVals.add(Data.onlyDateFormat.format(date.getTime()));
-                        date.add(Calendar.MONTH, 1);
-                    }
-                }
-                isAddedLabel = true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    protected static LineData convertCountQuarterLineData(JSONObject receiveJson, boolean isSale, Calendar startDate) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<>();
-        try {
-            Iterator<String> keyIterator = receiveJson.keys();
-            boolean isAddedLabel = false;
-            Calendar date = Calendar.getInstance();
-            date.setTime(startDate.getTime());
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = receiveJson.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                    if (!isAddedLabel) {
-                        xVals.add(date.get(Calendar.YEAR) + "년 " + (date.get(Calendar.MONTH) / 4 + 1) + "분기");
-                        date.add(Calendar.MONTH, 3 - date.get(Calendar.MONTH) % 3);
-                    }
-                }
-                isAddedLabel = true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    protected static LineData convertCountYearLineData(JSONObject recieveDataJsn, boolean isSale, Calendar startDate) {
-        Random random = new Random();
-
-        HashMap<String, LineDataSet> menuCountData = new HashMap<>();
-        ArrayList<String> xVals = new ArrayList<String>();
-        try {
-            Iterator<String> keyIterator = recieveDataJsn.keys();
-            boolean isAddedLabel = false;
-            Calendar date = Calendar.getInstance();
-            date.setTime(startDate.getTime());
-            while (keyIterator.hasNext()) {
-                String key = keyIterator.next();
-                JSONArray dataJsn = recieveDataJsn.getJSONArray(key);
-                for (int j = 0; j < dataJsn.length(); j++) {
-                    if (menuCountData.containsKey(key)) {
-                        LineDataSet dataSet = menuCountData.get(key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                    } else {
-                        LineDataSet dataSet = new LineDataSet(new ArrayList<>(), key);
-                        dataSet.addEntry(new Entry(dataJsn.getJSONObject(j).getInt(isSale ? "price" : "count"), j));
-                        dataSet.setColor(colors[random.nextInt(colors.length)]);
-                        menuCountData.put(key, dataSet);
-                    }
-                    if (!isAddedLabel) {
-                        xVals.add(date.get(Calendar.YEAR) + "년 ");
-                        date.add(Calendar.YEAR, 1);
-                    }
-                }
-                isAddedLabel = true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<ILineDataSet> countData = new ArrayList<>();
-        for (LineDataSet dataSet : menuCountData.values()) {
-            countData.add(dataSet);
-        }
-        return new LineData(xVals, countData);
-    }
-
-    public static class SimpleStatisticBarData extends BarData {
-
-        private int rangeCash;
-        private int rangeCard;
-        private int rangeTotal;
-
-        public SimpleStatisticBarData() {
-        }
-
-        public SimpleStatisticBarData(List<String> xVals) {
-            super(xVals);
-        }
-
-        public SimpleStatisticBarData(String[] xVals) {
-            super(xVals);
-        }
-
-        public SimpleStatisticBarData(List<String> xVals, List<IBarDataSet> dataSets) {
-            super(xVals, dataSets);
-        }
-
-        public SimpleStatisticBarData(String[] xVals, List<IBarDataSet> dataSets) {
-            super(xVals, dataSets);
-        }
-
-        public SimpleStatisticBarData(List<String> xVals, IBarDataSet dataSet) {
-            super(xVals, dataSet);
-        }
-
-        public SimpleStatisticBarData(String[] xVals, IBarDataSet dataSet) {
-            super(xVals, dataSet);
-        }
-
-        public int getRangeCash() {
-            return rangeCash;
-        }
-
-        public void setRangeCash(int rangeCash) {
-            this.rangeCash = rangeCash;
-        }
-
-        public int getRangeCard() {
-            return rangeCard;
-        }
-
-        public void setRangeCard(int rangeCard) {
-            this.rangeCard = rangeCard;
-        }
-
-        public int getRangeTotal() {
-            return rangeTotal;
-        }
-
-        public void setRangeTotal(int rangeTotal) {
-            this.rangeTotal = rangeTotal;
-        }
+        return chartData;
     }
 }

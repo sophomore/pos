@@ -16,7 +16,7 @@ public class Order extends RealmObject {
     @PrimaryKey
     @SerializedName("id") private int id;
     @SerializedName("time") private Date date;
-    @SerializedName("ordermenus") private RealmList<OrderMenu> orderMenus;
+    @SerializedName("orderMenus") private RealmList<OrderMenu> orderMenus;
 
     public Order copyNewInstance() {
         Order newOrder = new Order();

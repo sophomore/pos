@@ -10,7 +10,11 @@ import android.view.ViewGroup;
 
 import org.jaram.ds.activities.BaseActivity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -19,6 +23,8 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void setupLayout(View view);
 
     @Nullable private BaseActivity activity;
+
+    private Set<Subscription> subscriptionSet = new HashSet<>();
 
     @Nullable
     @Override
@@ -32,6 +38,16 @@ public abstract class BaseFragment extends Fragment {
             activity = (BaseActivity) getActivity();
         }
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        for (Subscription subscription : subscriptionSet) {
+            if (!subscription.isUnsubscribed()) {
+                subscription.unsubscribe();
+            }
+        }
+        super.onDestroyView();
     }
 
     protected void showProgress() {
@@ -50,5 +66,10 @@ public abstract class BaseFragment extends Fragment {
         if (activity != null) {
             activity.setProgressMessage(message);
         }
+    }
+
+    protected Subscription addSubscription(Subscription subscription) {
+        subscriptionSet.add(subscription);
+        return subscription;
     }
 }

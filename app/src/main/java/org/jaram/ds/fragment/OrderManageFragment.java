@@ -76,7 +76,7 @@ public class OrderManageFragment extends BaseFragment {
         orderListView.setLoader(this::loadOrder);
         orderListView.addItemDecoration(new VerticalSpaceItemDecoration(itemSpacing));
 
-        orderAdapter.asObservable()
+        addSubscription(orderAdapter.asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(order -> {
                     if (order == null) {
@@ -88,7 +88,7 @@ public class OrderManageFragment extends BaseFragment {
                     }
                     return true;
                 })
-                .subscribe(orderDetailView::setOrder);
+                .subscribe(orderDetailView::setOrder));
 
         orderDetailView.setOnDeleteListener(order -> {
             int position = getItemPosition(order);
@@ -124,14 +124,9 @@ public class OrderManageFragment extends BaseFragment {
     }
 
     protected Observable<PaginationData<Order>> loadOrder(int page) {
-        Observable<PaginationData<Order>> observable;
-        if (isFilteredList) {
-            observable = manager.getFilteredOrders();
-        } else {
-            observable = orderAdapter.getItemCount() == 0
-                    ? manager.getOrders()
-                    : manager.getMoreOrders(orderAdapter.getItem(orderAdapter.getItemCount() - 1).getDate());
-        }
+        Observable<PaginationData<Order>> observable = isFilteredList
+                ? manager.getFilteredOrders(page)
+                : manager.getOrders(page);
 
         return observable
                 .map(this::addDateHeaderItem);
@@ -145,8 +140,8 @@ public class OrderManageFragment extends BaseFragment {
         } else {
             lastDate.add(Calendar.YEAR, 1);
         }
-        DateUtil.dropTime(lastDate);
         for (int i = 0; i < data.getResults().size(); i++) {
+            DateUtil.dropTime(lastDate);
             Calendar date = Calendar.getInstance();
             Date receiveDate = data.getResults().get(i).getDate();
             if (receiveDate == null) {

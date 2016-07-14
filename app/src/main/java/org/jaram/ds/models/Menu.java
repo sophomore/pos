@@ -18,7 +18,7 @@ public class Menu extends RealmObject {
     @SerializedName("price") private int price;
     private int categoryId;
     @Ignore
-    @SerializedName("category_id") private Category category;
+    @SerializedName("category") private Category category;
     @SerializedName("available") private boolean available;
 
     public static void saveWithCopy(Menu menu) {

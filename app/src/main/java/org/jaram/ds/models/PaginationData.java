@@ -17,7 +17,7 @@ public class PaginationData<Data> {
     public PaginationData(List<Data> results) {
         mResults = results;
         mCount = results.size();
-        mNext = "hasNext!";
+        mNext = "";
         mPrev = "";
     }
 

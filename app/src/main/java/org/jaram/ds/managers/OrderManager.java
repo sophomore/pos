@@ -143,7 +143,7 @@ public class OrderManager {
     }
 
     public void clearMenu() {
-        menus.clear();;
+        menus.clear();
     }
 
     public boolean containsMenu(Menu menu) {
@@ -163,51 +163,31 @@ public class OrderManager {
                 });
     }
 
-    public Observable<PaginationData<Order>> getOrders() {
-        return Api.with(context).getOrder()
+    public Observable<PaginationData<Order>> getOrders(int page) {
+        return Api.with(context).getOrder(page)
                 .retryWhen(RxUtils::exponentialBackoff)
-                .map(orders -> {
-                    orders.addAll(0, getSavedOrders());
-                    return orders;
+                .map(result -> {
+                    result.getResults().addAll(0, getSavedOrders());
+                    return result;
                 })
-                .onErrorReturn(e -> getSavedOrders())
-                .map(this::setupOrderMenu)
-                .map(this::convertPaginationData);
+                .onErrorReturn(e -> new PaginationData<>(getSavedOrders()))
+                .map(this::setupOrderMenu);
     }
 
-    public Observable<PaginationData<Order>> getMoreOrders(Date date) {
-        return Api.with(context).getMoreOrders(date)
+    public Observable<PaginationData<Order>> getFilteredOrders(int page) {
+        return Api.with(context).getOrder(page, date, menus, payMethods, price, priceCriteria)
                 .retryWhen(RxUtils::exponentialBackoff)
-                .onErrorReturn(e -> new ArrayList<>())
-                .map(this::setupOrderMenu)
-                .map(this::convertPaginationData);
+                .onErrorReturn(e -> new PaginationData<>(new ArrayList<>()))
+                .map(this::setupOrderMenu);
     }
 
-    public Observable<PaginationData<Order>> getFilteredOrders() {
-        return Api.with(context).getFilteredOrder(date, menus, payMethods)
-                .retryWhen(RxUtils::exponentialBackoff)
-                .onErrorReturn(e -> new ArrayList<>())
-                .map(this::setupOrderMenu)
-                .map(this::convertPaginationData)
-                .map(orderPaginationData -> {
-                    orderPaginationData.setmNext("");
-                    return orderPaginationData;
-                });
-    }
-
-    protected List<Order> setupOrderMenu(List<Order> data) {
-        for (Order order : data) {
+    protected PaginationData<Order> setupOrderMenu(PaginationData<Order> data) {
+        for (Order order : data.getResults()) {
             for (OrderMenu orderMenu : order.getOrderMenus()) {
                 orderMenu.setOrder(order);
             }
         }
         return data;
-    }
-
-    protected PaginationData<Order> convertPaginationData(List<Order> data) {
-        PaginationData<Order> paginationData = new PaginationData<>(data);
-        paginationData.setmNext(data.size() > 0 ? "hasNext" : "");
-        return paginationData;
     }
 
     private List<Order> getSavedOrders() {
@@ -216,6 +196,7 @@ public class OrderManager {
         for (Order order : db.where(Order.class).findAllSorted("date", Sort.DESCENDING)) {
             result.add(order.copyNewInstance());
         }
+        db.close();
         return result;
     }
 
@@ -225,6 +206,12 @@ public class OrderManager {
         order.setDate(new Date());
         db.beginTransaction();
         db.copyToRealm(order);
+        if (order.getOrderMenus() != null) {
+            for (OrderMenu orderMenu : order.getOrderMenus()) {
+                orderMenu.setOrder(order);
+                db.copyFromRealm(orderMenu);
+            }
+        }
         db.commitTransaction();
         db.close();
     }

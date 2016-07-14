@@ -1,10 +1,12 @@
 package org.jaram.ds.networks;
 
-import org.jaram.ds.models.result.SimpleApiResult;
+import org.jaram.ds.models.result.SimpleStatisticResult;
+import org.jaram.ds.models.result.StatisticResult;
 
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
+import java.util.List;
+
+import retrofit.http.GET;
+import retrofit.http.Query;
 import rx.Observable;
 
 /**
@@ -12,10 +14,13 @@ import rx.Observable;
  */
 public interface StatisticService {
 
-    @FormUrlEncoded
-    @POST("/statistic/linechart/")
-    Observable<SimpleApiResult> getLinechartData(@Field("startDate") String startDate,
-                                                 @Field("endDate") String endDate,
-                                                 @Field("unit") int unit,
-                                                 @Field("menus") String menus);
+    @GET("/statistic/")
+    Observable<StatisticResult> getStatisticData(@Query("start") String startDate,
+                                                 @Query("end") String endDate,
+                                                 @Query("menus") String menus,
+                                                 @Query("unit") int unit);
+
+    @GET("/statistic/simple/")
+    Observable<SimpleStatisticResult> getSimpleStatisticData(@Query("start") String startDate,
+                                                                   @Query("end") String endDate);
 }

@@ -61,12 +61,11 @@ public class MenuManageFragment extends BaseFragment {
 
     private void deleteMenu(Menu menu) {
         showProgress();
-        Api.with(getActivity()).deleteMenu(menu)
+        addSubscription(Api.with(getActivity()).deleteMenu(menu)
                 .retryWhen(RxUtils::exponentialBackoff)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxUtils::doNothing, SLog::e, () -> {
-                    MenuManager.getInstance(getActivity()).refresh();
-                    hideProgress();
-                });
+                .doAfterTerminate(this::hideProgress)
+                .subscribe(RxUtils::doNothing, SLog::e, () ->
+                        MenuManager.getInstance(getActivity()).refresh()));
     }
 }

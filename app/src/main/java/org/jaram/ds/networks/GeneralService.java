@@ -13,6 +13,6 @@ import rx.Observable;
  */
 public interface GeneralService {
 
-    @GET("/today")// TODO: 하루씩으로 변경
-    Observable<DailyTotalSales> getDailyTotalSales(@Query("date") Date date);
+    @GET("/sales/")
+    Observable<DailyTotalSales> getDailyTotalSales(@Query("date") String date);
 }

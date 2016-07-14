@@ -156,9 +156,6 @@ public class OrderFragment extends BaseFragment {
         OrderMenu orderMenu = new OrderMenu();
         orderMenu.setPay(Pay.CREDIT);
         orderMenu.setPay(false);
-        orderMenu.setTakeout(false);
-        orderMenu.setTwice(false);
-        orderMenu.setCurry(false);
         orderMenu.setAttributes(new RealmList<>());
         orderMenu.setMenu(menu);
         adapter.add(orderMenu);
@@ -185,8 +182,9 @@ public class OrderFragment extends BaseFragment {
     private void endOrder() {
         Order order = new Order();
         order.setDate(new Date());
-        order.getOrderMenus().clear();
-        order.getOrderMenus().addAll(adapter.getAll());
+        RealmList<OrderMenu> orderMenus = new RealmList<>();
+        orderMenus.addAll(adapter.getAll());
+        order.setOrderMenus(orderMenus);
         OrderManager.getInstance(getActivity()).addOrder(order);
         Toast.makeText(getActivity(), R.string.message_end_order, Toast.LENGTH_SHORT).show();
         clear();

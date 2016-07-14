@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class DailyTotalSales {
 
-    @SerializedName("price") int price;
     @SerializedName("date") Date date;
+    @SerializedName("total") int price;
 
     public int getPrice() {
         return price;

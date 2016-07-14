@@ -47,7 +47,7 @@ public class MenuSerializer implements JsonSerializer<Menu>, JsonDeserializer<Me
             menu.setName(object.get("name").getAsString());
             menu.setPrice(object.get("price").getAsInt());
             menu.setAvailable(object.get("available").getAsBoolean());
-            menu.setCategory(context.deserialize(object.get("category_id"), Category.class));
+            menu.setCategory(context.deserialize(object.get("category"), Category.class));
         }
         return menu;
     }

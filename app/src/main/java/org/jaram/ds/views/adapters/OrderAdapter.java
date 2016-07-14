@@ -68,10 +68,6 @@ public class OrderAdapter extends PaginationAdapter<Order> {
         return publishSubject;
     }
 
-    public void notifySelectedItemChanged() {
-        notifyItemChanged(selectedPosition);
-    }
-
     private static TextView createSmallOrderMenuView(Context context) {
         FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
         int marginPixel = context.getResources().getDimensionPixelSize(R.dimen.spacing_smaller);
@@ -103,7 +99,7 @@ public class OrderAdapter extends PaginationAdapter<Order> {
         protected void bind() {
             dateView.setText(DateUtil.format("yyyy-MM-dd", data.getDate()));
             totalView.setText("로딩중");
-            if (dailyTotalSalesCache.containsKey(data.getDate())) {
+            if (!isToday(data.getDate()) && dailyTotalSalesCache.containsKey(data.getDate())) {
                 totalView.setText(context.getString(R.string.format_money,
                         dailyTotalSalesCache.get(data.getDate())));
                 return;
@@ -113,17 +109,6 @@ public class OrderAdapter extends PaginationAdapter<Order> {
         }
 
         private void loadTotalSaveFromServer() {
-            // TODO: 다른 날도 가져올 수 있도록 하면 날짜 비교 코드 삭제
-            Calendar today = Calendar.getInstance();
-            Calendar objDay = Calendar.getInstance();
-            objDay.setTime(data.getDate());
-            DateUtil.dropTime(today);
-            DateUtil.dropTime(objDay);
-            if (today.compareTo(objDay) != 0) {
-                totalView.setText("");
-                return;
-            }
-
             Api.with(context).getDailyTotalSales(data.getDate())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {
@@ -131,6 +116,15 @@ public class OrderAdapter extends PaginationAdapter<Order> {
                                 result.getPrice()));
                         dailyTotalSalesCache.put(data.getDate(), result.getPrice());
                     }, SLog::e);
+        }
+
+        private boolean isToday(Date date) {
+            Calendar today = Calendar.getInstance();
+            Calendar objDay = Calendar.getInstance();
+            objDay.setTime(data.getDate());
+            DateUtil.dropTime(today);
+            DateUtil.dropTime(objDay);
+            return today.compareTo(objDay) == 0;
         }
     }
 

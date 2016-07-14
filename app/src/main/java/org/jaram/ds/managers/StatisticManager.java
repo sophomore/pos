@@ -2,10 +2,13 @@ package org.jaram.ds.managers;
 
 import android.content.Context;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.jaram.ds.Data;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.result.SimpleStatisticResult;
 import org.jaram.ds.models.result.StatisticResult;
+import org.jaram.ds.networks.Api;
 import org.jaram.ds.networks.ApiConstants;
 import org.jaram.ds.util.Http;
 import org.json.JSONArray;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
@@ -28,8 +32,8 @@ import rx.subjects.PublishSubject;
 public class StatisticManager {
 
     public enum Type {
-        SALE(1),
-        COUNT(2);
+        @SerializedName("1") SALE(1),
+        @SerializedName("2") COUNT(2);
 
         private int value;
 
@@ -52,12 +56,12 @@ public class StatisticManager {
     }
 
     public enum Unit {
-        HOUR(1),
-        DATE(2),
-        DAY(3),
-        MONTH(4),
-        QUARTER(5),
-        YEAR(6);
+        @SerializedName("1") HOUR(1),
+        @SerializedName("2") DATE(2),
+        @SerializedName("3") DAY(3),
+        @SerializedName("4") MONTH(4),
+        @SerializedName("5") QUARTER(5),
+        @SerializedName("6") YEAR(6);
 
         private int value;
 
@@ -167,45 +171,10 @@ public class StatisticManager {
     }
 
     public Observable<StatisticResult> getStatisticData() {
-        Observable<StatisticResult> observable = Observable.create(subscriber -> {
-            HashMap<String, Object> requestParams = new HashMap<>();
-            requestParams.put("startDate", Data.onlyDateFormat.format(start.getTime()));
-            requestParams.put("endDate", Data.onlyDateFormat.format(end.getTime()));
-            requestParams.put("unit", unit.getValue());
-            JSONArray menusArr = new JSONArray();
-            for (Menu menu : selectedMenu) {
-                menusArr.put(menu.getId());
-            }
-            requestParams.put("menus", menusArr.toString());
-
-            try {
-                subscriber.onNext(new StatisticResult(unit, type,
-                        new JSONObject(Http.post(ApiConstants.BASE_URL + "statistic/linechart", requestParams))));
-                subscriber.onCompleted();
-            } catch (JSONException | IOException e) {
-                subscriber.onError(e);
-            }
-        });
-        observable.subscribeOn(Schedulers.io());
-        return observable;
+        return Api.with(context).getStatistic(start.getTime(), end.getTime(), selectedMenu, unit);
     }
 
     public Observable<SimpleStatisticResult> getSimpleStatisticData() {
-        Observable<SimpleStatisticResult> observable = Observable.create(subscriber -> {
-            HashMap<String, Object> requestParams = new HashMap<>();
-            requestParams.put("startDate", Data.onlyDateFormat.format(start.getTime()));
-            requestParams.put("endDate", Data.onlyDateFormat.format(end.getTime()));
-            requestParams.put("unit", 4);
-            requestParams.put("menus", "[]");
-
-            try {
-                subscriber.onNext(new SimpleStatisticResult(new JSONArray(Http.post(ApiConstants.BASE_URL + "statistic/barchart", requestParams))));
-                subscriber.onCompleted();
-            } catch (JSONException | IOException e) {
-                subscriber.onError(e);
-            }
-        });
-        observable.subscribeOn(Schedulers.io());
-        return observable;
+        return Api.with(context).getSimpleStatistic(start.getTime(), end.getTime());
     }
 }

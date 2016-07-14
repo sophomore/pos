@@ -16,8 +16,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class StatisticSettingDrawerFragment extends BaseFragment {
 
-    @BindView(R.id.typeSale) Button typeSaleButton;
-    @BindView(R.id.typeCount) Button typeCountButton;
+//    @BindView(R.id.typeSale) Button typeSaleButton;
+//    @BindView(R.id.typeCount) Button typeCountButton;
     @BindView(R.id.unitHour) Button unitHourButton;
     @BindView(R.id.unitDate) Button unitDateButton;
     @BindView(R.id.unitDay) Button unitDayButton;
@@ -49,25 +49,25 @@ public class StatisticSettingDrawerFragment extends BaseFragment {
             }
         });
 
-        manager.asObservable()
+        addSubscription(manager.asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setSettingFromManager);
+                .subscribe(this::setSettingFromManager));
         setSettingFromManager(manager);
     }
 
-    @OnClick({R.id.typeSale, R.id.typeCount})
-    protected void setTypeByView(View v) {
-        switch (v.getId()) {
-            case R.id.typeSale:
-                manager.setType(StatisticManager.Type.SALE);
-                break;
-            case R.id.typeCount:
-                manager.setType(StatisticManager.Type.COUNT);
-                break;
-        }
-        unSelectModeAllType();
-        v.setSelected(true);
-    }
+//    @OnClick({R.id.typeSale, R.id.typeCount})
+//    protected void setTypeByView(View v) {
+//        switch (v.getId()) {
+//            case R.id.typeSale:
+//                manager.setType(StatisticManager.Type.SALE);
+//                break;
+//            case R.id.typeCount:
+//                manager.setType(StatisticManager.Type.COUNT);
+//                break;
+//        }
+//        unSelectModeAllType();
+//        v.setSelected(true);
+//    }
 
     @OnClick({R.id.unitHour, R.id.unitDate, R.id.unitDay,
             R.id.unitMonth, R.id.unitQuarter, R.id.unitYear})
@@ -102,14 +102,14 @@ public class StatisticSettingDrawerFragment extends BaseFragment {
     }
 
     protected void setSettingFromManager(StatisticManager manager) {
-        switch (manager.getType()) {
-            case COUNT:
-                setTypeByView(typeCountButton);
-                break;
-            case SALE:
-                setTypeByView(typeSaleButton);
-                break;
-        }
+//        switch (manager.getType()) {
+//            case COUNT:
+//                setTypeByView(typeCountButton);
+//                break;
+//            case SALE:
+//                setTypeByView(typeSaleButton);
+//                break;
+//        }
 
         switch (manager.getUnit()) {
             case HOUR:
@@ -135,10 +135,10 @@ public class StatisticSettingDrawerFragment extends BaseFragment {
         menuListView.notifyAllDataSetChanged();
     }
 
-    private void unSelectModeAllType() {
-        typeSaleButton.setSelected(false);
-        typeCountButton.setSelected(false);
-    }
+//    private void unSelectModeAllType() {
+//        typeSaleButton.setSelected(false);
+//        typeCountButton.setSelected(false);
+//    }
 
     private void unSelectModeAllUnit() {
         unitHourButton.setSelected(false);

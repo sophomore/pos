@@ -6,11 +6,16 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.jaram.ds.Config;
 import org.jaram.ds.Data;
+import org.jaram.ds.managers.OrderManager;
+import org.jaram.ds.managers.StatisticManager;
 import org.jaram.ds.models.DailyTotalSales;
 import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
+import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.models.Pay;
 import org.jaram.ds.models.result.SimpleApiResult;
+import org.jaram.ds.models.result.SimpleStatisticResult;
+import org.jaram.ds.models.result.StatisticResult;
 import org.jaram.ds.util.EasySharedPreferences;
 import org.jaram.ds.util.GsonUtils;
 
@@ -37,6 +42,7 @@ public class Api {
     private GeneralService generalService;
     private MenuService menuService;
     private OrderService orderService;
+    private StatisticService statisticService;
 
     public static Api with(Context context) {
         if (instance == null) {
@@ -55,14 +61,11 @@ public class Api {
         generalService = adapter.create(GeneralService.class);
         menuService = adapter.create(MenuService.class);
         orderService = adapter.create(OrderService.class);
+        statisticService = adapter.create(StatisticService.class);
     }
 
     public Observable<DailyTotalSales> getDailyTotalSales(Date date) {
-        return generalService.getDailyTotalSales(date);
-    }
-
-    public Observable<List<Menu>> getMenus() {
-        return menuService.getMenus();
+        return generalService.getDailyTotalSales(Data.onlyDateFormat.format(date));
     }
 
     public Observable<List<Menu>> getAllMenus() {
@@ -81,23 +84,22 @@ public class Api {
         return menuService.addMenu(menu.getName(), menu.getPrice(), menu.getCategoryId());
     }
 
-    public Observable<List<Order>> getOrder() {
-        return orderService.getOrder();
+    public Observable<PaginationData<Order>> getOrder(int page) {
+        return getOrder(page, null, null, null, 0, null);
     }
 
-    public Observable<List<Order>> getMoreOrders(Date date) {
-        return orderService.getMoreOrder(Data.onlyDateFormat.format(date));
-    }
-
-    public Observable<List<Order>> getFilteredOrder(Date date, Set<Menu> menus, Set<Pay> pays) {
-        return orderService.getFilteredOrder(Data.onlyDateFormat.format(date),
-                Data.onlyDateFormat.format(date),
-                GsonUtils.getGsonObject().toJson(menus),
-                GsonUtils.getGsonObject().toJson(pays));
+    public Observable<PaginationData<Order>> getOrder(int page, Date date, Set<Menu> menus,
+                                                      Set<Pay> pays, int price,
+                                                      OrderManager.PriceFilterCriteria priceCriteria) {
+        return orderService.getOrder(page, date == null ? null : Data.onlyDateFormat.format(date),
+                menus == null ? null : GsonUtils.getGsonObject().toJson(menus),
+                pays == null ? null : GsonUtils.getGsonObject().toJson(pays),
+                price, priceCriteria == null ? 0 : priceCriteria.getValue());
     }
 
     public Observable<SimpleApiResult> addOrder(Order order) {
-        return orderService.addOrder(order.getDate(), order.getTotalPrice(), order.getOrderMenus());
+        return orderService.addOrder(Data.dateFormat.format(order.getDate()),
+                GsonUtils.getGsonObject().toJson(order.getOrderMenus()));
     }
 
     public Observable<SimpleApiResult> modifyOrderMenu(int id, int pay) {
@@ -114,6 +116,18 @@ public class Api {
 
     public Observable<SimpleApiResult> deleteOrder(int id) {
         return orderService.deleteOrder(id);
+    }
+
+    public Observable<StatisticResult> getStatistic(Date startDate, Date endDate,
+                                                    Set<Menu> menus, StatisticManager.Unit unit) {
+        return statisticService.getStatisticData(Data.onlyDateFormat.format(startDate),
+                Data.onlyDateFormat.format(endDate),
+                GsonUtils.getGsonObject().toJson(menus), unit.getValue());
+    }
+
+    public Observable<SimpleStatisticResult> getSimpleStatistic(Date startDate, Date endDate) {
+        return statisticService.getSimpleStatisticData(Data.onlyDateFormat.format(startDate),
+                Data.onlyDateFormat.format(endDate));
     }
 
     private static RestAdapter buildRestAdapter(Context context) {

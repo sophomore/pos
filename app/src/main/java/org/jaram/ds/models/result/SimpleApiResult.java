@@ -7,9 +7,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SimpleApiResult {
 
-    @SerializedName("result") String result;
+    @SerializedName("success") boolean success;
+    @SerializedName("message") String message;
 
     public boolean isSuccess() {
-        return "success".equals(result);
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

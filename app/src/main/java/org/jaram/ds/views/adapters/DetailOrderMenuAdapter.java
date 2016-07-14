@@ -84,16 +84,6 @@ public class DetailOrderMenuAdapter extends BaseRecyclerView.BaseListAdapter<Ord
 
             attributeContainer.removeAllViews();
 
-            if (data.isCurry()) {
-                addAttributeView(MenuAttribute.CURRY);
-            }
-            if (data.isTwice()) {
-                addAttributeView(MenuAttribute.TWICE);
-            }
-            if (data.isTakeout()) {
-                addAttributeView(MenuAttribute.TAKEOUT);
-            }
-
             if (data.getAttributes() != null) {
                 for (MenuAttribute attr : data.getAttributes()) {
                     addAttributeView(attr);

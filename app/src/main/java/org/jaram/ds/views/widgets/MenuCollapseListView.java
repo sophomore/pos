@@ -192,7 +192,7 @@ public class MenuCollapseListView extends LinearLayout implements CollapseMenuAd
         etcView.addItemDecoration(new GridSpaceItemDecoration(3, itemSpacing, true));
 
         manager.asObservable()
-        .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(menus -> refreshMenuList());
 
         refreshMenuList();

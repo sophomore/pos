@@ -1,13 +1,8 @@
 package org.jaram.ds.networks;
 
-import org.jaram.ds.models.Menu;
 import org.jaram.ds.models.Order;
-import org.jaram.ds.models.OrderMenu;
-import org.jaram.ds.models.Pay;
+import org.jaram.ds.models.PaginationData;
 import org.jaram.ds.models.result.SimpleApiResult;
-
-import java.util.Date;
-import java.util.List;
 
 import retrofit.http.DELETE;
 import retrofit.http.Field;
@@ -16,6 +11,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 
 /**
@@ -23,34 +19,30 @@ import rx.Observable;
  */
 public interface OrderService {
 
-    @GET("/order")
-    Observable<List<Order>> getOrder();
+    @GET("/order/")
+    Observable<PaginationData<Order>> getOrder(@Query("page") int page,
+                                               @Query("date") String date,
+                                               @Query("menus") String menusJson,
+                                               @Query("pay") String paysJson,
+                                               @Query("price") int price,
+                                               @Query("priceCriteria") int priceCriteria);
 
     @FormUrlEncoded
-    @PUT("/order")
-    Observable<List<Order>> getMoreOrder(@Field("lastDate") String date);
+    @POST("/order/")
+    Observable<SimpleApiResult> addOrder(@Field("time") String time,
+                                         @Field("orderMenus") String orderMenusJson);
 
     @FormUrlEncoded
-    @POST("/order/search") //TODO: 현재 앱에 맞게 변경
-    Observable<List<Order>> getFilteredOrder(@Field("startDate") String startDate,
-                                             @Field("endDate") String endDate,
-                                             @Field("menus") String menus,
-                                             @Field("pay") String pays);
+    @PUT("/order/{order_menu_id}/")
+    Observable<SimpleApiResult> modifyOrderMenu(@Path("order_menu_id") int orderMenuId,
+                                                @Field("pay") int pay);
 
-    @FormUrlEncoded
-    @POST("/order")
-    Observable<SimpleApiResult> addOrder(Date time, int totalPrice, List<OrderMenu> orderMenus);
+    @DELETE("/order/{id}/")
+    Observable<SimpleApiResult> deleteOrder(@Path("id") int id);
 
-    @FormUrlEncoded
-    @POST("/order/menu/{id}")
-    Observable<SimpleApiResult> modifyOrderMenu(@Path("id") int id, @Field("pay") int pay);
-
-    @GET("/order/{id}/print/receipt")
-    Observable<SimpleApiResult> printReceipt(@Path("id") int id);
-
-    @GET("/order/{id}/print/statement")
+    @GET("/print_statement/{id}/")
     Observable<SimpleApiResult> printStatement(@Path("id") int id);
 
-    @DELETE("/order/{id}")
-    Observable<SimpleApiResult> deleteOrder(@Path("id") int id);
+    @GET("/print_receipt/{id}/")
+    Observable<SimpleApiResult> printReceipt(@Path("id") int id);
 }

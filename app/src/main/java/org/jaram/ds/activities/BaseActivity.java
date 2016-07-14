@@ -22,11 +22,15 @@ import org.jaram.ds.R;
 import org.jaram.ds.dialogs.SettingDialog;
 import org.jaram.ds.fragment.BaseFragment;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
+import rx.Subscription;
 
 /**
  * Created by jdekim43 on 2016. 1. 28..
@@ -40,23 +44,24 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
 
     protected abstract FragmentType createFragment();
 
-    /**
-     * Google Analytics 화면 추적에 사용할 이름을 전달한다.
-     * {@link BaseActivity}에서 Toolbar의 기본 타이틀로도 사용한다.
-     * 직접 Toolbar의 타이틀을 변경하기 위해선 {@link #setTitle(CharSequence)} 혹은 {@link #setTitle(int)} 메소드를 사용한다.
-     *
-     * @return 화면 이름
-     */
     public abstract String getScreenName();
 
-    @Nullable @BindView(R.id.drawerContainer) DrawerLayout drawerContainer;
-    @Nullable @BindView(R.id.navigator) ViewGroup navigatorContainer;
+    @Nullable
+    @BindView(R.id.drawerContainer)
+    DrawerLayout drawerContainer;
+    @Nullable
+    @BindView(R.id.navigator)
+    ViewGroup navigatorContainer;
 
-    @Nullable @BindView(R.id.toolbar) Toolbar toolbar;
+    @Nullable
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private ProgressDialog progressDialog;
 
     @BindColor(R.color.accent) int progressColor;
     @BindString(R.string.message_wait) String defaultProgressDialogMessage;
+
+    private Set<Subscription> subscriptionSet = new HashSet<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -101,7 +106,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
             case R.id.navigator:
                 try {
                     drawerContainer.openDrawer(GravityCompat.END);
-                } catch (NullPointerException|IllegalArgumentException e) {
+                } catch (NullPointerException | IllegalArgumentException e) {
                     //do nothing
                 }
                 break;
@@ -176,6 +181,16 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        for (Subscription subscription : subscriptionSet) {
+            if (!subscription.isUnsubscribed()) {
+                subscription.unsubscribe();
+            }
+        }
+        super.onDestroy();
+    }
+
     public void showProgress() {
         progressDialog.show();
     }
@@ -234,11 +249,7 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         }
 
         View settingButton = ButterKnife.findById(navigatorContainer, R.id.setting);
-//        if (this instanceof OrderActivity) {
-//            settingButton.setSelected(true);
-//        } else {
-            settingButton.setOnClickListener(v -> showSettingDialog());
-//        }
+        settingButton.setOnClickListener(v -> showSettingDialog());
     }
 
     protected void startOrderActivity() {
@@ -257,7 +268,9 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
             return;
         }
 
-        startActivity(new Intent(this, OrderManageActivity.class));
+        Intent intent = new Intent(this, OrderManageActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         if (drawerContainer != null) {
             drawerContainer.closeDrawer(GravityCompat.END);
         }
@@ -291,5 +304,10 @@ public abstract class BaseActivity<FragmentType extends BaseFragment> extends Ap
         if (drawerContainer != null) {
             drawerContainer.closeDrawer(GravityCompat.END);
         }
+    }
+
+    protected Subscription addSubscription(Subscription subscription) {
+        subscriptionSet.add(subscription);
+        return subscription;
     }
 }

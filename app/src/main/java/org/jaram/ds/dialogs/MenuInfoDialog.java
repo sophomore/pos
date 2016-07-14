@@ -22,6 +22,7 @@ import org.jaram.ds.models.result.SimpleApiResult;
 import org.jaram.ds.networks.Api;
 import org.jaram.ds.util.RxUtils;
 import org.jaram.ds.util.SLog;
+import org.jaram.ds.views.widgets.EditPriceView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +38,7 @@ import rx.functions.Action0;
 public class MenuInfoDialog extends AppCompatDialogFragment {
 
     @BindView(R.id.name) EditText nameView;
-    @BindView(R.id.price) EditText priceView;
+    @BindView(R.id.price) EditPriceView priceView;
     @BindView(R.id.category) Spinner categoryView;
 
     private Action0 confirmListener;
@@ -61,22 +62,6 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
         }
 
         categoryView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, Category.values()));
-        categoryView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Realm db = Realm.getDefaultInstance();
-                db.beginTransaction();
-                menu.setCategory((Category) parent.getItemAtPosition(position));
-                db.commitTransaction();
-                db.close();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         setViewByMenu(menu);
 
@@ -101,6 +86,9 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
     @OnClick(R.id.confirm)
     protected void save() {
         showProgress();
+        menu.setName(nameView.getText().toString());
+        menu.setPrice(priceView.getNumber());
+        menu.setCategory((Category) categoryView.getSelectedItem());
         getApplyObservable()
                 .retryWhen(RxUtils::exponentialBackoff)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,8 +109,9 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
     }
 
     protected void setViewByMenu(Menu menu) {
-        nameView.setText(menu.getName());
-        priceView.setText(menu.getPrice() + "");
+        nameView.setText(menu.getName() == null ? "" : menu.getName());
+        priceView.setNumber(menu.getPrice());
+        categoryView.setSelection(menu.getCategory() == null ? 0 : menu.getCategory().ordinal());
     }
 
     protected void onSuccessApplyMenu() {
@@ -138,8 +127,8 @@ public class MenuInfoDialog extends AppCompatDialogFragment {
 
     private Observable<SimpleApiResult> getApplyObservable() {
         return this.menu.getId() == -1
-                ? Api.with(getActivity()).modifyMenu(menu)
-                : Api.with(getActivity()).addMenu(menu);
+                ? Api.with(getActivity()).addMenu(menu)
+                : Api.with(getActivity()).modifyMenu(menu);
     }
 
     private void showProgress() {
